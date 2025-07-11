@@ -1,0 +1,23 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Unnepek" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+         <item name="colorPrimary">@color/black</item>
+         <item name="colorPrimaryDark">@color/black</item>
+         <item name="colorAccent">@color/black</item>
+    </style>
+
+    <style name="Theme.Unnepek" parent="Base.Theme.Unnepek" />
+    <style name="Weekday">
+        <item name="android:layout_width">18dp</item>
+        <item name="android:layout_height">18dp</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">#bbb</item>
+    </style>
+
+    <style name="Weekend" parent="Weekday">
+        <item name="android:textColor">#FF4444</item>
+    </style>
+
+</resources>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/month_bg"
+        >
+
+        <TextView
+            android:id="@+id/monthName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="JANUÁR"
+            android:textSize="12sp"
+            android:layout_gravity="center"
+            android:textColor="#ffffff"
+            android:textStyle="bold"
+            android:gravity="center" />
+
+        <!-- Weekday headers -->
+
+        <GridLayout
+            android:id="@+id/dayGrid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:columnCount="7"
+            android:rowCount="6"
+            android:layout_marginTop="4dp"
+            android:alignmentMode="alignMargins"
+            android:useDefaultMargins="true" />
+    </LinearLayout>
+
