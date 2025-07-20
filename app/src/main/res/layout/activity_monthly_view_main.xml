@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/topBar"
+        android:layout_marginTop="50dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="10dp">
+
+
+        <ImageView
+            android:id="@+id/prevMonthBtn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@drawable/left_arrow"
+            android:tint="#42919E" />
+
+        <TextView
+            android:id="@+id/monthYearText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/poppins_medium"
+            android:gravity="center"
+            android:text="JANUÁR 2025"
+            android:textColor="#42919E"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/claneder"
+            android:layout_width="24dp"
+
+            android:layout_height="24dp"
+
+            android:layout_marginEnd="15dp"
+            android:src="@drawable/calendar"
+            android:tint="#42919E" />
+
+        <ImageView
+            android:id="@+id/nextMonthBtn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginEnd="12dp"
+
+            android:src="@drawable/right_arrow"
+            android:tint="#42919E" />
+
+        <ImageView
+            android:id="@+id/add_event"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@android:drawable/ic_input_add"
+            android:tint="#42919E" />
+
+
+    </LinearLayout>
+
+    <GridLayout
+        android:id="@+id/monthlyDayGrid"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topBar"
+        android:columnCount="7"
+        android:paddingTop="10dp"
+        android:rowCount="6"/>
+
+
+</RelativeLayout>

@@ -13,7 +13,9 @@
         android:layout_marginTop="10dp"
         android:gravity="end"
         android:paddingBottom="8dp"
-        android:text="Pick Date"
+        android:fontFamily="@font/poppins_bold"
+
+        android:text="Dátum kiválasztása"
         android:textColor="@android:color/holo_blue_dark" />
 
     <EditText
@@ -21,17 +23,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/edit_bg"
-        android:hint="Event Name"
+        android:hint="Esemény neve"
+        android:fontFamily="@font/poppins_medium"
         android:padding="15dp" />
 
     <EditText
         android:id="@+id/eventStoryInput"
+        android:fontFamily="@font/poppins_medium"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@drawable/edit_bg"
         android:gravity="top"
-        android:hint="Story"
+        android:hint="Történet"
         android:inputType="textMultiLine"
         android:minLines="4"
         android:padding="15dp" />

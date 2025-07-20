@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:background="@drawable/month_bg"
+    android:orientation="vertical"
+    android:padding="15dp">
+
+    <!-- Top Row: Name and Close Button -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/eventName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.97"
+            android:fontFamily="@font/poppins_bold"
+            android:text="Esemény neve"
+            android:textColor="#fff"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/btnClose"
+            android:layout_width="29dp"
+            android:layout_height="29dp"
+            android:contentDescription="Bezárás"
+            android:src="@android:drawable/ic_menu_close_clear_cancel"
+            android:tint="#FF0000" />
+    </LinearLayout>
+
+    <!-- Event Date -->
+    <TextView
+        android:id="@+id/eventDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:fontFamily="@font/plus_jakarta_sans_light"
+        android:text="2025-07-18"
+        android:layout_gravity="end"
+
+        android:textColor="@color/white"
+        android:textSize="12sp" />
+
+    <!-- Event Story -->
+    <TextView
+        android:id="@+id/eventStory"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+
+        android:fontFamily="@font/poppins_medium"
+        android:text="Rövid leírás az eseményről..."
+        android:textColor="#fff"
+        android:textSize="14sp" />
+</LinearLayout>

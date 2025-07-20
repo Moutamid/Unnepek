@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/change_app_color"
+        android:title="Alkalmazás háttérszínének módosítása" />
+    <item
+        android:id="@+id/change_feast_color"
+        android:title="Ünnepnap színének módosítása" />
+    <item
+        android:id="@+id/change_reminder_color"
+        android:title="Emlékeztető színének módosítása" />
+    <item
+        android:id="@+id/change_note_color"
+        android:title="Jegyzet színének módosítása" />
+    <item
+        android:id="@+id/toggle_dim"
+        android:title="Háttér elhalványítása" />
+    <item
+        android:id="@+id/toggle_week_numbers"
+        android:title="Heti számok megjelenítése/elrejtése" />
+</menu>

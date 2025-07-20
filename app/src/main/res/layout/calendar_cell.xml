@@ -1,0 +1,31 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="45dp"
+    android:layout_height="50dp"
+    android:orientation="vertical"
+    android:padding="2dp"
+    android:id="@+id/calendar_cell_root"
+
+    android:gravity="center">
+
+    <TextView
+        android:id="@+id/dayText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1"
+        android:textSize="14sp"
+        android:textColor="#FFFFFF"
+        android:gravity="center" />
+
+    <TextView
+        android:id="@+id/feastLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Feast Day"
+        android:textSize="9sp"
+        android:maxLines="1"
+        android:padding="2dp"
+        android:textColor="#000"
+        android:background="#0B9F89"
+        android:visibility="invisible"
+        android:gravity="center" />
+</LinearLayout>

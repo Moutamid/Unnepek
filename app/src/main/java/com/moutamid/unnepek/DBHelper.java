@@ -21,14 +21,14 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE events (id INTEGER PRIMARY KEY AUTOINCREMENT, year INTEGER, month INTEGER, day INTEGER, name TEXT, story TEXT)");
     }
-
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
+    {
         db.execSQL("DROP TABLE IF EXISTS events");
         onCreate(db);
     }
-
-    public void addEvent(int year, int month, int day, String name, String story) {
+    public void addEvent(int year, int month, int day, String name, String story)
+    {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("year", year);
@@ -44,18 +44,19 @@ public class DBHelper extends SQLiteOpenHelper {
         List<FeastDay> events = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM events", null);
-
-        if (cursor.moveToFirst()) {
-            do {
+        if (cursor.moveToFirst())
+        {
+            do
+            {
                 int year = cursor.getInt(1);
                 int month = cursor.getInt(2);
                 int day = cursor.getInt(3);
                 String name = cursor.getString(4);
                 String story = cursor.getString(5);
                 events.add(new FeastDay(year, month, day, name, story));
-            } while (cursor.moveToNext());
+            }
+            while (cursor.moveToNext());
         }
-
         cursor.close();
         db.close();
         return events;

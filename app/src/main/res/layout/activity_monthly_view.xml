@@ -1,75 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widgetRoot"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#000000"
-    android:orientation="vertical"
-    android:padding="10dp">
+    android:layout_height="wrap_content"
+    android:background="#331F1E"
+    android:padding="15dp">
 
-    <LinearLayout
-        android:id="@+id/topBar"
+    <!-- Previous Month Button -->
+    <ImageView
+        android:id="@+id/prevMonthBtn"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/left_arrow"
+        android:tint="@android:color/white" />
+
+    <!-- Month Year Text -->
+    <TextView
+        android:id="@+id/monthYearText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_toLeftOf="@+id/claneder"
+        android:fontFamily="@font/poppins_medium"
+        android:layout_toRightOf="@+id/prevMonthBtn"
+        android:gravity="center"
+        android:text="JANUÁR 2025"
+        android:textColor="@android:color/white"
+        android:textSize="14sp" />
+
+    <!-- Calendar Icon -->
+    <ImageView
+        android:id="@+id/claneder"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="20dp"
+        android:layout_toLeftOf="@+id/nextMonthBtn"
+        android:src="@drawable/calendar"
+        android:tint="@android:color/white" />
+
+    <!-- Next Month Button -->
+    <ImageView
+        android:id="@+id/nextMonthBtn"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="10dp"
+        android:src="@drawable/right_arrow"
+        android:tint="@android:color/white" />
+
+    <!-- GridView for Calendar -->
+    <GridView
+        android:id="@+id/calendarGrid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-
-        <ImageView
-            android:id="@+id/prevMonthBtn"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/left_arrow"
-            android:tint="#42919E" />
-
-        <TextView
-            android:id="@+id/monthYearText"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="JANUÁR 2025"
-            android:textColor="#42919E"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/claneder"
-            android:layout_width="24dp"
-
-            android:layout_height="24dp"
-
-            android:layout_marginEnd="15dp"
-            android:src="@drawable/calendar"
-            android:tint="#42919E" />
-
-        <ImageView
-            android:id="@+id/nextMonthBtn"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_marginEnd="12dp"
-
-            android:src="@drawable/right_arrow"
-            android:tint="#42919E" />
-
-        <ImageView
-            android:id="@+id/add_event"
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:src="@android:drawable/ic_input_add"
-            android:tint="#42919E" />
-
-
-    </LinearLayout>
-
-    <GridLayout
-        android:id="@+id/monthlyDayGrid"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/topBar"
-        android:columnCount="7"
-        android:paddingTop="10dp"
-        android:rowCount="6"
-        android:useDefaultMargins="true" />
-
+        android:layout_marginTop="75dp"
+        android:horizontalSpacing="12dp"
+        android:numColumns="7"
+        android:paddingBottom="90dp"
+        android:verticalSpacing="12dp" />
 
 </RelativeLayout>
