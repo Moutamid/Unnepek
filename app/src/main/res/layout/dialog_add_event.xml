@@ -26,6 +26,14 @@
         android:hint="Esemény neve"
         android:fontFamily="@font/poppins_medium"
         android:padding="15dp" />
+    <Switch
+        android:gravity="start"
+        android:id="@+id/addForAllYearsSwitch"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Hozzáadás minden évre (2025-2035)"
+        android:checked="false" />
 
     <EditText
         android:id="@+id/eventStoryInput"

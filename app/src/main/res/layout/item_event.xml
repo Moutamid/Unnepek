@@ -7,7 +7,6 @@
     android:orientation="vertical"
     android:padding="15dp">
 
-    <!-- Top Row: Name and Close Button -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -26,6 +25,15 @@
             android:textStyle="bold" />
 
         <ImageView
+            android:id="@+id/btnDelete"
+            android:layout_width="29dp"
+            android:layout_marginEnd="15dp"
+            android:layout_height="29dp"
+            android:padding="5dp"
+            android:contentDescription="Bezárás"
+            android:src="@drawable/bin"
+            android:tint="#CD2222" />
+    <ImageView
             android:id="@+id/btnClose"
             android:layout_width="29dp"
             android:layout_height="29dp"
@@ -53,8 +61,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="15dp"
-
-        android:fontFamily="@font/poppins_medium"
+        android:justificationMode="inter_word"
+        android:lineSpacingExtra="2dp"
+        android:scrollHorizontally="false"
+        android:ellipsize="none"
+        android:fontFamily="@font/poppins_light"
         android:text="Rövid leírás az eseményről..."
         android:textColor="#fff"
         android:textSize="14sp" />

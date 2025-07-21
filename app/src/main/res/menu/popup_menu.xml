@@ -13,7 +13,7 @@
         android:title="Jegyzet színének módosítása" />
     <item
         android:id="@+id/toggle_dim"
-        android:title="Háttér elhalványítása" />
+        android:title="Sötét mód" />
     <item
         android:id="@+id/toggle_week_numbers"
         android:title="Heti számok megjelenítése/elrejtése" />

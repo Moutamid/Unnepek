@@ -1,10 +1,12 @@
 package com.moutamid.unnepek;
+
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -21,15 +23,12 @@ public class WidgetProvider extends AppWidgetProvider {
     private static int month = Calendar.getInstance().get(Calendar.MONTH);
     private static int year = Calendar.getInstance().get(Calendar.YEAR);
     private static boolean isLayoutVisible = false;
-
     @Override
     public void onReceive(Context context, Intent intent) {
         super.onReceive(context, intent);
         if (intent.getAction() == null) return;
-
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
         ComponentName widget = new ComponentName(context, WidgetProvider.class);
-
         switch (intent.getAction()) {
             case ACTION_PREV:
                 month--;
@@ -38,7 +37,6 @@ public class WidgetProvider extends AppWidgetProvider {
                     year--;
                 }
                 break;
-
             case ACTION_NEXT:
                 month++;
                 if (month > 11) {
@@ -46,74 +44,61 @@ public class WidgetProvider extends AppWidgetProvider {
                     year++;
                 }
                 break;
-
             case ACTION_TOGGLE_LAYOUT:
                 isLayoutVisible = !isLayoutVisible;
                 RemoteViews updatedViews = new RemoteViews(context.getPackageName(), R.layout.activity_monthly_view);
                 updatedViews.setViewVisibility(R.id.monthYearText, isLayoutVisible ? View.VISIBLE : View.GONE);
                 manager.updateAppWidget(widget, updatedViews);
                 break;
-
             case ACTION_CELL_CLICK:
-
-                    Intent openDetail = new Intent(context, MonthlyViewActivity.class);
-                    context.startActivity(openDetail);
+                Intent openDetail = new Intent(context, MonthlyViewActivity.class);
+                context.startActivity(openDetail);
                 break;
-
-
         }
-
         int[] ids = manager.getAppWidgetIds(widget);
         for (int id : ids) {
             updateAppWidget(context, manager, id);
         }
     }
-
     @Override
     public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
         for (int id : ids) {
             updateAppWidget(context, manager, id);
         }
     }
-
     static void updateAppWidget(Context context, AppWidgetManager manager, int appWidgetId) {
         views = new RemoteViews(context.getPackageName(), R.layout.activity_monthly_view);
-        // Hungarian month names
         DateFormatSymbols dfs = new DateFormatSymbols(new Locale("hu", "HU"));
         String monthName = dfs.getMonths()[month];
         views.setTextViewText(R.id.monthYearText, monthName);
-
-        // Previous button
+        SharedPreferences prefs = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("saved_month", month);
+        editor.putInt("saved_year", year);
+        editor.apply();
         Intent prevIntent = new Intent(context, WidgetProvider.class);
         prevIntent.setAction(ACTION_PREV);
         prevIntent.setData(Uri.parse("widget://prev" + appWidgetId));
         PendingIntent prevPending = PendingIntent.getBroadcast(context, appWidgetId, prevIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.prevMonthBtn, prevPending);
-
-        // Next button
         Intent nextIntent = new Intent(context, WidgetProvider.class);
         nextIntent.setAction(ACTION_NEXT);
         nextIntent.setData(Uri.parse("widget://next" + appWidgetId));
         PendingIntent nextPending = PendingIntent.getBroadcast(context, appWidgetId + 1, nextIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.nextMonthBtn, nextPending);
-
-        // Open main app on header click
         Intent openIntent = new Intent(context, MainActivity.class);
         openIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent openPending = PendingIntent.getActivity(context, appWidgetId, openIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.claneder, openPending);
-
-        // Set the grid adapter
         Intent serviceIntent = new Intent(context, WidgetService.class);
         serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         serviceIntent.putExtra("month", month);
         serviceIntent.putExtra("year", year);
         serviceIntent.setData(Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME)));
         views.setRemoteAdapter(R.id.calendarGrid, serviceIntent);
-
         Intent clickIntentTemplate = new Intent(context, MonthlyViewActivity.class);
         clickIntentTemplate.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, clickIntentTemplate,

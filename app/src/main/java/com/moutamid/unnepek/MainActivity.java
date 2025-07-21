@@ -1,6 +1,7 @@
 package com.moutamid.unnepek;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
@@ -58,6 +60,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_main);
         checkApp(MainActivity.this);
         yearText = findViewById(R.id.yearText);
@@ -75,50 +78,43 @@ public class MainActivity extends AppCompatActivity {
             popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
 
             popupMenu.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case R.id.change_app_color:
-                        showColorPickerDialog("Válassz alkalmazás színt", color -> {
-                            appColor = color;
-                            ColorPreference.saveAppColor(this, appColor);
-                            rootLayout.setBackgroundColor(appColor);
-                        });
-                        return true;
-
-                    case R.id.change_feast_color:
-                        showFeastColorPickerDialog("Válassz ünnepnap színt", color -> {
-                            feastColor = color;
-                            ColorPreference.saveFeastColor(this, feastColor);
-                        });
-                        return true;
-
-                    case R.id.change_reminder_color:
-                        showReminderColorPickerDialog("Válassz emlékeztető színt", color -> {
-                            reminderColor = color;
-                            ColorPreference.saveReminderColor(this, reminderColor);
-                        });
-                        return true;
-
-                    case R.id.change_note_color:
-                        showNoteColorPickerDialog("Válassz jegyzet színt", color -> {
-                            noteColor = color;
-                            ColorPreference.saveNoteColor(this, noteColor);
-                        });
-                        return true;
-
-                    case R.id.toggle_dim:
-                        boolean currentState = ColorPreference.isDimmed(this);
-                        boolean newState = !currentState;
-                        ColorPreference.setDimState(this, newState);
-                        applyDimEffect(newState);
-                        return true;
-
-                    case R.id.toggle_week_numbers:
-                        toggleWeekNumbers();
-                        return true;
-
-                    default:
-                        return false;
+                int itemId = item.getItemId();
+                if (itemId == R.id.change_app_color) {
+                    showColorPickerDialog("Válassz alkalmazás színt", color -> {
+                        appColor = color;
+                        ColorPreference.saveAppColor(this, appColor);
+                        rootLayout.setBackgroundColor(appColor);
+                    });
+                    return true;
+                } else if (itemId == R.id.change_feast_color) {
+                    showFeastColorPickerDialog("Válassz ünnepnap színt", color -> {
+                        feastColor = color;
+                        ColorPreference.saveFeastColor(this, feastColor);
+                    });
+                    return true;
+                } else if (itemId == R.id.change_reminder_color) {
+                    showReminderColorPickerDialog("Válassz emlékeztető színt", color -> {
+                        reminderColor = color;
+                        ColorPreference.saveReminderColor(this, reminderColor);
+                    });
+                    return true;
+                } else if (itemId == R.id.change_note_color) {
+                    showNoteColorPickerDialog("Válassz jegyzet színt", color -> {
+                        noteColor = color;
+                        ColorPreference.saveNoteColor(this, noteColor);
+                    });
+                    return true;
+                } else if (itemId == R.id.toggle_dim) {
+                    boolean currentState = ColorPreference.isDimmed(this);
+                    boolean newState = !currentState;
+                    ColorPreference.setDimState(this, newState);
+                    applyDimEffect(newState);
+                    return true;
+                } else if (itemId == R.id.toggle_week_numbers) {
+                    toggleWeekNumbers();
+                    return true;
                 }
+                return false;
             });
 
             popupMenu.show();
@@ -130,9 +126,12 @@ public class MainActivity extends AppCompatActivity {
                 int currentMonth = calendar.get(Calendar.MONTH);
                 int currentYear = calendar.get(Calendar.YEAR);
                 Intent i = new Intent(MainActivity.this, MonthlyViewActivity.class);
-                i.putExtra("month", currentMonth);
-                i.putExtra("currentYear", currentYear);
-                              startActivity(i);
+                SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("saved_month", currentMonth);
+                editor.putInt("saved_year", currentYear);
+                editor.apply();
+                startActivity(i);
             }
         });
         monthAdapter = new BaseAdapter() {
@@ -218,9 +217,11 @@ public class MainActivity extends AppCompatActivity {
 
         {
             Intent i = new Intent(MainActivity.this, MonthlyViewActivity.class);
-            i.putExtra("month", position);
-            i.putExtra("currentYear", currentYear);
-
+            SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("saved_month", position);
+            editor.putInt("saved_year", currentYear);
+            editor.apply();
             startActivity(i);
         });
 
