@@ -6,7 +6,20 @@ public class FeastDay {
     public int day;
     public String name;
     public String story;
+    public boolean isWeekend;
+    public boolean isFeastDay;
+    public String feastLabel;
+    public String feastStory;
     public boolean isFromDB;
+    public int displayDay;
+
+    public FeastDay(int day, boolean isWeekend, boolean isFeastDay, String feastLabel) {
+        this.day = day;
+        this.isWeekend = isWeekend;
+        this.isFeastDay = isFeastDay;
+        this.feastLabel = feastLabel;
+        this.isFromDB = false;
+    }
 
     public FeastDay(int year, int month, int day, String name, String story) {
         this.year = year;

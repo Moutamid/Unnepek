@@ -5,6 +5,7 @@ public class DayItem {
     public boolean isFeastDay;
     public String feastLabel;
     public String feastStory;
+    public boolean isFromDB;
 
         public int displayDay; // For prev/next month day numbers
 
@@ -13,6 +14,7 @@ public class DayItem {
         this.isWeekend = isWeekend;
         this.isFeastDay = isFeastDay;
         this.feastLabel = feastLabel;
+        this.isFromDB = false;
     }
     public DayItem(int day, String feastLabel, String feastStory, boolean isWeekend, boolean isFeastDay, int displayDay) {
         this.day = day;

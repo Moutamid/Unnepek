@@ -56,7 +56,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 String story = cursor.getString(cursor.getColumnIndexOrThrow("story"));
 
                 FeastDay fd = new FeastDay(id, year, month, day, name, story);
-                fd.isFromDB = true; // mark as DB event
+                fd.isFromDB = true;
                 events.add(fd);
             } while (cursor.moveToNext());
         }

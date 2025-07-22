@@ -1,6 +1,8 @@
 package com.moutamid.unnepek;
 
 import android.app.Activity;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -84,24 +86,28 @@ public class MainActivity extends AppCompatActivity {
                         appColor = color;
                         ColorPreference.saveAppColor(this, appColor);
                         rootLayout.setBackgroundColor(appColor);
+                        refreshWidget();
                     });
                     return true;
                 } else if (itemId == R.id.change_feast_color) {
                     showFeastColorPickerDialog("Válassz ünnepnap színt", color -> {
                         feastColor = color;
                         ColorPreference.saveFeastColor(this, feastColor);
+                        refreshWidget();
                     });
                     return true;
                 } else if (itemId == R.id.change_reminder_color) {
                     showReminderColorPickerDialog("Válassz emlékeztető színt", color -> {
                         reminderColor = color;
                         ColorPreference.saveReminderColor(this, reminderColor);
+                        refreshWidget();
                     });
                     return true;
                 } else if (itemId == R.id.change_note_color) {
                     showNoteColorPickerDialog("Válassz jegyzet színt", color -> {
                         noteColor = color;
                         ColorPreference.saveNoteColor(this, noteColor);
+                        refreshWidget();
                     });
                     return true;
                 } else if (itemId == R.id.toggle_dim) {
@@ -109,9 +115,11 @@ public class MainActivity extends AppCompatActivity {
                     boolean newState = !currentState;
                     ColorPreference.setDimState(this, newState);
                     applyDimEffect(newState);
+                    refreshWidget();
                     return true;
                 } else if (itemId == R.id.toggle_week_numbers) {
                     toggleWeekNumbers();
+                    refreshWidget();
                     return true;
                 }
                 return false;
@@ -125,13 +133,14 @@ public class MainActivity extends AppCompatActivity {
                 Calendar calendar = Calendar.getInstance();
                 int currentMonth = calendar.get(Calendar.MONTH);
                 int currentYear = calendar.get(Calendar.YEAR);
-                Intent i = new Intent(MainActivity.this, MonthlyViewActivity.class);
+                Intent intent = new Intent(MainActivity.this, MonthlyViewActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
                 SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = prefs.edit();
                 editor.putInt("saved_month", currentMonth);
                 editor.putInt("saved_year", currentYear);
                 editor.apply();
-                startActivity(i);
+                startActivity(intent);
             }
         });
         monthAdapter = new BaseAdapter() {
@@ -216,13 +225,14 @@ public class MainActivity extends AppCompatActivity {
         monthGrid.setOnItemClickListener((parent, view, position, id) ->
 
         {
-            Intent i = new Intent(MainActivity.this, MonthlyViewActivity.class);
+            Intent intent = new Intent(this, MonthlyViewActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
             SharedPreferences.Editor editor = prefs.edit();
             editor.putInt("saved_month", position);
             editor.putInt("saved_year", currentYear);
             editor.apply();
-            startActivity(i);
+            startActivity(intent);
         });
 
         updateUI();
@@ -288,6 +298,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void applyColors() {
+
         rootLayout.setBackgroundColor(ColorPreference.getAppColor(this));
     }
     private void toggleWeekNumbers() {
@@ -367,5 +378,28 @@ public class MainActivity extends AppCompatActivity {
 
         }).start();
     }
+
+    private void refreshWidget() {
+        AppWidgetManager manager = AppWidgetManager.getInstance(this);
+        ComponentName widget = new ComponentName(this, WidgetProvider.class);
+        int[] ids = manager.getAppWidgetIds(widget);
+
+        // Get current date and time
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        for (int id : ids) {
+            WidgetProvider.updateAppWidgetWithDate(this, manager, id, year, month, day, hour, minute);
+        }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
+
 
 }

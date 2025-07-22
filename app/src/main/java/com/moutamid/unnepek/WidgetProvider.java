@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -68,9 +69,10 @@ public class WidgetProvider extends AppWidgetProvider {
     }
     static void updateAppWidget(Context context, AppWidgetManager manager, int appWidgetId) {
         views = new RemoteViews(context.getPackageName(), R.layout.activity_monthly_view);
+        views.setInt(R.id.widgetRoot, "setBackgroundColor", ColorPreference.getAppColor(context)); // Example: Red color
         DateFormatSymbols dfs = new DateFormatSymbols(new Locale("hu", "HU"));
         String monthName = dfs.getMonths()[month];
-        views.setTextViewText(R.id.monthYearText, monthName);
+        views.setTextViewText(R.id.monthYearText, year+" "+ monthName);
         SharedPreferences prefs = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putInt("saved_month", month);
@@ -107,4 +109,12 @@ public class WidgetProvider extends AppWidgetProvider {
         manager.notifyAppWidgetViewDataChanged(appWidgetId, R.id.calendarGrid);
         manager.updateAppWidget(appWidgetId, views);
     }
+    static void updateAppWidgetWithDate(Context context, AppWidgetManager manager, int appWidgetId,
+                                        int year, int month, int day, int hour, int minute) {
+        RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.activity_monthly_view);
+        String dateTime = String.format("%04d/%02d", year, month + 1);
+        views.setTextViewText(R.id.monthYearText, dateTime); // Ensure this TextView exists
+        updateAppWidget(context, manager, appWidgetId);
+    }
+
 }

@@ -2,6 +2,8 @@ package com.moutamid.unnepek;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +11,6 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
@@ -23,7 +24,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
-
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,7 +80,10 @@ public class MonthlyViewActivity extends AppCompatActivity {
         });
 
         calendarBtn.setOnClickListener(v -> {
-            finish();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+
         });
         feastDays = Arrays.asList(
                 new FeastDay(2025, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
@@ -4048,6 +4051,11 @@ public class MonthlyViewActivity extends AppCompatActivity {
         int feastColor = ColorPreference.getFeastColor(this);
         int reminderColor = ColorPreference.getReminderColor(this);
 
+        Calendar today = Calendar.getInstance();
+        int todayYear = today.get(Calendar.YEAR);
+        int todayMonth = today.get(Calendar.MONTH);
+        int todayDay = today.get(Calendar.DAY_OF_MONTH);
+
         int weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
         int prevStart = daysInPrevMonth - firstDayOfWeek + 1;
 
@@ -4056,11 +4064,13 @@ public class MonthlyViewActivity extends AppCompatActivity {
             dayGrid.addView(weekNum);
         }
 
+        // ===== PREVIOUS MONTH DAYS =====
         for (int i = 0; i < firstDayOfWeek; i++) {
             LinearLayout prevContainer = createDayCell(prevStart + i, "#666666", cellSize);
             dayGrid.addView(prevContainer);
         }
 
+        // ===== CURRENT MONTH DAYS =====
         for (int day = 1; day <= daysInMonth; day++) {
             calendar.set(Calendar.DAY_OF_MONTH, day);
             int dayOfWeek = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7;
@@ -4071,8 +4081,15 @@ public class MonthlyViewActivity extends AppCompatActivity {
                 dayGrid.addView(weekNum);
             }
 
+            // Normal day cell
             LinearLayout container = createDayCell(day, (dayOfWeek == 5 || dayOfWeek == 6) ? "RED" : "WHITE", cellSize);
 
+            // === Highlight current day ===
+            if (currentYear == todayYear && month == todayMonth && day == todayDay) {
+                container.setBackgroundColor(getColor(R.color.app_color)); // Highlight color
+            }
+
+            // Feast days
             for (FeastDay fd : feastDays) {
                 if (fd.year == currentYear && fd.month == month && fd.day == day) {
                     TextView fdLabel = createEventLabel(fd.name, feastColor, cellSize);
@@ -4081,6 +4098,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                 }
             }
 
+            // DB events (reminders)
             for (FeastDay fd : dbHelper.getAllEvents()) {
                 if (fd.year == currentYear && fd.month == month && fd.day == day) {
                     TextView fdLabel = createEventLabel(fd.name, reminderColor, cellSize);
@@ -4092,6 +4110,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
             dayGrid.addView(container);
         }
 
+        // ===== NEXT MONTH DAYS =====
         int totalCells = dayGrid.getChildCount();
         int cellsAfterHeaders = totalCells - (showWeek ? 8 : 7);
         int remainder = cellsAfterHeaders % (showWeek ? 8 : 7);
@@ -4194,7 +4213,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
         ImageView btnDelete = eventView.findViewById(R.id.btnDelete);
 
         nameView.setText(fd.name);
-        dateView.setText(fd.year + "/" + (fd.month + 1) + "/" + fd.day);
+        dateView.setText(String.format("%04d/%02d/%02d", fd.year, fd.month + 1, fd.day));
         storyView.setText(fd.story);
 
         eventView.setBackgroundColor(ColorPreference.getNoteColor(this));
@@ -4250,6 +4269,11 @@ public class MonthlyViewActivity extends AppCompatActivity {
             if (!isFinishing()) {
                 dp.show();
             }
+            AppWidgetManager manager = AppWidgetManager.getInstance(this);
+            ComponentName widget = new ComponentName(this, WidgetProvider.class);
+            int[] ids = manager.getAppWidgetIds(widget);
+            manager.notifyAppWidgetViewDataChanged(ids, R.id.calendarGrid);
+
         });
 
         AlertDialog dialog = new AlertDialog.Builder(MonthlyViewActivity.this)
@@ -4286,6 +4310,8 @@ public class MonthlyViewActivity extends AppCompatActivity {
                 }
 
                 populateCalendar();
+                refreshWidget();
+
                 dialog.dismiss(); // Close dialog after saving
             });
         });
@@ -4307,7 +4333,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
         new AlertDialog.Builder(this)
                 .setTitle("Esemény törlése")
                 .setMessage("Biztosan törölni szeretnéd ezt az eseményt?\n\n" +
-                        "Töröljem az összes évben (2025-2035)?")
+                        "Töröljem az összes évben?")
                 .setPositiveButton("Csak ezt", (dialog, which) -> {
                     dbHelper.deleteEventByDate(fd.year, fd.month, fd.day);
                     Toast.makeText(this, "Esemény törölve!", Toast.LENGTH_SHORT).show();
@@ -4319,9 +4345,37 @@ public class MonthlyViewActivity extends AppCompatActivity {
                     }
                     Toast.makeText(this, "Esemény minden évből törölve!", Toast.LENGTH_SHORT).show();
                     populateCalendar();
+                    refreshWidget();
                 })
                 .setNegativeButton("Mégse", null)
                 .show();
     }
 
+    @Override
+    public void onBackPressed() {
+        if (isTaskRoot()) {
+            finish();
+        } else {
+            super.onBackPressed();
+            finish();
+        }
+    }
+
+    private void refreshWidget() {
+        AppWidgetManager manager = AppWidgetManager.getInstance(this);
+        ComponentName widget = new ComponentName(this, WidgetProvider.class);
+        int[] ids = manager.getAppWidgetIds(widget);
+
+        // Get current date and time
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        int minute = calendar.get(Calendar.MINUTE);
+
+        for (int id : ids) {
+            WidgetProvider.updateAppWidgetWithDate(this, manager, id, year, month, day, hour, minute);
+        }
+    }
 }
