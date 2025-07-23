@@ -11,12 +11,14 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.PopupMenu;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,12 +27,19 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class MonthlyViewActivity extends AppCompatActivity {
+    Integer appColor;
+    Integer feastColor;
+    Integer reminderColor;
+    Integer noteColor;
     private int month;
     private int currentYear;
     private TextView headerText;
@@ -38,6 +47,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
     List<FeastDay> feastDays = new ArrayList<>();
     DBHelper dbHelper;
     View rootLayout;
+    ImageView currentDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,22 +56,88 @@ public class MonthlyViewActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_monthly_view_main);
         dbHelper = new DBHelper(this);
+        ImageView showPopupBtn = findViewById(R.id.menu);
         rootLayout = findViewById(R.id.main_layout);
         boolean isDimmed = ColorPreference.isDimmed(this);
         applyDimEffect(isDimmed);
         applyColors();
+        showPopupBtn.setOnClickListener(v -> {
+            PopupMenu popupMenu = new PopupMenu(MonthlyViewActivity.this, v);
+            popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                int itemId = item.getItemId();
+                if (itemId == R.id.change_app_color) {
+                    showColorPickerDialog("Válassz alkalmazás színt", color -> {
+                        appColor = color;
+                        ColorPreference.saveAppColor(this, appColor);
+                        rootLayout.setBackgroundColor(appColor);
+                        refreshWidget();
+                    });
+                    return true;
+                } else if (itemId == R.id.change_feast_color) {
+                    showFeastColorPickerDialog("Válassz ünnepnap színt", color -> {
+                        feastColor = color;
+                        ColorPreference.saveFeastColor(this, feastColor);
+                        refreshWidget();
+                    });
+                    return true;
+                } else if (itemId == R.id.change_reminder_color) {
+                    showReminderColorPickerDialog("Válassz emlékeztető színt", color -> {
+                        reminderColor = color;
+                        ColorPreference.saveReminderColor(this, reminderColor);
+                        refreshWidget();
+                    });
+                    return true;
+                } else if (itemId == R.id.change_note_color) {
+                    showNoteColorPickerDialog("Válassz jegyzet színt", color -> {
+                        noteColor = color;
+                        ColorPreference.saveNoteColor(this, noteColor);
+                        refreshWidget();
+                    });
+                    return true;
+                } else if (itemId == R.id.toggle_dim) {
+                    boolean currentState = ColorPreference.isDimmed(this);
+                    boolean newState = !currentState;
+                    ColorPreference.setDimState(this, newState);
+                    applyDimEffect(newState);
+                    refreshWidget();
+                    return true;
+                } else if (itemId == R.id.toggle_week_numbers) {
+                    toggleWeekNumbers();
+                    refreshWidget();
+                    return true;
+                }
+                return false;
+            });
+
+            popupMenu.show();
+        });
         headerText = findViewById(R.id.monthYearText);
         dayGrid = findViewById(R.id.monthlyDayGrid);
+        currentDay = findViewById(R.id.currentDay);
         ImageView prevBtn = findViewById(R.id.prevMonthBtn);
         ImageView nextBtn = findViewById(R.id.nextMonthBtn);
         ImageView calendarBtn = findViewById(R.id.claneder);
         ImageView addBtn = findViewById(R.id.add_event);
+        currentDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                month = Calendar.getInstance().get(Calendar.MONTH);
+                currentYear = Calendar.getInstance().get(Calendar.YEAR);
+                populateCalendar();
+            }
+        });
         addBtn.setOnClickListener(v -> showAddEventDialog());
-        SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-        month = prefs.getInt("saved_month", 0);
-        currentYear = prefs.getInt("saved_year", 2025);
-
-         prevBtn.setOnClickListener(v -> {
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("month") && intent.hasExtra("currentYear")) {
+            month = intent.getIntExtra("month", Calendar.getInstance().get(Calendar.MONTH));
+            currentYear = intent.getIntExtra("currentYear", Calendar.getInstance().get(Calendar.YEAR));
+        } else {
+            SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            month = prefs.getInt("saved_month", Calendar.getInstance().get(Calendar.MONTH));
+            currentYear = prefs.getInt("saved_year", Calendar.getInstance().get(Calendar.YEAR));
+        }  prevBtn.setOnClickListener(v -> {
             month--;
             if (month < 0) {
                 month = 11;
@@ -80,9 +156,9 @@ public class MonthlyViewActivity extends AppCompatActivity {
         });
 
         calendarBtn.setOnClickListener(v -> {
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+            Intent intenti = new Intent(this, MainActivity.class);
+            intenti.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intenti);
 
         });
         feastDays = Arrays.asList(
@@ -4034,7 +4110,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
 
         String[] monthNames = {"JANUÁR", "FEBRUÁR", "MÁRCIUS", "ÁPRILIS", "MÁJUS", "JÚNIUS",
                 "JÚLIUS", "AUGUSZTUS", "SZEPTEMBER", "OKTÓBER", "NOVEMBER", "DECEMBER"};
-        headerText.setText(monthNames[month]);
+        headerText.setText(currentYear+ " / "+ monthNames[month]);
 
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, currentYear);
@@ -4178,31 +4254,6 @@ public class MonthlyViewActivity extends AppCompatActivity {
         return tv;
     }
 
-    // Helper method for day cells
-    private LinearLayout createDayCell(int day, String color) {
-        LinearLayout container = new LinearLayout(this);
-        container.setOrientation(LinearLayout.VERTICAL);
-        container.setGravity(Gravity.CENTER);
-        container.setLayoutParams(new LinearLayout.LayoutParams(100, 100));
-
-        TextView dayView = new TextView(this);
-        dayView.setText(String.valueOf(day));
-        dayView.setTextSize(14);
-        dayView.setGravity(Gravity.CENTER);
-
-        if (color.equals("RED")) {
-            dayView.setTextColor(Color.RED);
-        } else if (color.equals("WHITE")) {
-            dayView.setTextColor(Color.WHITE);
-        } else {
-            dayView.setTextColor(Color.parseColor(color));
-        }
-
-        container.addView(dayView);
-        return container;
-    }
-
-
     private void showFeastDialog(FeastDay fd) {
         View eventView = getLayoutInflater().inflate(R.layout.item_event, null);
 
@@ -4319,9 +4370,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void applyColors() {
-        rootLayout.setBackgroundColor(ColorPreference.getAppColor(this));
-    }
+
 
     private void applyDimEffect(boolean dim) {
         if (dim) {
@@ -4329,7 +4378,9 @@ public class MonthlyViewActivity extends AppCompatActivity {
         } else {
             rootLayout.setForeground(null);
         }
-    }private void showDeleteConfirmation(FeastDay fd) {
+    }
+
+    private void showDeleteConfirmation(FeastDay fd) {
         new AlertDialog.Builder(this)
                 .setTitle("Esemény törlése")
                 .setMessage("Biztosan törölni szeretnéd ezt az eseményt?\n\n" +
@@ -4378,4 +4429,78 @@ public class MonthlyViewActivity extends AppCompatActivity {
             WidgetProvider.updateAppWidgetWithDate(this, manager, id, year, month, day, hour, minute);
         }
     }
+
+    private void showColorPickerDialog(String title, Consumer<Integer> colorSelected) {
+        final int[] colors = {
+                Color.parseColor("#171B24"), // Fekete
+                Color.parseColor("#031D57"), // Sötétkék
+                Color.parseColor("#4B0857"), // Lila
+                Color.parseColor("#57082D"), // Borvörös
+                Color.parseColor("#085721"), // Zöld
+                Color.parseColor("#505708"), // Olíva
+                Color.parseColor("#331F1E")  // Barna
+        };
+
+        final String[] colorNames = {
+                "Fekete", "Sötétkék", "Lila", "Borvörös", "Zöld", "Olíva", "Barna"
+        };
+
+        ColorAdapter adapter = new ColorAdapter(this, colors, colorNames);
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(title)
+                .setAdapter(adapter, (dialog, which) -> colorSelected.accept(colors[which]))
+                .show();
+    }
+
+    private void showFeastColorPickerDialog(String title, Consumer<Integer> colorSelected) {
+        final int[] colors = {
+                Color.parseColor("#F8BCBC"), // Rózsaszín
+                Color.parseColor("#F9E9AD"), // Sárga
+                Color.parseColor("#C4F9AD"), // Mentazöld
+                Color.parseColor("#ADF9DD"), // Aqua
+                Color.parseColor("#ADC9F9"), // Világoskék
+                Color.parseColor("#F1B2F8"), // Levendula
+                Color.parseColor("#FF2D61")  // Piros
+        };
+
+        final String[] colorNames = {
+                "Rózsaszín", "Sárga", "Mentazöld", "Aqua", "Világoskék", "Levendula", "Piros"
+        };
+
+        ColorAdapter adapter = new ColorAdapter(this, colors, colorNames);
+
+        new MaterialAlertDialogBuilder(this)
+                .setTitle(title)
+                .setAdapter(adapter, (dialog, which) -> colorSelected.accept(colors[which]))
+                .show();
+    }
+
+    private void showReminderColorPickerDialog(String title, Consumer<Integer> colorSelected) {
+        showFeastColorPickerDialog(title, colorSelected); // same color palette for now
+    }
+
+    private void showNoteColorPickerDialog(String title, Consumer<Integer> colorSelected) {
+        showColorPickerDialog (title, colorSelected); // same color palette for now
+    }
+
+    private void applyColors() {
+
+        rootLayout.setBackgroundColor(ColorPreference.getAppColor(this));
+    }
+    private void toggleWeekNumbers() {
+        SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
+        boolean showWeek = prefs.getBoolean("show_week_numbers", false);
+
+        showWeek = !showWeek; // Toggle state
+        prefs.edit().putBoolean("show_week_numbers", showWeek).apply();
+
+        if (showWeek) {
+            Toast.makeText(this, "Heti számok megjelenítve", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, "Heti számok elrejtve", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
 }

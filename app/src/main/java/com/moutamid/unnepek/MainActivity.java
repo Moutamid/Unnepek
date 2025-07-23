@@ -130,17 +130,11 @@ public class MainActivity extends AppCompatActivity {
         monthView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
-                int currentMonth = calendar.get(Calendar.MONTH);
-                int currentYear = calendar.get(Calendar.YEAR);
                 Intent intent = new Intent(MainActivity.this, MonthlyViewActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-                SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-                SharedPreferences.Editor editor = prefs.edit();
-                editor.putInt("saved_month", currentMonth);
-                editor.putInt("saved_year", currentYear);
-                editor.apply();
+                intent.putExtra("month", 0);
+                intent.putExtra("currentYear", currentYear);
                 startActivity(intent);
+
             }
         });
         monthAdapter = new BaseAdapter() {
@@ -225,14 +219,11 @@ public class MainActivity extends AppCompatActivity {
         monthGrid.setOnItemClickListener((parent, view, position, id) ->
 
         {
-            Intent intent = new Intent(this, MonthlyViewActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = prefs.edit();
-            editor.putInt("saved_month", position);
-            editor.putInt("saved_year", currentYear);
-            editor.apply();
+            Intent intent = new Intent(MainActivity.this, MonthlyViewActivity.class);
+            intent.putExtra("month", position);
+            intent.putExtra("currentYear", currentYear);
             startActivity(intent);
+
         });
 
         updateUI();
