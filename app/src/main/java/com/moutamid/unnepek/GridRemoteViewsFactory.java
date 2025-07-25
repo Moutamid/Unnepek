@@ -9,17 +9,19 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
+import androidx.core.content.ContextCompat;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 public class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFactory {
 
-    private final Context context;
-    private final List<FeastDay> items = new ArrayList<>();
-    private int currentMonth;
-    private int currentYear;
-    private DBHelper dbHelper;
+    public static Context context;
+    public static List<FeastDay> items = new ArrayList<>();
+    public static int currentMonth;
+    public static int currentYear;
+    public static DBHelper dbHelper;
 
     public GridRemoteViewsFactory(Context context, Intent intent) {
         this.context = context;
@@ -35,7 +37,7 @@ public class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
         populateCalendar();
     }
 
-    private void populateCalendar() {
+    public static void populateCalendar() {
         items.clear();
 
         // Add header row (Monday start)
@@ -4050,25 +4052,24 @@ public class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
 
         int feastColor = ColorPreference.getFeastColor(context);
         int reminderColor = ColorPreference.getReminderColor(context);
-
-        // --- Detect today's date ---
         Calendar today = Calendar.getInstance();
         int todayYear = today.get(Calendar.YEAR);
         int todayMonth = today.get(Calendar.MONTH);
         int todayDay = today.get(Calendar.DAY_OF_MONTH);
         boolean isToday = (currentYear == todayYear && currentMonth == todayMonth && item.day == todayDay);
+        if (isToday) {
+            rv.setTextColor(R.id.dayText, Color.YELLOW);
+            rv.setInt(R.id.calendar_cell_root, "setBackgroundColor", ContextCompat.getColor(context, R.color.app_color));
+        }
 
-        // --- Reset visibility ---
         rv.setViewVisibility(R.id.feastLabel, View.INVISIBLE);
 
-        // --- Header Row (Day names) ---
         if (item.day == -1 && item.feastLabel != null) {
             rv.setTextViewText(R.id.dayText, item.feastLabel);
             rv.setTextColor(R.id.dayText,
                     (item.feastLabel.equals("Szo") || item.feastLabel.equals("V")) ? Color.RED : Color.WHITE);
             rv.setTextViewTextSize(R.id.dayText, TypedValue.COMPLEX_UNIT_SP, 13);
 
-            // --- Previous/Next Month Cells ---
         } else if (item.day == -2) {
             rv.setTextViewText(R.id.dayText, String.valueOf(item.displayDay));
             rv.setTextColor(R.id.dayText, Color.parseColor("#666666"));
@@ -4087,11 +4088,10 @@ public class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
                 rv.setInt(R.id.calendar_cell_root, "setBackgroundColor", Color.TRANSPARENT);
             }
 
-            // Feast day handling
-            if (item.isFeastDay) {
+            if (item.isFeastDay)
+            {
                 rv.setViewVisibility(R.id.feastLabel, View.VISIBLE);
                 rv.setTextViewText(R.id.feastLabel, item.feastLabel);
-
                 int color = item.isFromDB ? reminderColor : feastColor;
                 rv.setInt(R.id.feastLabel, "setBackgroundColor", color);
             }

@@ -17,6 +17,7 @@ import java.util.Locale;
 
 public class WidgetProvider extends AppWidgetProvider {
     static RemoteViews views;
+    public static final String ACTION_CURRENT_DAY = "com.moutamid.unnepek.CURRENT_DAY";
     public static final String ACTION_PREV = "com.moutamid.unnepek.PREV_MONTH";
     public static final String ACTION_NEXT = "com.moutamid.unnepek.NEXT_MONTH";
     public static final String ACTION_CELL_CLICK = "com.moutamid.unnepek.CELL_CLICK";
@@ -45,6 +46,18 @@ public class WidgetProvider extends AppWidgetProvider {
                     year++;
                 }
                 break;
+            case ACTION_CURRENT_DAY:
+                Calendar calendar = Calendar.getInstance();
+                month = calendar.get(Calendar.MONTH);
+                year = calendar.get(Calendar.YEAR);
+
+                // Force refresh widget list
+                AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(
+                        AppWidgetManager.getInstance(context).getAppWidgetIds(new ComponentName(context, WidgetProvider.class)),
+                        R.id.calendarGrid
+                );
+                break;
+
             case ACTION_TOGGLE_LAYOUT:
                 isLayoutVisible = !isLayoutVisible;
                 RemoteViews updatedViews = new RemoteViews(context.getPackageName(), R.layout.activity_monthly_view);
@@ -84,6 +97,14 @@ public class WidgetProvider extends AppWidgetProvider {
         PendingIntent prevPending = PendingIntent.getBroadcast(context, appWidgetId, prevIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.prevMonthBtn, prevPending);
+
+        Intent prevIntent1 = new Intent(context, WidgetProvider.class);
+        prevIntent1.setAction(ACTION_CURRENT_DAY);
+        prevIntent1.setData(Uri.parse("widget://current" + appWidgetId));
+        PendingIntent prevIntent2 = PendingIntent.getBroadcast(context, appWidgetId, prevIntent1,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        views.setOnClickPendingIntent(R.id.currentDay, prevIntent2);
+
         Intent nextIntent = new Intent(context, WidgetProvider.class);
         nextIntent.setAction(ACTION_NEXT);
         nextIntent.setData(Uri.parse("widget://next" + appWidgetId));
@@ -95,6 +116,12 @@ public class WidgetProvider extends AppWidgetProvider {
         PendingIntent openPending = PendingIntent.getActivity(context, appWidgetId, openIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.claneder, openPending);
+        Intent currentDayIntent = new Intent(context, WidgetProvider.class);
+        currentDayIntent.setAction(ACTION_CURRENT_DAY);
+        currentDayIntent.setData(Uri.parse("widget://currentday" + appWidgetId));
+        PendingIntent currentDayPending = PendingIntent.getBroadcast(context, appWidgetId + 2, currentDayIntent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        views.setOnClickPendingIntent(R.id.currentDayBtn, currentDayPending);
         Intent serviceIntent = new Intent(context, WidgetService.class);
         serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId);
         serviceIntent.putExtra("month", month);

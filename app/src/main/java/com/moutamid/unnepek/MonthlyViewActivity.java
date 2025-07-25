@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
@@ -64,7 +65,6 @@ public class MonthlyViewActivity extends AppCompatActivity {
         showPopupBtn.setOnClickListener(v -> {
             PopupMenu popupMenu = new PopupMenu(MonthlyViewActivity.this, v);
             popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
-
             popupMenu.setOnMenuItemClickListener(item -> {
                 int itemId = item.getItemId();
                 if (itemId == R.id.change_app_color) {
@@ -122,7 +122,8 @@ public class MonthlyViewActivity extends AppCompatActivity {
         ImageView addBtn = findViewById(R.id.add_event);
         currentDay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v)
+            {
                 month = Calendar.getInstance().get(Calendar.MONTH);
                 currentYear = Calendar.getInstance().get(Calendar.YEAR);
                 populateCalendar();
@@ -143,6 +144,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                 month = 11;
                 currentYear--;
             }
+            refreshWidget();
             populateCalendar();
         });
 
@@ -152,6 +154,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                 month = 0;
                 currentYear++;
             }
+            refreshWidget();
             populateCalendar();
         });
 
@@ -4246,14 +4249,21 @@ public class MonthlyViewActivity extends AppCompatActivity {
     private TextView createEventLabel(String text, int bgColor, int size) {
         TextView tv = new TextView(this);
         tv.setText(text);
-        tv.setTextSize(9);
+        tv.setTextSize(7);
         tv.setGravity(Gravity.CENTER);
         tv.setBackgroundColor(bgColor);
         tv.setTextColor(Color.BLACK);
         tv.setMaxLines(1);
+        ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams
+                (
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        int margin = 4;
+        params.setMargins(margin, margin, margin, margin);
+        tv.setLayoutParams(params);
         return tv;
     }
-
     private void showFeastDialog(FeastDay fd) {
         View eventView = getLayoutInflater().inflate(R.layout.item_event, null);
 
@@ -4286,7 +4296,6 @@ public class MonthlyViewActivity extends AppCompatActivity {
 
         dialog.show();
     }
-
     private void showAddEventDialog() {
         if (isFinishing()) return; // prevent crash
 
@@ -4354,7 +4363,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                     for (int year = 2025; year <= 2035; year++) {
                         dbHelper.addEvent(year, selectedMonth[0], selectedDay[0], name, story);
                     }
-                    Toast.makeText(this, "Esemény mentve minden évre (2025–2035)!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Esemény mentve minden évre!", Toast.LENGTH_SHORT).show();
                 } else {
                     dbHelper.addEvent(selectedYear[0], selectedMonth[0], selectedDay[0], name, story);
                     Toast.makeText(this, "Esemény mentve!", Toast.LENGTH_SHORT).show();

@@ -3,7 +3,6 @@ package com.moutamid.unnepek;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -199,20 +198,18 @@ public class MainActivity extends AppCompatActivity {
                 return view;
             }
         };
-
         monthGrid.setAdapter(monthAdapter);
+
         prev.setOnClickListener(v -> {
-            if (currentYear > 2025) {
+                refreshWidget();
                 currentYear--;
                 updateUI();
-            }
         });
 
         next.setOnClickListener(v -> {
-            if (currentYear < 2035) {
+                refreshWidget();
                 currentYear++;
                 updateUI();
-            }
         });
 
 
