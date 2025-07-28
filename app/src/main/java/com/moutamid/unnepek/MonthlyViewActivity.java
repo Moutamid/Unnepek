@@ -41,10 +41,10 @@ public class MonthlyViewActivity extends AppCompatActivity {
     Integer feastColor;
     Integer reminderColor;
     Integer noteColor;
-    private int month;
-    private int currentYear;
-    private TextView headerText;
-    private GridLayout dayGrid;
+    int month;
+    int currentYear;
+    TextView headerText;
+    GridLayout dayGrid;
     List<FeastDay> feastDays = new ArrayList<>();
     DBHelper dbHelper;
     View rootLayout;
@@ -115,7 +115,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
         });
         headerText = findViewById(R.id.monthYearText);
         dayGrid = findViewById(R.id.monthlyDayGrid);
-        currentDay = findViewById(R.id.currentDay);
+        currentDay = findViewById(R.id.currentDayBtn);
         ImageView prevBtn = findViewById(R.id.prevMonthBtn);
         ImageView nextBtn = findViewById(R.id.nextMonthBtn);
         ImageView calendarBtn = findViewById(R.id.claneder);
