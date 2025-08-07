@@ -3,6 +3,7 @@ package com.moutamid.unnepek;
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -129,13 +130,19 @@ public class MainActivity extends AppCompatActivity {
         monthView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                int currentMonth = calendar.get(Calendar.MONTH);
+                int currentYear = calendar.get(Calendar.YEAR);
+                SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+                editor.putInt("saved_month", currentMonth);
+                editor.putInt("saved_year", currentYear);
+                editor.apply();
                 Intent intent = new Intent(MainActivity.this, MonthlyViewActivity.class);
-                intent.putExtra("month", 0);
-                intent.putExtra("currentYear", currentYear);
                 startActivity(intent);
-
             }
         });
+
         monthAdapter = new BaseAdapter() {
             @Override
             public int getCount() {
@@ -181,9 +188,9 @@ public class MainActivity extends AppCompatActivity {
 
                     TextView dayView = new TextView(MainActivity.this);
                     dayView.setText(String.valueOf(day));
-                    dayView.setTextSize(6);
-                    dayView.setWidth(17);
-                    dayView.setHeight(17);
+                    dayView.setTextSize(8);
+                    dayView.setWidth(18);
+                    dayView.setHeight(25);
                     dayView.setGravity(Gravity.CENTER);
 
                     if (dayOfWeek == 5 || dayOfWeek == 6) {
@@ -213,15 +220,16 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        monthGrid.setOnItemClickListener((parent, view, position, id) ->
-
-        {
+        monthGrid.setOnItemClickListener((parent, view, position, id) -> {
+            SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("saved_month", position);
+            editor.putInt("saved_year", currentYear);
+            editor.apply();
             Intent intent = new Intent(MainActivity.this, MonthlyViewActivity.class);
-            intent.putExtra("month", position);
-            intent.putExtra("currentYear", currentYear);
             startActivity(intent);
-
         });
+
 
         updateUI();
     }
@@ -239,11 +247,15 @@ public class MainActivity extends AppCompatActivity {
                 Color.parseColor("#57082D"), // Borvörös
                 Color.parseColor("#085721"), // Zöld
                 Color.parseColor("#505708"), // Olíva
-                Color.parseColor("#331F1E")  // Barna
+                Color.parseColor("#331F1E"), // Barna
+                Color.parseColor("#98092C"), // Red
+                Color.parseColor("#36923A"), // Green
+                Color.parseColor("#ffffff"), // White
         };
 
         final String[] colorNames = {
-                "Fekete", "Sötétkék", "Lila", "Borvörös", "Zöld", "Olíva", "Barna"
+                "Fekete", "Sötétkék", "Lila", "Borvörös", "Zöld", "Olíva", "Barna",
+                "Red", "Green", "White"
         };
 
         ColorAdapter adapter = new ColorAdapter(this, colors, colorNames);
@@ -262,11 +274,15 @@ public class MainActivity extends AppCompatActivity {
                 Color.parseColor("#ADF9DD"), // Aqua
                 Color.parseColor("#ADC9F9"), // Világoskék
                 Color.parseColor("#F1B2F8"), // Levendula
-                Color.parseColor("#FF2D61")  // Piros
+                Color.parseColor("#FF2D61"), // Piros
+                Color.parseColor("#98092C"), // Red
+                Color.parseColor("#36923A"), // Green
+                Color.parseColor("#ffffff"), // White
         };
 
         final String[] colorNames = {
-                "Rózsaszín", "Sárga", "Mentazöld", "Aqua", "Világoskék", "Levendula", "Piros"
+                "Rózsaszín", "Sárga", "Mentazöld", "Aqua", "Világoskék", "Levendula", "Piros",
+                "Red", "Green", "White"
         };
 
         ColorAdapter adapter = new ColorAdapter(this, colors, colorNames);

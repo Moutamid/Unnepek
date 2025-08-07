@@ -130,15 +130,10 @@ public class MonthlyViewActivity extends AppCompatActivity {
             }
         });
         addBtn.setOnClickListener(v -> showAddEventDialog());
-        Intent intent = getIntent();
-        if (intent != null && intent.hasExtra("month") && intent.hasExtra("currentYear")) {
-            month = intent.getIntExtra("month", Calendar.getInstance().get(Calendar.MONTH));
-            currentYear = intent.getIntExtra("currentYear", Calendar.getInstance().get(Calendar.YEAR));
-        } else {
-            SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
-            month = prefs.getInt("saved_month", Calendar.getInstance().get(Calendar.MONTH));
-            currentYear = prefs.getInt("saved_year", Calendar.getInstance().get(Calendar.YEAR));
-        }  prevBtn.setOnClickListener(v -> {
+        SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        month = prefs.getInt("saved_month", Calendar.getInstance().get(Calendar.MONTH));
+        currentYear = prefs.getInt("saved_year", Calendar.getInstance().get(Calendar.YEAR));
+        prevBtn.setOnClickListener(v -> {
             month--;
             if (month < 0) {
                 month = 11;
@@ -4097,109 +4092,91 @@ public class MonthlyViewActivity extends AppCompatActivity {
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         int cellSize = screenWidth / columns;
 
-        String[] dayNames = {"H", "K", "Sze", "Cs", "P", "Szo", "V"};
-
-        // Header row
+        // --- Day headers ---
         if (showWeek) {
-            TextView weekHeader = createHeader("Hét", cellSize);
-            dayGrid.addView(weekHeader);
+            dayGrid.addView(createHeader("Hét", cellSize));
         }
-
+        String[] dayNames = {"H", "K", "Sze", "Cs", "P", "Szo", "V"}; // Monday - Sunday
         for (String dayName : dayNames) {
             TextView dayHeader = createHeader(dayName, cellSize);
-            dayHeader.setTextColor(dayName.equals("Szo") || dayName.equals("V") ? Color.RED : Color.WHITE);
+            if (dayName.equals("Szo") || dayName.equals("V"))
+                dayHeader.setTextColor(Color.RED);
+            else
+                dayHeader.setTextColor(Color.WHITE);
             dayGrid.addView(dayHeader);
         }
 
+        // --- Month title ---
         String[] monthNames = {"JANUÁR", "FEBRUÁR", "MÁRCIUS", "ÁPRILIS", "MÁJUS", "JÚNIUS",
                 "JÚLIUS", "AUGUSZTUS", "SZEPTEMBER", "OKTÓBER", "NOVEMBER", "DECEMBER"};
-        headerText.setText(currentYear+ " / "+ monthNames[month]);
+        headerText.setText(currentYear + " / " + monthNames[month]);
 
+        // --- Set calendar to 1st of month ---
         Calendar calendar = Calendar.getInstance();
+        calendar.setFirstDayOfWeek(Calendar.MONDAY);
         calendar.set(Calendar.YEAR, currentYear);
         calendar.set(Calendar.MONTH, month);
         calendar.set(Calendar.DAY_OF_MONTH, 1);
 
-        int firstDayOfWeek = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7;
+        int firstDayOfWeek = Calendar.MONDAY; // Always start week on Monday
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        int offset = (dayOfWeek + 5) % 7; // Shift Sunday to end
+
         int daysInMonth = calendar.getActualMaximum(Calendar.DAY_OF_MONTH);
 
-        Calendar prevMonth = (Calendar) calendar.clone();
-        prevMonth.add(Calendar.MONTH, -1);
-        int daysInPrevMonth = prevMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
+        // Create temp calendar to loop all visible cells
+        Calendar drawCal = (Calendar) calendar.clone();
+        drawCal.add(Calendar.DAY_OF_MONTH, -offset); // go to first visible cell
 
-        int feastColor = ColorPreference.getFeastColor(this);
-        int reminderColor = ColorPreference.getReminderColor(this);
+        int totalCells = ((offset + daysInMonth + 6) / 7) * 7;
 
         Calendar today = Calendar.getInstance();
         int todayYear = today.get(Calendar.YEAR);
         int todayMonth = today.get(Calendar.MONTH);
         int todayDay = today.get(Calendar.DAY_OF_MONTH);
 
-        int weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
-        int prevStart = daysInPrevMonth - firstDayOfWeek + 1;
+        for (int i = 0; i < totalCells; i++) {
 
-        if (showWeek) {
-            TextView weekNum = createWeekNum(weekNumber, cellSize);
-            dayGrid.addView(weekNum);
-        }
-
-        // ===== PREVIOUS MONTH DAYS =====
-        for (int i = 0; i < firstDayOfWeek; i++) {
-            LinearLayout prevContainer = createDayCell(prevStart + i, "#666666", cellSize);
-            dayGrid.addView(prevContainer);
-        }
-
-        // ===== CURRENT MONTH DAYS =====
-        for (int day = 1; day <= daysInMonth; day++) {
-            calendar.set(Calendar.DAY_OF_MONTH, day);
-            int dayOfWeek = (calendar.get(Calendar.DAY_OF_WEEK) + 5) % 7;
-
-            if (dayOfWeek == 0 && showWeek) {
-                weekNumber = calendar.get(Calendar.WEEK_OF_YEAR);
-                TextView weekNum = createWeekNum(weekNumber, cellSize);
+            if (showWeek && i % 7 == 0) {
+                TextView weekNum = createWeekNum(drawCal.get(Calendar.WEEK_OF_YEAR), cellSize);
                 dayGrid.addView(weekNum);
             }
 
-            // Normal day cell
-            LinearLayout container = createDayCell(day, (dayOfWeek == 5 || dayOfWeek == 6) ? "RED" : "WHITE", cellSize);
+            int day = drawCal.get(Calendar.DAY_OF_MONTH);
+            int cellMonth = drawCal.get(Calendar.MONTH);
+            int cellYear = drawCal.get(Calendar.YEAR);
 
-            // === Highlight current day ===
-            if (currentYear == todayYear && month == todayMonth && day == todayDay) {
-                container.setBackgroundColor(getColor(R.color.app_color)); // Highlight color
+            boolean isCurrentMonth = (cellMonth == month && cellYear == currentYear);
+            boolean isWeekend = drawCal.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY ||
+                    drawCal.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY;
+
+            String textColor = isCurrentMonth ? (isWeekend ? "RED" : "WHITE") : "#666666";
+            LinearLayout container = createDayCell(day, textColor, cellSize);
+
+            if (cellYear == todayYear && cellMonth == todayMonth && day == todayDay) {
+                container.setBackgroundColor(getColor(R.color.app_color)); // Highlight today
             }
 
-            // Feast days
+            // Add feast events
             for (FeastDay fd : feastDays) {
-                if (fd.year == currentYear && fd.month == month && fd.day == day) {
-                    TextView fdLabel = createEventLabel(fd.name, feastColor, cellSize);
-                    fdLabel.setOnClickListener(v -> showFeastDialog(fd));
-                    container.addView(fdLabel);
+                if (fd.year == cellYear && fd.month == cellMonth && fd.day == day) {
+                    TextView label = createEventLabel(fd.name, ColorPreference.getFeastColor(this), cellSize);
+                    label.setOnClickListener(v -> showFeastDialog(fd));
+                    container.addView(label);
                 }
             }
 
-            // DB events (reminders)
+            // Add reminder events
             for (FeastDay fd : dbHelper.getAllEvents()) {
-                if (fd.year == currentYear && fd.month == month && fd.day == day) {
-                    TextView fdLabel = createEventLabel(fd.name, reminderColor, cellSize);
-                    fdLabel.setOnClickListener(v -> showFeastDialog(fd));
-                    container.addView(fdLabel);
+                if (fd.year == cellYear && fd.month == cellMonth && fd.day == day) {
+                    TextView label = createEventLabel(fd.name, ColorPreference.getReminderColor(this), cellSize);
+                    label.setOnClickListener(v -> showFeastDialog(fd));
+                    container.addView(label);
                 }
             }
 
             dayGrid.addView(container);
-        }
-
-        // ===== NEXT MONTH DAYS =====
-        int totalCells = dayGrid.getChildCount();
-        int cellsAfterHeaders = totalCells - (showWeek ? 8 : 7);
-        int remainder = cellsAfterHeaders % (showWeek ? 8 : 7);
-
-        if (remainder != 0) {
-            int extraDays = (showWeek ? 8 : 7) - remainder;
-            for (int i = 1; i <= extraDays; i++) {
-                LinearLayout nextContainer = createDayCell(i, "#666666", cellSize);
-                dayGrid.addView(nextContainer);
-            }
+            drawCal.add(Calendar.DAY_OF_MONTH, 1);
         }
     }
 
@@ -4235,7 +4212,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
         layout.setGravity(Gravity.CENTER);
         GridLayout.LayoutParams params = new GridLayout.LayoutParams();
         params.width = size;
-        params.height = size;
+        params.height = (int) (size * 1.4); // 40% taller
         layout.setLayoutParams(params);
 
         TextView tv = new TextView(this);
@@ -4251,6 +4228,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
         tv.setText(text);
         tv.setTextSize(7);
         tv.setGravity(Gravity.CENTER);
+        tv.setPadding(2, 1, 1, 2);
         tv.setBackgroundColor(bgColor);
         tv.setTextColor(Color.BLACK);
         tv.setMaxLines(1);
@@ -4259,7 +4237,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
         );
-        int margin = 4;
+        int margin = 2;
         params.setMargins(margin, margin, margin, margin);
         tv.setLayoutParams(params);
         return tv;
@@ -4395,13 +4373,16 @@ public class MonthlyViewActivity extends AppCompatActivity {
                 .setMessage("Biztosan törölni szeretnéd ezt az eseményt?\n\n" +
                         "Töröljem az összes évben?")
                 .setPositiveButton("Csak ezt", (dialog, which) -> {
-                    dbHelper.deleteEventByDate(fd.year, fd.month, fd.day);
+                    dbHelper.deleteEventById(fd.id);
+//                    dbHelper.deleteEventByDate(fd.year, fd.month, fd.day);
                     Toast.makeText(this, "Esemény törölve!", Toast.LENGTH_SHORT).show();
                     populateCalendar();
                 })
                 .setNeutralButton("Minden év", (dialog, which) -> {
                     for (int year = 2025; year <= 2035; year++) {
-                        dbHelper.deleteEventByDate(year, fd.month, fd.day);
+                        dbHelper.deleteEventById(fd.id);
+
+//                        dbHelper.deleteEventByDate(year, fd.month, fd.day);
                     }
                     Toast.makeText(this, "Esemény minden évből törölve!", Toast.LENGTH_SHORT).show();
                     populateCalendar();
@@ -4447,11 +4428,15 @@ public class MonthlyViewActivity extends AppCompatActivity {
                 Color.parseColor("#57082D"), // Borvörös
                 Color.parseColor("#085721"), // Zöld
                 Color.parseColor("#505708"), // Olíva
-                Color.parseColor("#331F1E")  // Barna
+                Color.parseColor("#331F1E"), // Barna
+                Color.parseColor("#98092C"), // Red
+                Color.parseColor("#36923A"), // Green
+                Color.parseColor("#ffffff"), // White
         };
 
         final String[] colorNames = {
-                "Fekete", "Sötétkék", "Lila", "Borvörös", "Zöld", "Olíva", "Barna"
+                "Fekete", "Sötétkék", "Lila", "Borvörös", "Zöld", "Olíva", "Barna",
+                "Red", "Green", "White"
         };
 
         ColorAdapter adapter = new ColorAdapter(this, colors, colorNames);
@@ -4470,11 +4455,16 @@ public class MonthlyViewActivity extends AppCompatActivity {
                 Color.parseColor("#ADF9DD"), // Aqua
                 Color.parseColor("#ADC9F9"), // Világoskék
                 Color.parseColor("#F1B2F8"), // Levendula
-                Color.parseColor("#FF2D61")  // Piros
+                Color.parseColor("#FF2D61"), // Piros
+                Color.parseColor("#98092C"), // Red
+                Color.parseColor("#36923A"), // Green
+                Color.parseColor("#ffffff"), // White
+             
         };
 
         final String[] colorNames = {
-                "Rózsaszín", "Sárga", "Mentazöld", "Aqua", "Világoskék", "Levendula", "Piros"
+                "Rózsaszín", "Sárga", "Mentazöld", "Aqua", "Világoskék", "Levendula", "Piros",
+                "Red", "Green", "White"
         };
 
         ColorAdapter adapter = new ColorAdapter(this, colors, colorNames);
@@ -4505,11 +4495,36 @@ public class MonthlyViewActivity extends AppCompatActivity {
         prefs.edit().putBoolean("show_week_numbers", showWeek).apply();
 
         if (showWeek) {
+            refreshWidget();
+            populateCalendar();
             Toast.makeText(this, "Heti számok megjelenítve", Toast.LENGTH_SHORT).show();
         } else {
+            refreshWidget();
+            populateCalendar();
+
             Toast.makeText(this, "Heti számok elrejtve", Toast.LENGTH_SHORT).show();
         }
 
     }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d("ActivityLifecycle", "onDestroy called");
+        finish();
+    }  @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d("ActivityLifecycle", "onPause called");
+        finish();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        month = prefs.getInt("saved_month", Calendar.getInstance().get(Calendar.MONTH));
+        currentYear = prefs.getInt("saved_year", Calendar.getInstance().get(Calendar.YEAR));
+        Log.d("ActivityLifecycle", "onResume called   "+ month);
+    }
 }

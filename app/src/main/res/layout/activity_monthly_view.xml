@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/widgetRoot"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#331F1E"
+    android:layout_height="match_parent"
     android:padding="15dp">
 
     <ImageView
@@ -59,7 +58,6 @@
         android:src="@drawable/right_arrow"
         android:tint="@android:color/white" />
 
-    <!-- GridView for Calendar -->
     <GridView
         android:id="@+id/calendarGrid"
         android:layout_width="match_parent"
@@ -67,7 +65,6 @@
         android:layout_marginTop="75dp"
         android:horizontalSpacing="12dp"
         android:numColumns="7"
-        android:paddingBottom="90dp"
         android:verticalSpacing="12dp" />
 
 </RelativeLayout>
