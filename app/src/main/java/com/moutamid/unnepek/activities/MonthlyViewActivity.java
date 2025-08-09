@@ -1,4 +1,4 @@
-package com.moutamid.unnepek;
+package com.moutamid.unnepek.activities;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -29,6 +29,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.moutamid.unnepek.R;
+import com.moutamid.unnepek.adapter.ColorAdapter;
+import com.moutamid.unnepek.model.FeastDayModel;
+import com.moutamid.unnepek.receiver.UpdateReceiver;
+import com.moutamid.unnepek.utils.ColorPreference;
+import com.moutamid.unnepek.utils.DBHelper;
+import com.moutamid.unnepek.widget.WidgetProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +52,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
     int currentYear;
     TextView headerText;
     GridLayout dayGrid;
-    List<FeastDay> feastDays = new ArrayList<>();
+    List<FeastDayModel> feastDays = new ArrayList<>();
     DBHelper dbHelper;
     View rootLayout;
     ImageView currentDay;
@@ -160,7 +167,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
 
         });
         feastDays = Arrays.asList(
-                new FeastDay(2025, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
+                new FeastDayModel(2025, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
                         " karácsonyfát, jelezve az ünnepi időszak végét. Az ünnep Jézus " +
                         " megjelenésére emlékeztet: a napkeleti bölcsek látogatására, Jézus " +
                         " megkeresztelkedésére és az első csodájára. A három királyok aranyat, " +
@@ -169,7 +176,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbóluma, amely a megkeresztelkedés szentségéhez kapcsolódik. Egyházi " +
                         " ünnepként a 4. század óta létezik. Sok helyen ekkor tartanak " +
                         " házszenteléseket, Isten áldását kérve az otthonra és az új évre."),
-                new FeastDay(2025, 1, 14, "Valentin nap", "  " +
+                new FeastDayModel(2025, 1, 14, "Valentin nap", "  " +
                         " A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
                         " (Valentin) római paphoz kötődik. A legenda szerint Valentin a 3. században " +
                         " titokban esketett meg szerelmespárokat, mert II. Claudius császár " +
@@ -178,7 +185,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepet hivatalosan 496-ban vezette be I. Geláz pápa. Ma világszerte a " +
                         " szerelmesek megajándékozásáról szól, szív alakú díszekkel, virágokkal " +
                         " és üdvözlőkártyákkal ünneplik."),
-                new FeastDay(2025, 2, 5, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
+                new FeastDayModel(2025, 2, 5, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
                         " amely a 7. század óta létezik. A hívők ezen a napon hamuval jelölik meg a " +
                         " homlokukat, emlékeztetve bűnösségükre és az élet mulandóságára. A " +
                         " szertartás a Teremtés könyvének szavait idézi: „porból vétettél, és " +
@@ -189,7 +196,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és feltámadására emlékezve, alázatos életet élve Isten előtt.  A " +
                         " Hamvazószerda a húsvéti böjt kezdete, amit 46 nappal húsvétvasárnap " +
                         " előtt tartanak. Általában február végére vagy március elejére esik."),
-                new FeastDay(2025, 2, 8, "Nőnap", "Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
+                new FeastDayModel(2025, 2, 8, "Nőnap", "Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
                         " demonstráltak a jobb munkakörülményekért és az egyenlő jogokért. Az " +
                         " ünnep célja a nők társadalmi, politikai és gazdasági jogainak " +
                         " előmozdítása, valamint a nemek közti egyenlőség hangsúlyozása. 1910-ben " +
@@ -197,7 +204,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " 1911-ben már több európai országban is megünnepelték. Magyarországon " +
                         " 1913 óta hivatalos ünnep. Eredetileg szocialista gyökerei voltak, mára már " +
                         " a nők jogainak elismerésére és tiszteletére emelkedett."),
-                new FeastDay(2025, 2, 15, "1848-as Forradalom", " Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
+                new FeastDayModel(2025, 2, 15, "1848-as Forradalom", " Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
                         " 1848-as forradalom és szabadságharc emlékére van. Ezen a napon a pesti " +
                         " forradalmi események nyomán, a fiatalok és a polgárok kiálltak a " +
                         " sajtószabadságért, a jobb életkörülményekért és a függetlenségért. " +
@@ -207,7 +214,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " eseményévé vált. Az események hatására megerősödött a nemzeti " +
                         " identitás és ma már a magyar szabadság és összetartozás napjaként " +
                         " ünnepeljük"),
-                new FeastDay(2025, 2, 30, "Óraátállítás", "A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
+                new FeastDayModel(2025, 2, 30, "Óraátállítás", "A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
                         " A tavaszi óraátállításkor az órákat hajnali 2:00-ról 3:00-ra állítjuk " +
                         " előre, hogy jobban kihasználjuk a nappali világosságot és csökkentsük a " +
                         " mesterséges világítás szükségességét. Magyarországon először " +
@@ -219,7 +226,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " villamosenergia-megtakarítás érdekében. Azóta évente kétszer állítjuk " +
                         " át az órákat és 1996 óta kormányrendelet szabályozza az " +
                         " óraátállítást Magyarországon"),
-                new FeastDay(2025, 3, 1, "Bolondok napja", " Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
+                new FeastDayModel(2025, 3, 1, "Bolondok napja", " Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
                         " átverések napja. Az emberek apró csínyekkel, például hamis hírekkel vagy " +
                         " kitalált történetekkel szórakoztatják egymást. Az internet " +
                         " elterjedésével az álhírek és vírusos videók is népszerűvé váltak. A " +
@@ -231,7 +238,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " váltak. Hasonló szokások figyelhetők meg a kelta tavaszi ünnepekben és az " +
                         " ókori római Hilaria ünnepén is, ahol a bolondos viselkedés a tavaszi " +
                         " megújulást jelezte."),
-                new FeastDay(2025, 3, 13, "Virágvasárnap", "A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
+                new FeastDayModel(2025, 3, 13, "Virágvasárnap", "A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
                         " bevonulásának emlékére van. Az evangéliumok szerint Jézus szamárháton " +
                         " vonult be a városba, miközben a hívek pálmaágakat lengettek, üdvözölve " +
                         " őt, mint a Megváltót. A virágok, a pálmák és a zöld ágak használata " +
@@ -240,7 +247,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepekre való lelki felkészülést jelzi. Az ünnep hivatalosan a 4. " +
                         " század óta van jelen az egyházi naptárban és azóta része a keresztény " +
                         " hagyományoknak világszerte."),
-                new FeastDay(2025, 3, 18, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
+                new FeastDayModel(2025, 3, 18, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
                         " Jézus Krisztus kereszthalálát és szenvedését emlékezzük meg. Az ünnep " +
                         " célja, hogy a hívők átgondolják a megváltásra tett áldozat " +
                         " jelentőségét. E napot a 4. század óta ünneplik, amikor a keresztény " +
@@ -251,7 +258,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény közösség számára Nagypéntek a bűnbánat és a lelki " +
                         " megújulás napja is.  Nagypénteket a húsvét előtti pénteken ünneplik, " +
                         " tehát ez a dátum évente változik."),
-                new FeastDay(2025, 3, 20, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
+                new FeastDayModel(2025, 3, 20, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
                         " feltámadásának napja, amely a halál feletti győzelmet és az örök élet " +
                         " ígéretét hirdeti. Magyarországon 1991 óta munkaszüneti nap, de " +
                         " jelentősége évszázadok óta meghatározó. Húsvét a 40 napos nagyböjt " +
@@ -264,7 +271,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény húsvéti szokásokba. A Húsvétot évente változó dátumon " +
                         " ünneplik, mivel a tavaszi napéjegyenlőség utáni első teliholdat követő " +
                         " vasárnapra esik."),
-                new FeastDay(2025, 3, 21, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2025, 3, 21, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus feltámadását követően az új élet és a megújulás " +
                         " szimbólumává vált. Magyarországon a húsvéti locsolás hagyománya a 17. " +
                         " századtól terjedt el. A férfiak vízzel vagy illatos kölnivel locsolják " +
@@ -275,7 +282,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és a megváltást szimbolizálja. Magyarországon a húsvétot a " +
                         " kereszténység elterjedése óta ünneplik és a népszokások a 19. " +
                         " századtól erősödtek meg."),
-                new FeastDay(2025, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
+                new FeastDayModel(2025, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
                         " Nelson szenátor kezdeményezésére több millió ember gyűlt össze, hogy " +
                         " felhívja a figyelmet a környezetszennyezésre és a természeti erőforrások " +
                         " védelmére. A nap célja, hogy globálisan tudatosítsa az emberekben a " +
@@ -284,7 +291,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " megemlékeznek róla. Számos esemény, akció és kampány hívja fel a " +
                         " figyelmet a bolygó védelmére és a környezeti problémák megoldására. " +
                         " "),
-                new FeastDay(2025, 3, 30, "Májusfa állítás", " A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
+                new FeastDayModel(2025, 3, 30, "Májusfa állítás", " A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
                         " május 1-jét megelőző nap délután/este volt.  Magyarországon a középkor " +
                         " óta ismert, tehát legalább a 14. századtól ünneplik. A szokás az ősi " +
                         " tavaszi rituálékra épül, melyek a természet megújulását és az élet " +
@@ -295,7 +302,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " neveztek. A hagyomány a szerelem és a termékenység ünnepe volt, később " +
                         " pedig összefonódott a munka ünnepével (május 1.). Mára már kevésbé " +
                         " elterjedt szokás, de sok helyen igyekeznek még fenntartani."),
-                new FeastDay(2025, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
+                new FeastDayModel(2025, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
                         " folytatott küzdelem emléknapja világszerte. Az ünnep gyökerei az 1886-os " +
                         " chicagói tüntetésekhez nyúlnak vissza, ahol a munkások a nyolcórás " +
                         " munkaidő bevezetéséért demonstráltak. Az események hatására 1890-től " +
@@ -305,7 +312,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " nagyszabású felvonulásokkal és tömegrendezvényekkel ünnepelték. A " +
                         " rendszerváltás után a jelentése átalakult, de továbbra is a munka " +
                         " tiszteletét és a munkavállalók jogainak fontosságát hirdeti."),
-                new FeastDay(2025, 4, 4, "Anyák napja", " Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
+                new FeastDayModel(2025, 4, 4, "Anyák napja", " Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
                         " világszerte az édesanyák tiszteletére tartanak. Gyökerei az ókori " +
                         " Görögországba nyúlnak vissza, ahol Rheát, az istenek anyját ünnepelték. " +
                         " A modern anyák napja az Egyesült Államokból indult 1908-ban, amikor Anna " +
@@ -317,7 +324,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " gyerekek. Bár világszerte eltérő időpontokban ünneplik, mindenhol az " +
                         " anyák iránti szeretet és tisztelet áll a középpontban. Anyák napját " +
                         " Magyarországon minden év május első vasárnapján ünneplik. "),
-                new FeastDay(2025, 4, 25, "Gyermeknap", " A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
+                new FeastDayModel(2025, 4, 25, "Gyermeknap", " A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
                         " ünnep, melyet világszerte különböző időpontokban tartanak. Eredete " +
                         " 1925-re nyúlik vissza, amikor a genfi Gyermekjóléti Konferencián " +
                         " elhatározták, hogy kiemelik a gyermekek védelmének fontosságát. " +
@@ -327,7 +334,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " rendezvényekkel ünneplik őket. Az ünnep célja, hogy felhívja a figyelmet " +
                         " a gyermekek jogaira és boldogságuk fontosságára. Magyarországon a " +
                         " Gyermeknapot minden évben május utolsó vasárnapján ünneplik."),
-                new FeastDay(2025, 5, 8, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
+                new FeastDayModel(2025, 5, 8, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
                         " századtól kezdve ünnepelnek a keresztény egyházban. Az ünnep Jézus " +
                         " mennybemenetele után ötven nappal emlékezik meg a Szentlélek " +
                         " eljöveteléről, amely erőt adott az apostoloknak a keresztény hit " +
@@ -337,7 +344,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " számos népi hagyomány kapcsolódik hozzá, például a pünkösdi király " +
                         " és királyné választása.  Pünkösd vasárnapját a húsvét utáni 50. " +
                         " napon, tehát 50 nappal húsvétvasárnap után ünneplik. "),
-                new FeastDay(2025, 5, 9, "Pünkösdhétfő", " A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
+                new FeastDayModel(2025, 5, 9, "Pünkösdhétfő", " A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
                         " pünkösdnek a második napja. Pünkösd a húsvét utáni 50. napon van, és a " +
                         " Szentlélek eljövetelét ünnepli, amikor Jézus tanítványai erőt és " +
                         " útmutatást kaptak küldetésükhöz. Az esemény a keresztény egyház " +
@@ -346,7 +353,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " volt. Magyarországon pünkösdhétfő munkaszüneti nap és hivatalosan 1993 " +
                         " óta ünnepeljük újra. Az ünnep a megújulást és a közösség " +
                         " összetartozását jelképezi."),
-                new FeastDay(2025, 5, 15, "Apák napja", " Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
+                new FeastDayModel(2025, 5, 15, "Apák napja", " Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
                         " családban és a gyermeknevelésben betöltött szerepüket. Az ünnep eredete " +
                         " az Egyesült Államokhoz köthető, ahol először 1910-ben tartották meg " +
                         " Sonora Smart Dodd kezdeményezésére , aki édesapját akarta tiszteletben " +
@@ -357,7 +364,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szerepét. Ez a nap lehetőséget ad arra, hogy köszönetet mondjunk az apák " +
                         " szeretetéért, támogatásáért és áldozatos munkájáért, amelyet " +
                         " családjukért tesznek. "),
-                new FeastDay(2025, 5, 21, "Nyári napforduló", " Az év leghosszabb napja.  " +
+                new FeastDayModel(2025, 5, 21, "Nyári napforduló", " Az év leghosszabb napja.  " +
                         " Napkelte: Körülbelül 4:42 " +
                         " Napnyugta: Körülbelül 20:19 " +
                         " Világos időtartam: Körülbelül 15 óra és 37 " +
@@ -367,7 +374,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " környékén a Nap több mint 15 órán keresztül a horizont felett " +
                         " tartózkodik. Ezen a napon a Föld az északi féltekén éri el a leghosszabb " +
                         " nappali órákat, így ez a legrövidebb éjszaka."),
-                new FeastDay(2025, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
+                new FeastDayModel(2025, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
                         " megalapozva a keresztény Magyarországot. 1083 augusztus 20.-án szentté " +
                         " avatták a Szent Péter-bazilikában. Az Árpád-korban az István-kultusz az " +
                         " uralkodó dinasztiát támogatta és egységet teremtett a népcsoportok " +
@@ -379,7 +386,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbólumává vált. 1950-től az új államrendszer ideológiája szerint " +
                         " alakították át az ünnep jelentését, majd 1991-ben ismét állami " +
                         " ünneppé nyilvánították."),
-                new FeastDay(2025, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
+                new FeastDayModel(2025, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
                         " eseményeire emlékezik. Az ünnep hivatalosan 1989 október 23.-án vált " +
                         " nemzeti ünneppé a rendszerváltás után, amikor a forradalom hőseit " +
                         " ünnepelve tisztelegtek a szabadságért és a demokráciáért folytatott " +
@@ -388,7 +395,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " játszott Magyarország függetlenségi törekvéseiben és a későbbi " +
                         " rendszerváltásban. Az október 23.-i események máig a szabadság és a " +
                         " nemzeti szuverenitás fontos szimbólumai."),
-                new FeastDay(2025, 9, 26, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
+                new FeastDayModel(2025, 9, 26, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
                         " 3:00 → 2:00 " +
                         " Ekkor kell 1 órát visszaállítani az órákat. " +
                         " Az őszi óraátállítás célja, hogy reggel világosabb legyen, így a " +
@@ -399,7 +406,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " vasárnapján kezdődik, amikor az órákat visszaállítjuk. Ezáltal reggel " +
                         " hamarabb világosodik, de este hamarabb sötétedik. 1996 óta kormányrendelet " +
                         " szabályozza az óraátállítást."),
-                new FeastDay(2025, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
+                new FeastDayModel(2025, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
                         " megemlékezik minden üdvözült lélekről, akik elnyerték a mennyországot, " +
                         " de nevüket nem tartják számon a naptárban. Az ünnep eredete a " +
                         " kereszténység előtti halotti kultuszokra is visszavezethető. Hivatalosan a " +
@@ -408,7 +415,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon munkaszüneti nap. Sokan virágokkal és gyertyagyújtással " +
                         " tisztelegnek elhunyt szeretteik emléke előtt. Ez a nap a hit és a " +
                         " megemlékezés ünnepe."),
-                new FeastDay(2025, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
+                new FeastDayModel(2025, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
                         " elhunyt hívekről. Az ünnep célja, hogy imádságokkal és jó " +
                         " cselekedetekkel segítsük a halottak lelki üdvét és tisztelegjünk " +
                         " szeretteink emléke előtt. Bár gyökerei a kereszténység előtti halotti " +
@@ -416,7 +423,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Odiló apát vezette be. Ő rendelte el, hogy a kolostorok imádkozzanak a " +
                         " tisztítótűzben szenvedő lelkekért. A gyertyagyújtás és a virágok " +
                         " elhelyezése máig az emlékezés fontos része."),
-                new FeastDay(2025, 10, 30, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
+                new FeastDayModel(2025, 10, 30, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
                         " születésére és második eljövetelére való várakozást jelenti. Az " +
                         " advent származása a 4. századra nyúlik vissza, amikor bűnbánattal és " +
                         " lelki felkészüléssel várták a karácsonyt. Kezdetben hosszabb böjti " +
@@ -428,7 +435,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Advent első vasárnapját a karácsonyt megelőző négy vasárnap egyikeként " +
                         " ünneplik. Ez a nap általában november végére vagy december elejére esik.  " +
                         " "),
-                new FeastDay(2025, 11, 6, "Mikulás", "Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
+                new FeastDayModel(2025, 11, 6, "Mikulás", "Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
                         " csizmáit édességgel és játékokkal.  Szent Miklós püspök emlék napja. " +
                         " A 4. században élt szent, aki a gyermekek, a hajósok és a szegények " +
                         " védőszentje lett, híres volt jótékonyságáról. Egy legenda szerint " +
@@ -439,7 +446,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " országonként eltérőek. Egyes helyeken a Mikulás hozza az ajándékokat, " +
                         " máshol a Télapó. A lényeg azonban mindenhol ugyanaz: a szeretet az " +
                         " adakozás és a gyermeki öröm ünnepe."),
-                new FeastDay(2025, 11, 13, "Luca napja", " Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
+                new FeastDayModel(2025, 11, 13, "Luca napja", " Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
                         " századi vértanú, a látás védőszentje, de a népi hitvilágban a " +
                         " termékenység, a jólét és a védelem szimbóluma. A hagyomány szerint ezen " +
                         " a napon kezdődött a tél leghosszabb éjszakája, így Luca napja a fény és " +
@@ -448,7 +455,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " búzát ültetni és jóslásokat végezni. Luca napja a megújulás és a " +
                         " remény ünnepe, a fény győzelme a sötétség felett és a következő év " +
                         " jólétének biztosítása."),
-                new FeastDay(2025, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
+                new FeastDayModel(2025, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
                         " Napkelte: Körülbelül  7:30 " +
                         " Napnyugta:  Körülbelül 16:00 " +
                         " Világos időtartam: Körülbelül 8 óra 30 perc " +
@@ -459,7 +466,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " felett, így ez a leghosszabb éjszaka. Ezen a napon kezdődik a nappali fény " +
                         " fokozatos növekedése, így a következő hónapokban egyre hosszabbak lesznek " +
                         " a nappalok."),
-                new FeastDay(2025, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2025, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus születésének előestéje. Bár Jézus pontos születési dátuma " +
                         " nem ismert, a keresztény egyház a 4. században december 25.-ét jelölte meg " +
                         " születésének napjaként, összekapcsolva azt a téli napfordulóval. " +
@@ -471,7 +478,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szeretet és a megbecsülés kifejezése, amely a három királyok " +
                         " ajándékozására utal. Karácsony, bár elsősorban keresztény ünnep, " +
                         " világszerte a szeretet, a béke és a család ünnepe lett."),
-                new FeastDay(2025, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
+                new FeastDayModel(2025, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
                         " század óta tartanak. Az ünnep a téli napfordulóhoz kapcsolódik, " +
                         " szimbolizálva a fény győzelmét a sötétség felett. Karácsony a remény, " +
                         " a szeretet és a megváltás ünnepe, amely a családi együttlét, az öröm " +
@@ -481,7 +488,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " kultúrában a szeretet és a béke fontosságát hangsúlyozza. Karácsony " +
                         " lehetőséget ad az emberi kapcsolatok és az élet értelmének " +
                         " átgondolására."),
-                new FeastDay(2025, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
+                new FeastDayModel(2025, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
                         " azonban Magyarországon elsősorban Szent István királyra, az " +
                         " államalapítóra emlékeznek. A 4. századi eredetű ünnep során Jézus " +
                         " születése után következik Szent István napja, aki kulcsszerepet játszott " +
@@ -490,7 +497,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon nemzeti hősként is tisztelik, mivel ő alapította az " +
                         " államot. Ezen a napon az emberek szentmisére mennek, megemlékeznek " +
                         " királyukról és különböző ünnepi rendezvényeken is részt vesznek. "),
-                new FeastDay(2025, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
+                new FeastDayModel(2025, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
                         " ünnepeljük az új év kezdetét. Az ünnep neve Szent Szilveszter pápától " +
                         " származik, aki 335 körül halt meg, de az újév ünneplésének hagyományai " +
                         " sokkal régebbre nyúlnak vissza. Szilveszter éjszakáján családok és " +
@@ -503,14 +510,14 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Boldog Új Évet kívánok! Legyen tele örömmel, egészséggel és sikerrel. " +
                         " Hozzon az új év boldog pillanatokat, új lehetőségeket és boldog együtt " +
                         " töltött időt!"),
-                new FeastDay(2026, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
+                new FeastDayModel(2026, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
                         " Ilyenkor sokan fogadalmakat tesznek, hogy jobbá és tartalmasabbá tegyék az " +
                         " elkövetkező esztendőt. Kezdd az évet tiszta lappal és jusson eszedbe, hogy " +
                         " minden nap egy új lehetőség arra, hogy közelebb kerülj céljaidhoz és " +
                         " álmaidhoz. \"A hosszú út is egyetlen lépéssel kezdődik\" – tartja a " +
                         " mondás. Legyen ez a nap a változás első lépése. Boldogságot, " +
                         " egészséget és kitartást kívánok az új év minden pillanatára!\nAz év első napja a megújulás, az újrakezdés és a remény szimbóluma. Az emberek világszerte különféle szokásokkal és ünnepségekkel köszöntik az új esztendőt, jókívánságokat osztanak, fogadalmakat tesznek, és bíznak abban, hogy az új év jobb lesz, mint az előző."),
-                new FeastDay(2026, 0, 6, "Vízkereszt", "A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
+                new FeastDayModel(2026, 0, 6, "Vízkereszt", "A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
                         " karácsonyfát, jelezve az ünnepi időszak végét. Az ünnep Jézus " +
                         " megjelenésére emlékeztet: a napkeleti bölcsek látogatására, Jézus " +
                         " megkeresztelkedésére és az első csodájára. A három királyok aranyat, " +
@@ -519,7 +526,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbóluma, amely a megkeresztelkedés szentségéhez kapcsolódik. Egyházi " +
                         " ünnepként a 4. század óta létezik. Sok helyen ekkor tartanak " +
                         " házszenteléseket, Isten áldását kérve az otthonra és az új évre."),
-                new FeastDay(2026, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
+                new FeastDayModel(2026, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
                         " (Valentin) római paphoz kötődik. A legenda szerint Valentin a 3. században " +
                         " titokban esketett meg szerelmespárokat, mert II. Claudius császár " +
                         " megtiltotta a házasságot, mondván, hogy a nőtlen férfiak jobb katonák. " +
@@ -527,7 +534,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepet hivatalosan 496-ban vezette be I. Geláz pápa. Ma világszerte a " +
                         " szerelmesek megajándékozásáról szól, szív alakú díszekkel, virágokkal " +
                         " és üdvözlőkártyákkal ünneplik."),
-                new FeastDay(2026, 1, 18, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
+                new FeastDayModel(2026, 1, 18, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
                         " amely a 7. század óta létezik. A hívők ezen a napon hamuval jelölik meg a " +
                         " homlokukat, emlékeztetve bűnösségükre és az élet mulandóságára. A " +
                         " szertartás a Teremtés könyvének szavait idézi: „porból vétettél, és " +
@@ -538,7 +545,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és feltámadására emlékezve, alázatos életet élve Isten előtt.  A " +
                         " Hamvazószerda a húsvéti böjt kezdete, amit 46 nappal húsvétvasárnap " +
                         " előtt tartanak. Általában február végére vagy március elejére esik."),
-                new FeastDay(2026, 2, 8, "Nőnap", "Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
+                new FeastDayModel(2026, 2, 8, "Nőnap", "Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
                         " demonstráltak a jobb munkakörülményekért és az egyenlő jogokért. Az " +
                         " ünnep célja a nők társadalmi, politikai és gazdasági jogainak " +
                         " előmozdítása, valamint a nemek közti egyenlőség hangsúlyozása. 1910-ben " +
@@ -546,7 +553,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " 1911-ben már több európai országban is megünnepelték. Magyarországon " +
                         " 1913 óta hivatalos ünnep. Eredetileg szocialista gyökerei voltak, mára már " +
                         " a nők jogainak elismerésére és tiszteletére emelkedett."),
-                new FeastDay(2026, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
+                new FeastDayModel(2026, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
                         " 1848-as forradalom és szabadságharc emlékére van. Ezen a napon a pesti " +
                         " forradalmi események nyomán, a fiatalok és a polgárok kiálltak a " +
                         " sajtószabadságért, a jobb életkörülményekért és a függetlenségért. " +
@@ -556,7 +563,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " eseményévé vált. Az események hatására megerősödött a nemzeti " +
                         " identitás és ma már a magyar szabadság és összetartozás napjaként " +
                         " ünnepeljük."),
-                new FeastDay(2026, 2, 29, "Virágvasárnap", "A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
+                new FeastDayModel(2026, 2, 29, "Virágvasárnap", "A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
                         " bevonulásának emlékére van. Az evangéliumok szerint Jézus szamárháton " +
                         " vonult be a városba, miközben a hívek pálmaágakat lengettek, üdvözölve " +
                         " őt, mint a Megváltót. A virágok, a pálmák és a zöld ágak használata " +
@@ -565,7 +572,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepekre való lelki felkészülést jelzi. Az ünnep hivatalosan a 4. " +
                         " század óta van jelen az egyházi naptárban és azóta része a keresztény " +
                         " hagyományoknak világszerte."),
-                new FeastDay(2026, 2, 29, "Óraátállítás", "A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
+                new FeastDayModel(2026, 2, 29, "Óraátállítás", "A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
                         " A tavaszi óraátállításkor az órákat hajnali 2:00-ról 3:00-ra állítjuk " +
                         " előre, hogy jobban kihasználjuk a nappali világosságot és csökkentsük a " +
                         " mesterséges világítás szükségességét. Magyarországon először " +
@@ -577,7 +584,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " villamosenergia-megtakarítás érdekében. Azóta évente kétszer állítjuk " +
                         " át az órákat és 1996 óta kormányrendelet szabályozza az " +
                         " óraátállítást Magyarországon."),
-                new FeastDay(2026, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
+                new FeastDayModel(2026, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
                         " átverések napja. Az emberek apró csínyekkel, például hamis hírekkel vagy " +
                         " kitalált történetekkel szórakoztatják egymást. Az internet " +
                         " elterjedésével az álhírek és vírusos videók is népszerűvé váltak. A " +
@@ -589,7 +596,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " váltak. Hasonló szokások figyelhetők meg a kelta tavaszi ünnepekben és az " +
                         " ókori római Hilaria ünnepén is, ahol a bolondos viselkedés a tavaszi " +
                         " megújulást jelezte. "),
-                new FeastDay(2026, 3, 3, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
+                new FeastDayModel(2026, 3, 3, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
                         " Jézus Krisztus kereszthalálát és szenvedését emlékezzük meg. Az ünnep " +
                         " célja, hogy a hívők átgondolják a megváltásra tett áldozat " +
                         " jelentőségét. E napot a 4. század óta ünneplik, amikor a keresztény " +
@@ -600,7 +607,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény közösség számára Nagypéntek a bűnbánat és a lelki " +
                         " megújulás napja is. Nagypénteket a húsvét előtti pénteken ünneplik, " +
                         " tehát ez a dátum évente változik."),
-                new FeastDay(2026, 3, 5, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
+                new FeastDayModel(2026, 3, 5, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
                         " feltámadásának napja, amely a halál feletti győzelmet és az örök élet " +
                         " ígéretét hirdeti. Magyarországon 1991 óta munkaszüneti nap, de " +
                         " jelentősége évszázadok óta meghatározó. Húsvét a 40 napos nagyböjt " +
@@ -613,7 +620,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény húsvéti szokásokba.  A Húsvétot évente változó dátumon " +
                         " ünneplik, mivel a tavaszi napéjegyenlőség utáni első teliholdat követő " +
                         " vasárnapra esik."),
-                new FeastDay(2026, 3, 6, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2026, 3, 6, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus feltámadását követően az új élet és a megújulás " +
                         " szimbólumává vált. Magyarországon a húsvéti locsolás hagyománya a 17. " +
                         " századtól terjedt el. A férfiak vízzel vagy illatos kölnivel locsolják " +
@@ -624,7 +631,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és a megváltást szimbolizálja. Magyarországon a húsvétot a " +
                         " kereszténység elterjedése óta ünneplik és a népszokások a 19. " +
                         " századtól erősödtek meg."),
-                new FeastDay(2026, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
+                new FeastDayModel(2026, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
                         " Nelson szenátor kezdeményezésére több millió ember gyűlt össze, hogy " +
                         " felhívja a figyelmet a környezetszennyezésre és a természeti erőforrások " +
                         " védelmére. A nap célja, hogy globálisan tudatosítsa az emberekben a " +
@@ -632,7 +639,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " való áttérést. Azóta minden évben április 22.-én világszerte " +
                         " megemlékeznek róla. Számos esemény, akció és kampány hívja fel a " +
                         " figyelmet a bolygó védelmére és a környezeti problémák megoldására."),
-                new FeastDay(2026, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
+                new FeastDayModel(2026, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
                         " május 1-jét megelőző nap délután/este volt.   Magyarországon a " +
                         " középkor óta ismert, tehát legalább a 14. századtól ünneplik. A szokás " +
                         " az ősi tavaszi rituálékra épül, melyek a természet megújulását és az " +
@@ -643,7 +650,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " neveztek. A hagyomány a szerelem és a termékenység ünnepe volt, később " +
                         " pedig összefonódott a munka ünnepével (május 1.). Mára már kevésbé " +
                         " elterjedt szokás, de sok helyen igyekeznek még fenntartani."),
-                new FeastDay(2026, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
+                new FeastDayModel(2026, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
                         " folytatott küzdelem emléknapja világszerte. Az ünnep gyökerei az 1886-os " +
                         " chicagói tüntetésekhez nyúlnak vissza, ahol a munkások a nyolcórás " +
                         " munkaidő bevezetéséért demonstráltak. Az események hatására 1890-től " +
@@ -653,7 +660,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " nagyszabású felvonulásokkal és tömegrendezvényekkel ünnepelték. A " +
                         " rendszerváltás után a jelentése átalakult, de továbbra is a munka " +
                         " tiszteletét és a munkavállalók jogainak fontosságát hirdeti."),
-                new FeastDay(2026, 4, 3, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
+                new FeastDayModel(2026, 4, 3, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
                         " világszerte az édesanyák tiszteletére tartanak. Gyökerei az ókori " +
                         " Görögországba nyúlnak vissza, ahol Rheát, az istenek anyját ünnepelték. " +
                         " A modern anyák napja az Egyesült Államokból indult 1908-ban, amikor Anna " +
@@ -665,7 +672,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " gyerekek. Bár világszerte eltérő időpontokban ünneplik, mindenhol az " +
                         " anyák iránti szeretet és tisztelet áll a középpontban. Anyák napját " +
                         " Magyarországon minden év május első vasárnapján ünneplik."),
-                new FeastDay(2026, 4, 24, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
+                new FeastDayModel(2026, 4, 24, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
                         " századtól kezdve ünnepelnek a keresztény egyházban. Az ünnep Jézus " +
                         " mennybemenetele után ötven nappal emlékezik meg a Szentlélek " +
                         " eljöveteléről, amely erőt adott az apostoloknak a keresztény hit " +
@@ -675,7 +682,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " számos népi hagyomány kapcsolódik hozzá, például a pünkösdi király " +
                         " és királyné választása. Pünkösd vasárnapját a húsvét utáni 50. " +
                         " napon, tehát 50 nappal húsvétvasárnap után ünneplik."),
-                new FeastDay(2026, 4, 25, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
+                new FeastDayModel(2026, 4, 25, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
                         " pünkösdnek a második napja. Pünkösd a húsvét utáni 50. napon van, és a " +
                         " Szentlélek eljövetelét ünnepli, amikor Jézus tanítványai erőt és " +
                         " útmutatást kaptak küldetésükhöz. Az esemény a keresztény egyház " +
@@ -684,7 +691,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " volt. Magyarországon pünkösdhétfő munkaszüneti nap és hivatalosan 1993 " +
                         " óta ünnepeljük újra. Az ünnep a megújulást és a közösség " +
                         " összetartozását jelképezi."),
-                new FeastDay(2026, 4, 31, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
+                new FeastDayModel(2026, 4, 31, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
                         " ünnep, melyet világszerte különböző időpontokban tartanak. Eredete " +
                         " 1925-re nyúlik vissza, amikor a genfi Gyermekjóléti Konferencián " +
                         " elhatározták, hogy kiemelik a gyermekek védelmének fontosságát. " +
@@ -694,7 +701,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " rendezvényekkel ünneplik őket. Az ünnep célja, hogy felhívja a figyelmet " +
                         " a gyermekek jogaira és boldogságuk fontosságára.  Magyarországon a " +
                         " Gyermeknapot minden évben május utolsó vasárnapján ünneplik."),
-                new FeastDay(2026, 5, 21, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
+                new FeastDayModel(2026, 5, 21, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
                         " családban és a gyermeknevelésben betöltött szerepüket. Az ünnep eredete " +
                         " az Egyesült Államokhoz köthető, ahol először 1910-ben tartották meg " +
                         " Sonora Smart Dodd kezdeményezésére , aki édesapját akarta tiszteletben " +
@@ -705,7 +712,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szerepét. Ez a nap lehetőséget ad arra, hogy köszönetet mondjunk az apák " +
                         " szeretetéért, támogatásáért és áldozatos munkájáért, amelyet " +
                         " családjukért tesznek. "),
-                new FeastDay(2026, 5, 21, "Nyári napforduló", "Az év leghosszabb napja.  " +
+                new FeastDayModel(2026, 5, 21, "Nyári napforduló", "Az év leghosszabb napja.  " +
                         " Napkelte: Körülbelül 05:07 " +
                         " Napnyugta: Körülbelül 22:07 " +
                         " Világos időtartam: Körülbelül 17 óra " +
@@ -715,7 +722,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " környékén a Nap több mint 15 órán keresztül a horizont felett " +
                         " tartózkodik. Ezen a napon a Föld az északi féltekén éri el a leghosszabb " +
                         " nappali órákat, így ez a legrövidebb éjszaka."),
-                new FeastDay(2026, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
+                new FeastDayModel(2026, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
                         " megalapozva a keresztény Magyarországot. 1083 augusztus 20.-án szentté " +
                         " avatták a Szent Péter-bazilikában. Az Árpád-korban az István-kultusz az " +
                         " uralkodó dinasztiát támogatta és egységet teremtett a népcsoportok " +
@@ -727,7 +734,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbólumává vált. 1950-től az új államrendszer ideológiája szerint " +
                         " alakították át az ünnep jelentését, majd 1991-ben ismét állami " +
                         " ünneppé nyilvánították."),
-                new FeastDay(2026, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
+                new FeastDayModel(2026, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
                         " eseményeire emlékezik. Az ünnep hivatalosan 1989 október 23.-án vált " +
                         " nemzeti ünneppé a rendszerváltás után, amikor a forradalom hőseit " +
                         " ünnepelve tisztelegtek a szabadságért és a demokráciáért folytatott " +
@@ -736,7 +743,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " játszott Magyarország függetlenségi törekvéseiben és a későbbi " +
                         " rendszerváltásban. Az október 23.-i események máig a szabadság és a " +
                         " nemzeti szuverenitás fontos szimbólumai."),
-                new FeastDay(2026, 9, 25, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
+                new FeastDayModel(2026, 9, 25, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
                         " 3:00 → 2:00 " +
                         " Ekkor kell 1 órát visszaállítani az órákat. " +
                         " Az őszi óraátállítás célja, hogy reggel világosabb legyen, így a " +
@@ -747,7 +754,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " vasárnapján kezdődik, amikor az órákat visszaállítjuk. Ezáltal reggel " +
                         " hamarabb világosodik, de este hamarabb sötétedik. 1996 óta kormányrendelet " +
                         " szabályozza az óraátállítást."),
-                new FeastDay(2026, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
+                new FeastDayModel(2026, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
                         " megemlékezik minden üdvözült lélekről, akik elnyerték a mennyországot, " +
                         " de nevüket nem tartják számon a naptárban. Az ünnep eredete a " +
                         " kereszténység előtti halotti kultuszokra is visszavezethető. Hivatalosan a " +
@@ -756,7 +763,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon munkaszüneti nap. Sokan virágokkal és gyertyagyújtással " +
                         " tisztelegnek elhunyt szeretteik emléke előtt. Ez a nap a hit és a " +
                         " megemlékezés ünnepe."),
-                new FeastDay(2026, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
+                new FeastDayModel(2026, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
                         " elhunyt hívekről. Az ünnep célja, hogy imádságokkal és jó " +
                         " cselekedetekkel segítsük a halottak lelki üdvét és tisztelegjünk " +
                         " szeretteink emléke előtt. Bár gyökerei a kereszténység előtti halotti " +
@@ -764,7 +771,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Odiló apát vezette be. Ő rendelte el, hogy a kolostorok imádkozzanak a " +
                         " tisztítótűzben szenvedő lelkekért. A gyertyagyújtás és a virágok " +
                         " elhelyezése máig az emlékezés fontos része."),
-                new FeastDay(2026, 10, 29, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
+                new FeastDayModel(2026, 10, 29, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
                         " születésére és második eljövetelére való várakozást jelenti. Az " +
                         " advent származása a 4. századra nyúlik vissza, amikor bűnbánattal és " +
                         " lelki felkészüléssel várták a karácsonyt. Kezdetben hosszabb böjti " +
@@ -775,7 +782,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " egy újabb gyertya meggyújtásával közelebb kerülünk a karácsonyhoz.  " +
                         " Advent első vasárnapját a karácsonyt megelőző négy vasárnap egyikeként " +
                         " ünneplik. Ez a nap általában november végére vagy december elejére esik."),
-                new FeastDay(2026, 11, 6, "Mikulás", "Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
+                new FeastDayModel(2026, 11, 6, "Mikulás", "Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
                         " csizmáit édességgel és játékokkal.  Szent Miklós püspök emlék napja. " +
                         " A 4. században élt szent, aki a gyermekek, a hajósok és a szegények " +
                         " védőszentje lett, híres volt jótékonyságáról. Egy legenda szerint " +
@@ -786,7 +793,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " országonként eltérőek. Egyes helyeken a Mikulás hozza az ajándékokat, " +
                         " máshol a Télapó. A lényeg azonban mindenhol ugyanaz: a szeretet az " +
                         " adakozás és a gyermeki öröm ünnepe."),
-                new FeastDay(2026, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
+                new FeastDayModel(2026, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
                         " századi vértanú, a látás védőszentje, de a népi hitvilágban a " +
                         " termékenység, a jólét és a védelem szimbóluma. A hagyomány szerint ezen " +
                         " a napon kezdődött a tél leghosszabb éjszakája, így Luca napja a fény és " +
@@ -795,7 +802,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " búzát ültetni és jóslásokat végezni. Luca napja a megújulás és a " +
                         " remény ünnepe, a fény győzelme a sötétség felett és a következő év " +
                         " jólétének biztosítása."),
-                new FeastDay(2026, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
+                new FeastDayModel(2026, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
                         " Napkelte: Körülbelül 08:49 " +
                         " Napnyugta: Körülbelül 16:29 " +
                         " Világos időtartam: Körülbelül 7 óra 40 perc " +
@@ -806,7 +813,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " felett, így ez a leghosszabb éjszaka. Ezen a napon kezdődik a nappali fény " +
                         " fokozatos növekedése, így a következő hónapokban egyre hosszabbak lesznek. " +
                         " a nappalok."),
-                new FeastDay(2026, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2026, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus születésének előestéje. Bár Jézus pontos születési dátuma " +
                         " nem ismert, a keresztény egyház a 4. században december 25.-ét jelölte meg " +
                         " születésének napjaként, összekapcsolva azt a téli napfordulóval. " +
@@ -818,7 +825,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szeretet és a megbecsülés kifejezése, amely a három királyok " +
                         " ajándékozására utal. Karácsony, bár elsősorban keresztény ünnep, " +
                         " világszerte a szeretet, a béke és a család ünnepe lett."),
-                new FeastDay(2026, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
+                new FeastDayModel(2026, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
                         " század óta tartanak. Az ünnep a téli napfordulóhoz kapcsolódik, " +
                         " szimbolizálva a fény győzelmét a sötétség felett. Karácsony a remény, " +
                         " a szeretet és a megváltás ünnepe, amely a családi együttlét, az öröm " +
@@ -828,7 +835,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " kultúrában a szeretet és a béke fontosságát hangsúlyozza. Karácsony " +
                         " lehetőséget ad az emberi kapcsolatok és az élet értelmének " +
                         " átgondolására."),
-                new FeastDay(2026, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
+                new FeastDayModel(2026, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
                         " azonban Magyarországon elsősorban Szent István királyra, az " +
                         " államalapítóra emlékeznek. A 4. századi eredetű ünnep során Jézus " +
                         " születése után következik Szent István napja, aki kulcsszerepet játszott " +
@@ -837,7 +844,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon nemzeti hősként is tisztelik, mivel ő alapította az " +
                         " államot. Ezen a napon az emberek szentmisére mennek, megemlékeznek " +
                         " királyukról és különböző ünnepi rendezvényeken is részt vesznek."),
-                new FeastDay(2026, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
+                new FeastDayModel(2026, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
                         " ünnepeljük az új év kezdetét. Az ünnep neve Szent Szilveszter pápától " +
                         " származik, aki 335 körül halt meg, de az újév ünneplésének hagyományai " +
                         " sokkal régebbre nyúlnak vissza. Szilveszter éjszakáján családok és " +
@@ -849,21 +856,21 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Boldog Új Évet kívánok! Legyen tele örömmel, egészséggel és sikerrel. " +
                         " Hozzon az új év boldog pillanatokat, új lehetőségeket és boldog együtt " +
                         " töltött időt!"),
-                new FeastDay(2027, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
+                new FeastDayModel(2027, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
                         " Ilyenkor sokan fogadalmakat tesznek, hogy jobbá és tartalmasabbá tegyék az " +
                         " elkövetkező esztendőt. Kezdd az évet tiszta lappal és jusson eszedbe, hogy " +
                         " minden nap egy új lehetőség arra, hogy közelebb kerülj céljaidhoz és " +
                         " álmaidhoz. \"A hosszú út is egyetlen lépéssel kezdődik\" – tartja a " +
                         " mondás. Legyen ez a nap a változás első lépése. Boldogságot, " +
                         " egészséget és kitartást kívánok az új év minden pillanatára!"),
-                new FeastDay(2027, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
+                new FeastDayModel(2027, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
                         " Ilyenkor sokan fogadalmakat tesznek, hogy jobbá és tartalmasabbá tegyék az " +
                         " elkövetkező esztendőt. Kezdd az évet tiszta lappal és jusson eszedbe, hogy " +
                         " minden nap egy új lehetőség arra, hogy közelebb kerülj céljaidhoz és " +
                         " álmaidhoz. \"A hosszú út is egyetlen lépéssel kezdődik\" – tartja a " +
                         " mondás. Legyen ez a nap a változás első lépése. Boldogságot, " +
                         " egészséget és kitartást kívánok az új év minden pillanatára!\nAz év első napja a megújulás, az újrakezdés és a remény szimbóluma. Az emberek világszerte különféle szokásokkal és ünnepségekkel köszöntik az új esztendőt, jókívánságokat osztanak, fogadalmakat tesznek, és bíznak abban, hogy az új év jobb lesz, mint az előző."),
-                new FeastDay(2027, 0, 6, "Vízkereszt", "A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
+                new FeastDayModel(2027, 0, 6, "Vízkereszt", "A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
                         " karácsonyfát, jelezve az ünnepi időszak végét. Az ünnep Jézus " +
                         " megjelenésére emlékeztet: a napkeleti bölcsek látogatására, Jézus " +
                         " megkeresztelkedésére és az első csodájára. A három királyok aranyat, " +
@@ -872,7 +879,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbóluma, amely a megkeresztelkedés szentségéhez kapcsolódik. Egyházi " +
                         " ünnepként a 4. század óta létezik. Sok helyen ekkor tartanak " +
                         " házszenteléseket, Isten áldását kérve az otthonra és az új évre."),
-                new FeastDay(2027, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
+                new FeastDayModel(2027, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
                         " (Valentin) római paphoz kötődik. A legenda szerint Valentin a 3. században " +
                         " titokban esketett meg szerelmespárokat, mert II. Claudius császár " +
                         " megtiltotta a házasságot, mondván, hogy a nőtlen férfiak jobb katonák. " +
@@ -880,7 +887,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepet hivatalosan 496-ban vezette be I. Geláz pápa. Ma világszerte a " +
                         " szerelmesek megajándékozásáról szól, szív alakú díszekkel, virágokkal " +
                         " és üdvözlőkártyákkal ünneplik."),
-                new FeastDay(2027, 1, 18, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
+                new FeastDayModel(2027, 1, 18, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
                         " amely a 7. század óta létezik. A hívők ezen a napon hamuval jelölik meg a " +
                         " homlokukat, emlékeztetve bűnösségükre és az élet mulandóságára. A " +
                         " szertartás a Teremtés könyvének szavait idézi: „porból vétettél, és " +
@@ -891,7 +898,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és feltámadására emlékezve, alázatos életet élve Isten előtt.  A " +
                         " Hamvazószerda a húsvéti böjt kezdete, amit 46 nappal húsvétvasárnap " +
                         " előtt tartanak. Általában február végére vagy március elejére esik."),
-                new FeastDay(2027, 2, 8, "Nőnap", "Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
+                new FeastDayModel(2027, 2, 8, "Nőnap", "Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
                         " demonstráltak a jobb munkakörülményekért és az egyenlő jogokért. Az " +
                         " ünnep célja a nők társadalmi, politikai és gazdasági jogainak " +
                         " előmozdítása, valamint a nemek közti egyenlőség hangsúlyozása. 1910-ben " +
@@ -899,7 +906,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " 1911-ben már több európai országban is megünnepelték. Magyarországon " +
                         " 1913 óta hivatalos ünnep. Eredetileg szocialista gyökerei voltak, mára már " +
                         " a nők jogainak elismerésére és tiszteletére emelkedett."),
-                new FeastDay(2027, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
+                new FeastDayModel(2027, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
                         " 1848-as forradalom és szabadságharc emlékére van. Ezen a napon a pesti " +
                         " forradalmi események nyomán, a fiatalok és a polgárok kiálltak a " +
                         " sajtószabadságért, a jobb életkörülményekért és a függetlenségért. " +
@@ -909,7 +916,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " eseményévé vált. Az események hatására megerősödött a nemzeti " +
                         " identitás és ma már a magyar szabadság és összetartozás napjaként " +
                         " ünnepeljük."),
-                new FeastDay(2027, 2, 29, "Virágvasárnap", "A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
+                new FeastDayModel(2027, 2, 29, "Virágvasárnap", "A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
                         " bevonulásának emlékére van. Az evangéliumok szerint Jézus szamárháton " +
                         " vonult be a városba, miközben a hívek pálmaágakat lengettek, üdvözölve " +
                         " őt, mint a Megváltót. A virágok, a pálmák és a zöld ágak használata " +
@@ -918,7 +925,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepekre való lelki felkészülést jelzi. Az ünnep hivatalosan a 4. " +
                         " század óta van jelen az egyházi naptárban és azóta része a keresztény " +
                         " hagyományoknak világszerte."),
-                new FeastDay(2027, 2, 29, "Óraátállítás", "A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
+                new FeastDayModel(2027, 2, 29, "Óraátállítás", "A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
                         " A tavaszi óraátállításkor az órákat hajnali 2:00-ról 3:00-ra állítjuk " +
                         " előre, hogy jobban kihasználjuk a nappali világosságot és csökkentsük a " +
                         " mesterséges világítás szükségességét. Magyarországon először " +
@@ -930,7 +937,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " villamosenergia-megtakarítás érdekében. Azóta évente kétszer állítjuk " +
                         " át az órákat és 1996 óta kormányrendelet szabályozza az " +
                         " óraátállítást Magyarországon."),
-                new FeastDay(2027, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
+                new FeastDayModel(2027, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
                         " átverések napja. Az emberek apró csínyekkel, például hamis hírekkel vagy " +
                         " kitalált történetekkel szórakoztatják egymást. Az internet " +
                         " elterjedésével az álhírek és vírusos videók is népszerűvé váltak. A " +
@@ -942,7 +949,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " váltak. Hasonló szokások figyelhetők meg a kelta tavaszi ünnepekben és az " +
                         " ókori római Hilaria ünnepén is, ahol a bolondos viselkedés a tavaszi " +
                         " megújulást jelezte. "),
-                new FeastDay(2027, 3, 3, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
+                new FeastDayModel(2027, 3, 3, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
                         " Jézus Krisztus kereszthalálát és szenvedését emlékezzük meg. Az ünnep " +
                         " célja, hogy a hívők átgondolják a megváltásra tett áldozat " +
                         " jelentőségét. E napot a 4. század óta ünneplik, amikor a keresztény " +
@@ -953,7 +960,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény közösség számára Nagypéntek a bűnbánat és a lelki " +
                         " megújulás napja is. Nagypénteket a húsvét előtti pénteken ünneplik, " +
                         " tehát ez a dátum évente változik."),
-                new FeastDay(2027, 3, 5, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
+                new FeastDayModel(2027, 3, 5, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
                         " feltámadásának napja, amely a halál feletti győzelmet és az örök élet " +
                         " ígéretét hirdeti. Magyarországon 1991 óta munkaszüneti nap, de " +
                         " jelentősége évszázadok óta meghatározó. Húsvét a 40 napos nagyböjt " +
@@ -966,7 +973,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény húsvéti szokásokba.  A Húsvétot évente változó dátumon " +
                         " ünneplik, mivel a tavaszi napéjegyenlőség utáni első teliholdat követő " +
                         " vasárnapra esik."),
-                new FeastDay(2027, 3, 6, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2027, 3, 6, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus feltámadását követően az új élet és a megújulás " +
                         " szimbólumává vált. Magyarországon a húsvéti locsolás hagyománya a 17. " +
                         " századtól terjedt el. A férfiak vízzel vagy illatos kölnivel locsolják " +
@@ -977,7 +984,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és a megváltást szimbolizálja. Magyarországon a húsvétot a " +
                         " kereszténység elterjedése óta ünneplik és a népszokások a 19. " +
                         " századtól erősödtek meg."),
-                new FeastDay(2027, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
+                new FeastDayModel(2027, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
                         " Nelson szenátor kezdeményezésére több millió ember gyűlt össze, hogy " +
                         " felhívja a figyelmet a környezetszennyezésre és a természeti erőforrások " +
                         " védelmére. A nap célja, hogy globálisan tudatosítsa az emberekben a " +
@@ -985,7 +992,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " való áttérést. Azóta minden évben április 22.-én világszerte " +
                         " megemlékeznek róla. Számos esemény, akció és kampány hívja fel a " +
                         " figyelmet a bolygó védelmére és a környezeti problémák megoldására."),
-                new FeastDay(2027, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
+                new FeastDayModel(2027, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
                         " május 1-jét megelőző nap délután/este volt.   Magyarországon a " +
                         " középkor óta ismert, tehát legalább a 14. századtól ünneplik. A szokás " +
                         " az ősi tavaszi rituálékra épül, melyek a természet megújulását és az " +
@@ -996,7 +1003,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " neveztek. A hagyomány a szerelem és a termékenység ünnepe volt, később " +
                         " pedig összefonódott a munka ünnepével (május 1.). Mára már kevésbé " +
                         " elterjedt szokás, de sok helyen igyekeznek még fenntartani."),
-                new FeastDay(2027, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
+                new FeastDayModel(2027, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
                         " folytatott küzdelem emléknapja világszerte. Az ünnep gyökerei az 1886-os " +
                         " chicagói tüntetésekhez nyúlnak vissza, ahol a munkások a nyolcórás " +
                         " munkaidő bevezetéséért demonstráltak. Az események hatására 1890-től " +
@@ -1006,7 +1013,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " nagyszabású felvonulásokkal és tömegrendezvényekkel ünnepelték. A " +
                         " rendszerváltás után a jelentése átalakult, de továbbra is a munka " +
                         " tiszteletét és a munkavállalók jogainak fontosságát hirdeti."),
-                new FeastDay(2027, 4, 3, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
+                new FeastDayModel(2027, 4, 3, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
                         " világszerte az édesanyák tiszteletére tartanak. Gyökerei az ókori " +
                         " Görögországba nyúlnak vissza, ahol Rheát, az istenek anyját ünnepelték. " +
                         " A modern anyák napja az Egyesült Államokból indult 1908-ban, amikor Anna " +
@@ -1018,7 +1025,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " gyerekek. Bár világszerte eltérő időpontokban ünneplik, mindenhol az " +
                         " anyák iránti szeretet és tisztelet áll a középpontban. Anyák napját " +
                         " Magyarországon minden év május első vasárnapján ünneplik."),
-                new FeastDay(2027, 4, 24, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
+                new FeastDayModel(2027, 4, 24, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
                         " századtól kezdve ünnepelnek a keresztény egyházban. Az ünnep Jézus " +
                         " mennybemenetele után ötven nappal emlékezik meg a Szentlélek " +
                         " eljöveteléről, amely erőt adott az apostoloknak a keresztény hit " +
@@ -1028,7 +1035,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " számos népi hagyomány kapcsolódik hozzá, például a pünkösdi király " +
                         " és királyné választása. Pünkösd vasárnapját a húsvét utáni 50. " +
                         " napon, tehát 50 nappal húsvétvasárnap után ünneplik."),
-                new FeastDay(2027, 4, 25, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
+                new FeastDayModel(2027, 4, 25, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
                         " pünkösdnek a második napja. Pünkösd a húsvét utáni 50. napon van, és a " +
                         " Szentlélek eljövetelét ünnepli, amikor Jézus tanítványai erőt és " +
                         " útmutatást kaptak küldetésükhöz. Az esemény a keresztény egyház " +
@@ -1037,7 +1044,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " volt. Magyarországon pünkösdhétfő munkaszüneti nap és hivatalosan 1993 " +
                         " óta ünnepeljük újra. Az ünnep a megújulást és a közösség " +
                         " összetartozását jelképezi."),
-                new FeastDay(2027, 4, 31, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
+                new FeastDayModel(2027, 4, 31, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
                         " ünnep, melyet világszerte különböző időpontokban tartanak. Eredete " +
                         " 1925-re nyúlik vissza, amikor a genfi Gyermekjóléti Konferencián " +
                         " elhatározták, hogy kiemelik a gyermekek védelmének fontosságát. " +
@@ -1047,7 +1054,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " rendezvényekkel ünneplik őket. Az ünnep célja, hogy felhívja a figyelmet " +
                         " a gyermekek jogaira és boldogságuk fontosságára.  Magyarországon a " +
                         " Gyermeknapot minden évben május utolsó vasárnapján ünneplik."),
-                new FeastDay(2027, 5, 21, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
+                new FeastDayModel(2027, 5, 21, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
                         " családban és a gyermeknevelésben betöltött szerepüket. Az ünnep eredete " +
                         " az Egyesült Államokhoz köthető, ahol először 1910-ben tartották meg " +
                         " Sonora Smart Dodd kezdeményezésére , aki édesapját akarta tiszteletben " +
@@ -1058,7 +1065,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szerepét. Ez a nap lehetőséget ad arra, hogy köszönetet mondjunk az apák " +
                         " szeretetéért, támogatásáért és áldozatos munkájáért, amelyet " +
                         " családjukért tesznek. "),
-                new FeastDay(2027, 5, 21, "Nyári napforduló", "Az év leghosszabb napja.  " +
+                new FeastDayModel(2027, 5, 21, "Nyári napforduló", "Az év leghosszabb napja.  " +
                         " Napkelte: Körülbelül 05:07 " +
                         " Napnyugta: Körülbelül 22:07 " +
                         " Világos időtartam: Körülbelül 17 óra " +
@@ -1068,7 +1075,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " környékén a Nap több mint 15 órán keresztül a horizont felett " +
                         " tartózkodik. Ezen a napon a Föld az északi féltekén éri el a leghosszabb " +
                         " nappali órákat, így ez a legrövidebb éjszaka."),
-                new FeastDay(2027, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
+                new FeastDayModel(2027, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
                         " megalapozva a keresztény Magyarországot. 1083 augusztus 20.-án szentté " +
                         " avatták a Szent Péter-bazilikában. Az Árpád-korban az István-kultusz az " +
                         " uralkodó dinasztiát támogatta és egységet teremtett a népcsoportok " +
@@ -1080,7 +1087,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbólumává vált. 1950-től az új államrendszer ideológiája szerint " +
                         " alakították át az ünnep jelentését, majd 1991-ben ismét állami " +
                         " ünneppé nyilvánították."),
-                new FeastDay(2027, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
+                new FeastDayModel(2027, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
                         " eseményeire emlékezik. Az ünnep hivatalosan 1989 október 23.-án vált " +
                         " nemzeti ünneppé a rendszerváltás után, amikor a forradalom hőseit " +
                         " ünnepelve tisztelegtek a szabadságért és a demokráciáért folytatott " +
@@ -1089,7 +1096,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " játszott Magyarország függetlenségi törekvéseiben és a későbbi " +
                         " rendszerváltásban. Az október 23.-i események máig a szabadság és a " +
                         " nemzeti szuverenitás fontos szimbólumai."),
-                new FeastDay(2027, 9, 25, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
+                new FeastDayModel(2027, 9, 25, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
                         " 3:00 → 2:00 " +
                         " Ekkor kell 1 órát visszaállítani az órákat. " +
                         " Az őszi óraátállítás célja, hogy reggel világosabb legyen, így a " +
@@ -1100,7 +1107,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " vasárnapján kezdődik, amikor az órákat visszaállítjuk. Ezáltal reggel " +
                         " hamarabb világosodik, de este hamarabb sötétedik. 1996 óta kormányrendelet " +
                         " szabályozza az óraátállítást."),
-                new FeastDay(2027, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
+                new FeastDayModel(2027, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
                         " megemlékezik minden üdvözült lélekről, akik elnyerték a mennyországot, " +
                         " de nevüket nem tartják számon a naptárban. Az ünnep eredete a " +
                         " kereszténység előtti halotti kultuszokra is visszavezethető. Hivatalosan a " +
@@ -1109,7 +1116,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon munkaszüneti nap. Sokan virágokkal és gyertyagyújtással " +
                         " tisztelegnek elhunyt szeretteik emléke előtt. Ez a nap a hit és a " +
                         " megemlékezés ünnepe."),
-                new FeastDay(2027, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
+                new FeastDayModel(2027, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
                         " elhunyt hívekről. Az ünnep célja, hogy imádságokkal és jó " +
                         " cselekedetekkel segítsük a halottak lelki üdvét és tisztelegjünk " +
                         " szeretteink emléke előtt. Bár gyökerei a kereszténység előtti halotti " +
@@ -1117,7 +1124,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Odiló apát vezette be. Ő rendelte el, hogy a kolostorok imádkozzanak a " +
                         " tisztítótűzben szenvedő lelkekért. A gyertyagyújtás és a virágok " +
                         " elhelyezése máig az emlékezés fontos része."),
-                new FeastDay(2027, 10, 29, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
+                new FeastDayModel(2027, 10, 29, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
                         " születésére és második eljövetelére való várakozást jelenti. Az " +
                         " advent származása a 4. századra nyúlik vissza, amikor bűnbánattal és " +
                         " lelki felkészüléssel várták a karácsonyt. Kezdetben hosszabb böjti " +
@@ -1128,7 +1135,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " egy újabb gyertya meggyújtásával közelebb kerülünk a karácsonyhoz.  " +
                         " Advent első vasárnapját a karácsonyt megelőző négy vasárnap egyikeként " +
                         " ünneplik. Ez a nap általában november végére vagy december elejére esik."),
-                new FeastDay(2027, 11, 6, "Mikulás", "Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
+                new FeastDayModel(2027, 11, 6, "Mikulás", "Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
                         " csizmáit édességgel és játékokkal.  Szent Miklós püspök emlék napja. " +
                         " A 4. században élt szent, aki a gyermekek, a hajósok és a szegények " +
                         " védőszentje lett, híres volt jótékonyságáról. Egy legenda szerint " +
@@ -1139,7 +1146,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " országonként eltérőek. Egyes helyeken a Mikulás hozza az ajándékokat, " +
                         " máshol a Télapó. A lényeg azonban mindenhol ugyanaz: a szeretet az " +
                         " adakozás és a gyermeki öröm ünnepe."),
-                new FeastDay(2027, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
+                new FeastDayModel(2027, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
                         " századi vértanú, a látás védőszentje, de a népi hitvilágban a " +
                         " termékenység, a jólét és a védelem szimbóluma. A hagyomány szerint ezen " +
                         " a napon kezdődött a tél leghosszabb éjszakája, így Luca napja a fény és " +
@@ -1148,7 +1155,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " búzát ültetni és jóslásokat végezni. Luca napja a megújulás és a " +
                         " remény ünnepe, a fény győzelme a sötétség felett és a következő év " +
                         " jólétének biztosítása."),
-                new FeastDay(2027, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
+                new FeastDayModel(2027, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
                         " Napkelte: Körülbelül 08:49 " +
                         " Napnyugta: Körülbelül 16:29 " +
                         " Világos időtartam: Körülbelül 7 óra 40 perc " +
@@ -1159,7 +1166,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " felett, így ez a leghosszabb éjszaka. Ezen a napon kezdődik a nappali fény " +
                         " fokozatos növekedése, így a következő hónapokban egyre hosszabbak lesznek. " +
                         " a nappalok."),
-                new FeastDay(2027, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2027, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus születésének előestéje. Bár Jézus pontos születési dátuma " +
                         " nem ismert, a keresztény egyház a 4. században december 25.-ét jelölte meg " +
                         " születésének napjaként, összekapcsolva azt a téli napfordulóval. " +
@@ -1171,7 +1178,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szeretet és a megbecsülés kifejezése, amely a három királyok " +
                         " ajándékozására utal. Karácsony, bár elsősorban keresztény ünnep, " +
                         " világszerte a szeretet, a béke és a család ünnepe lett."),
-                new FeastDay(2027, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
+                new FeastDayModel(2027, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
                         " század óta tartanak. Az ünnep a téli napfordulóhoz kapcsolódik, " +
                         " szimbolizálva a fény győzelmét a sötétség felett. Karácsony a remény, " +
                         " a szeretet és a megváltás ünnepe, amely a családi együttlét, az öröm " +
@@ -1181,7 +1188,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " kultúrában a szeretet és a béke fontosságát hangsúlyozza. Karácsony " +
                         " lehetőséget ad az emberi kapcsolatok és az élet értelmének " +
                         " átgondolására."),
-                new FeastDay(2027, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
+                new FeastDayModel(2027, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
                         " azonban Magyarországon elsősorban Szent István királyra, az " +
                         " államalapítóra emlékeznek. A 4. századi eredetű ünnep során Jézus " +
                         " születése után következik Szent István napja, aki kulcsszerepet játszott " +
@@ -1190,7 +1197,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon nemzeti hősként is tisztelik, mivel ő alapította az " +
                         " államot. Ezen a napon az emberek szentmisére mennek, megemlékeznek " +
                         " királyukról és különböző ünnepi rendezvényeken is részt vesznek."),
-                new FeastDay(2027, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
+                new FeastDayModel(2027, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
                         " ünnepeljük az új év kezdetét. Az ünnep neve Szent Szilveszter pápától " +
                         " származik, aki 335 körül halt meg, de az újév ünneplésének hagyományai " +
                         " sokkal régebbre nyúlnak vissza. Szilveszter éjszakáján családok és " +
@@ -1202,7 +1209,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Boldog Új Évet kívánok! Legyen tele örömmel, egészséggel és sikerrel. " +
                         " Hozzon az új év boldog pillanatokat, új lehetőségeket és boldog együtt " +
                         " töltött időt!"),
-                new FeastDay(2028, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
+                new FeastDayModel(2028, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
                         " Ilyenkor sokan fogadalmakat tesznek, hogy jobbá és tartalmasabbá tegyék az " +
                         " elkövetkező esztendőt. Kezdd az évet tiszta lappal és jusson eszedbe, hogy " +
                         " minden nap egy új lehetőség arra, hogy közelebb kerülj céljaidhoz és " +
@@ -1210,7 +1217,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " mondás. Legyen ez a nap a változás első lépése. Boldogságot, " +
                         " egészséget és kitartást kívánok az új év minden pillanatára! "
                 ),
-                new FeastDay(2028, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
+                new FeastDayModel(2028, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
                         " karácsonyfát, jelezve az ünnepi időszak végét. Az ünnep Jézus " +
                         " megjelenésére emlékeztet: a napkeleti bölcsek látogatására, Jézus " +
                         " megkeresztelkedésére és az első csodájára. A három királyok aranyat, " +
@@ -1219,7 +1226,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbóluma, amely a megkeresztelkedés szentségéhez kapcsolódik. Egyházi " +
                         " ünnepként a 4. század óta létezik. Sok helyen ekkor tartanak " +
                         " házszenteléseket, Isten áldását kérve az otthonra és az új évre."),
-                new FeastDay(2028, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
+                new FeastDayModel(2028, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
                         " (Valentin) római paphoz kötődik. A legenda szerint Valentin a 3. században " +
                         " titokban esketett meg szerelmespárokat, mert II. Claudius császár " +
                         " megtiltotta a házasságot, mondván, hogy a nőtlen férfiak jobb katonák. " +
@@ -1227,7 +1234,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepet hivatalosan 496-ban vezette be I. Geláz pápa. Ma világszerte a " +
                         " szerelmesek megajándékozásáról szól, szív alakú díszekkel, virágokkal " +
                         " és üdvözlőkártyákkal ünneplik."),
-                new FeastDay(2028, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
+                new FeastDayModel(2028, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
                         " amely a 7. század óta létezik. A hívők ezen a napon hamuval jelölik meg a " +
                         " homlokukat, emlékeztetve bűnösségükre és az élet mulandóságára. A " +
                         " szertartás a Teremtés könyvének szavait idézi: „porból vétettél, és " +
@@ -1238,7 +1245,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és feltámadására emlékezve, alázatos életet élve Isten előtt.  A " +
                         " Hamvazószerda a húsvéti böjt kezdete, amit 46 nappal húsvétvasárnap " +
                         " előtt tartanak. Általában február végére vagy március elejére esik."),
-                new FeastDay(2028, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
+                new FeastDayModel(2028, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
                         " demonstráltak a jobb munkakörülményekért és az egyenlő jogokért. Az " +
                         " ünnep célja a nők társadalmi, politikai és gazdasági jogainak " +
                         " előmozdítása, valamint a nemek közti egyenlőség hangsúlyozása. 1910-ben " +
@@ -1246,7 +1253,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " 1911-ben már több európai országban is megünnepelték. Magyarországon " +
                         " 1913 óta hivatalos ünnep. Eredetileg szocialista gyökerei voltak, mára már " +
                         " a nők jogainak elismerésére és tiszteletére emelkedett."),
-                new FeastDay(2028, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
+                new FeastDayModel(2028, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
                         " 1848-as forradalom és szabadságharc emlékére van. Ezen a napon a pesti " +
                         " forradalmi események nyomán, a fiatalok és a polgárok kiálltak a " +
                         " sajtószabadságért, a jobb életkörülményekért és a függetlenségért. " +
@@ -1257,7 +1264,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " identitás és ma már a magyar szabadság és összetartozás napjaként " +
                         " ünnepeljük. " +
                         " "),
-                new FeastDay(2028, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
+                new FeastDayModel(2028, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
                         " A tavaszi óraátállításkor az órákat hajnali 2:00-ról 3:00-ra állítjuk " +
                         " előre, hogy jobban kihasználjuk a nappali világosságot és csökkentsük a " +
                         " mesterséges világítás szükségességét. Magyarországon először " +
@@ -1269,7 +1276,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " villamosenergia-megtakarítás érdekében. Azóta évente kétszer állítjuk " +
                         " át az órákat és 1996 óta kormányrendelet szabályozza az " +
                         " óraátállítást Magyarországon."),
-                new FeastDay(2028, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
+                new FeastDayModel(2028, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
                         " átverések napja. Az emberek apró csínyekkel, például hamis hírekkel vagy " +
                         " kitalált történetekkel szórakoztatják egymást. Az internet " +
                         " elterjedésével az álhírek és vírusos videók is népszerűvé váltak. A " +
@@ -1281,7 +1288,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " váltak. Hasonló szokások figyelhetők meg a kelta tavaszi ünnepekben és az " +
                         " ókori római Hilaria ünnepén is, ahol a bolondos viselkedés a tavaszi " +
                         " megújulást jelezte. "),
-                new FeastDay(2028, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
+                new FeastDayModel(2028, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
                         " bevonulásának emlékére van. Az evangéliumok szerint Jézus szamárháton " +
                         " vonult be a városba, miközben a hívek pálmaágakat lengettek, üdvözölve " +
                         " őt, mint a Megváltót. A virágok, a pálmák és a zöld ágak használata " +
@@ -1290,7 +1297,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepekre való lelki felkészülést jelzi. Az ünnep hivatalosan a 4. " +
                         " század óta van jelen az egyházi naptárban és azóta része a keresztény " +
                         " hagyományoknak világszerte."),
-                new FeastDay(2028, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
+                new FeastDayModel(2028, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
                         " Jézus Krisztus kereszthalálát és szenvedését emlékezzük meg. Az ünnep " +
                         " célja, hogy a hívők átgondolják a megváltásra tett áldozat " +
                         " jelentőségét. E napot a 4. század óta ünneplik, amikor a keresztény " +
@@ -1302,7 +1309,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " megújulás napja is.  Nagypénteket a húsvét előtti pénteken ünneplik, " +
                         " tehát ez a dátum évente változik.  " +
                         " "),
-                new FeastDay(2028, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
+                new FeastDayModel(2028, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
                         " feltámadásának napja, amely a halál feletti győzelmet és az örök élet " +
                         " ígéretét hirdeti. Magyarországon 1991 óta munkaszüneti nap, de " +
                         " jelentősége évszázadok óta meghatározó. Húsvét a 40 napos nagyböjt " +
@@ -1315,7 +1322,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény húsvéti szokásokba. " +
                         " A Húsvétot évente változó dátumon ünneplik, mivel a tavaszi " +
                         " napéjegyenlőség utáni első teliholdat követő vasárnapra esik."),
-                new FeastDay(2028, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2028, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus feltámadását követően az új élet és a megújulás " +
                         " szimbólumává vált. Magyarországon a húsvéti locsolás hagyománya a 17. " +
                         " századtól terjedt el. A férfiak vízzel vagy illatos kölnivel locsolják " +
@@ -1326,7 +1333,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és a megváltást szimbolizálja. Magyarországon a húsvétot a " +
                         " kereszténység elterjedése óta ünneplik és a népszokások a 19. " +
                         " századtól erősödtek meg."),
-                new FeastDay(2028, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
+                new FeastDayModel(2028, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
                         " Nelson szenátor kezdeményezésére több millió ember gyűlt össze, hogy " +
                         " felhívja a figyelmet a környezetszennyezésre és a természeti erőforrások " +
                         " védelmére. A nap célja, hogy globálisan tudatosítsa az emberekben a " +
@@ -1337,7 +1344,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         "  " +
                         "  " +
                         " "),
-                new FeastDay(2028, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
+                new FeastDayModel(2028, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
                         " május 1-jét megelőző nap délután/este volt.  " +
                         " Magyarországon a középkor óta ismert, tehát legalább a 14. századtól " +
                         " ünneplik. A szokás az ősi tavaszi rituálékra épül, melyek a természet " +
@@ -1349,7 +1356,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepe volt, később pedig összefonódott a munka ünnepével (május 1.). " +
                         " Mára már kevésbé elterjedt szokás, de sok helyen igyekeznek még " +
                         " fenntartani."),
-                new FeastDay(2028, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
+                new FeastDayModel(2028, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
                         " folytatott küzdelem emléknapja világszerte. Az ünnep gyökerei az 1886-os " +
                         " chicagói tüntetésekhez nyúlnak vissza, ahol a munkások a nyolcórás " +
                         " munkaidő bevezetéséért demonstráltak. Az események hatására 1890-től " +
@@ -1359,7 +1366,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " nagyszabású felvonulásokkal és tömegrendezvényekkel ünnepelték. A " +
                         " rendszerváltás után a jelentése átalakult, de továbbra is a munka " +
                         " tiszteletét és a munkavállalók jogainak fontosságát hirdeti. "),
-                new FeastDay(2028, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
+                new FeastDayModel(2028, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
                         " világszerte az édesanyák tiszteletére tartanak. Gyökerei az ókori " +
                         " Görögországba nyúlnak vissza, ahol Rheát, az istenek anyját ünnepelték. " +
                         " A modern anyák napja az Egyesült Államokból indult 1908-ban, amikor Anna " +
@@ -1372,7 +1379,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " anyák iránti szeretet és tisztelet áll a középpontban. Anyák napját " +
                         " Magyarországon minden év május első vasárnapján ünneplik.  " +
                         " "),
-                new FeastDay(2028, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
+                new FeastDayModel(2028, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
                         " ünnep, melyet világszerte különböző időpontokban tartanak. Eredete " +
                         " 1925-re nyúlik vissza, amikor a genfi Gyermekjóléti Konferencián " +
                         " elhatározták, hogy kiemelik a gyermekek védelmének fontosságát. " +
@@ -1382,7 +1389,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " rendezvényekkel ünneplik őket. Az ünnep célja, hogy felhívja a figyelmet " +
                         " a gyermekek jogaira és boldogságuk fontosságára. Magyarországon a " +
                         " Gyermeknapot minden évben május utolsó vasárnapján ünneplik."),
-                new FeastDay(2028, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
+                new FeastDayModel(2028, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
                         " századtól kezdve ünnepelnek a keresztény egyházban. Az ünnep Jézus " +
                         " mennybemenetele után ötven nappal emlékezik meg a Szentlélek " +
                         " eljöveteléről, amely erőt adott az apostoloknak a keresztény hit " +
@@ -1392,7 +1399,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " számos népi hagyomány kapcsolódik hozzá, például a pünkösdi király " +
                         " és királyné választása. Pünkösd vasárnapját a húsvét utáni 50. " +
                         " napon, tehát 50 nappal húsvétvasárnap után ünneplik. "),
-                new FeastDay(2028, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
+                new FeastDayModel(2028, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
                         " pünkösdnek a második napja. Pünkösd a húsvét utáni 50. napon van, és a " +
                         " Szentlélek eljövetelét ünnepli, amikor Jézus tanítványai erőt és " +
                         " útmutatást kaptak küldetésükhöz. Az esemény a keresztény egyház " +
@@ -1401,7 +1408,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " volt. Magyarországon pünkösdhétfő munkaszüneti nap és hivatalosan 1993 " +
                         " óta ünnepeljük újra. Az ünnep a megújulást és a közösség " +
                         " összetartozását jelképezi."),
-                new FeastDay(2028, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
+                new FeastDayModel(2028, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
                         " családban és a gyermeknevelésben betöltött szerepüket. Az ünnep eredete " +
                         " az Egyesült Államokhoz köthető, ahol először 1910-ben tartották meg " +
                         " Sonora Smart Dodd kezdeményezésére , aki édesapját akarta tiszteletben " +
@@ -1412,7 +1419,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szerepét. Ez a nap lehetőséget ad arra, hogy köszönetet mondjunk az apák " +
                         " szeretetéért, támogatásáért és áldozatos munkájáért, amelyet " +
                         " családjukért tesznek. "),
-                new FeastDay(2028, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
+                new FeastDayModel(2028, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -1422,7 +1429,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " környékén a Nap több mint 15 órán keresztül a horizont felett " +
                         " tartózkodik. Ezen a napon a Föld az északi féltekén éri el a leghosszabb " +
                         " nappali órákat, így ez a legrövidebb éjszaka."),
-                new FeastDay(2028, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
+                new FeastDayModel(2028, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
                         " megalapozva a keresztény Magyarországot. 1083 augusztus 20.-án szentté " +
                         " avatták a Szent Péter-bazilikában. Az Árpád-korban az István-kultusz az " +
                         " uralkodó dinasztiát támogatta és egységet teremtett a népcsoportok " +
@@ -1434,7 +1441,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbólumává vált. 1950-től az új államrendszer ideológiája szerint " +
                         " alakították át az ünnep jelentését, majd 1991-ben ismét állami " +
                         " ünneppé nyilvánították."),
-                new FeastDay(2028, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
+                new FeastDayModel(2028, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
                         " eseményeire emlékezik. Az ünnep hivatalosan 1989 október 23.-án vált " +
                         " nemzeti ünneppé a rendszerváltás után, amikor a forradalom hőseit " +
                         " ünnepelve tisztelegtek a szabadságért és a demokráciáért folytatott " +
@@ -1443,7 +1450,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " játszott Magyarország függetlenségi törekvéseiben és a későbbi " +
                         " rendszerváltásban. Az október 23.-i események máig a szabadság és a " +
                         " nemzeti szuverenitás fontos szimbólumai."),
-                new FeastDay(2028, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
+                new FeastDayModel(2028, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
                         " 3:00 → 2:00 " +
                         " Ekkor kell 1 órát visszaállítani az órákat. " +
                         " Az őszi óraátállítás célja, hogy reggel világosabb legyen, így a " +
@@ -1455,7 +1462,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " hamarabb világosodik, de este hamarabb sötétedik.  1996 óta " +
                         " kormányrendelet szabályozza az óraátállítást. " +
                         " "),
-                new FeastDay(2028, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
+                new FeastDayModel(2028, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
                         " megemlékezik minden üdvözült lélekről, akik elnyerték a mennyországot, " +
                         " de nevüket nem tartják számon a naptárban. Az ünnep eredete a " +
                         " kereszténység előtti halotti kultuszokra is visszavezethető. Hivatalosan a " +
@@ -1464,7 +1471,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon munkaszüneti nap. Sokan virágokkal és gyertyagyújtással " +
                         " tisztelegnek elhunyt szeretteik emléke előtt. Ez a nap a hit és a " +
                         " megemlékezés ünnepe."),
-                new FeastDay(2028, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
+                new FeastDayModel(2028, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
                         " elhunyt hívekről. Az ünnep célja, hogy imádságokkal és jó " +
                         " cselekedetekkel segítsük a halottak lelki üdvét és tisztelegjünk " +
                         " szeretteink emléke előtt. Bár gyökerei a kereszténység előtti halotti " +
@@ -1472,7 +1479,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Odiló apát vezette be. Ő rendelte el, hogy a kolostorok imádkozzanak a " +
                         " tisztítótűzben szenvedő lelkekért. A gyertyagyújtás és a virágok " +
                         " elhelyezése máig az emlékezés fontos része. "),
-                new FeastDay(2028, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
+                new FeastDayModel(2028, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
                         " születésére és második eljövetelére való várakozást jelenti. Az " +
                         " advent származása a 4. századra nyúlik vissza, amikor bűnbánattal és " +
                         " lelki felkészüléssel várták a karácsonyt. Kezdetben hosszabb böjti " +
@@ -1484,7 +1491,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Advent első vasárnapját a karácsonyt megelőző négy vasárnap egyikeként " +
                         " ünneplik. Ez a nap általában november végére vagy december elejére esik.  " +
                         " "),
-                new FeastDay(2028, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
+                new FeastDayModel(2028, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
                         " csizmáit édességgel és játékokkal. Szent Miklós püspök emlék napja. A " +
                         " 4. században élt szent, aki a gyermekek, a hajósok és a szegények " +
                         " védőszentje lett, híres volt jótékonyságáról. Egy legenda szerint " +
@@ -1496,7 +1503,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " eltérőek. Egyes helyeken a Mikulás hozza az ajándékokat, máshol a " +
                         " Télapó. A lényeg azonban mindenhol ugyanaz: a szeretet az adakozás és a " +
                         " gyermeki öröm ünnepe"),
-                new FeastDay(2028, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
+                new FeastDayModel(2028, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
                         " századi vértanú, a látás védőszentje, de a népi hitvilágban a " +
                         " termékenység, a jólét és a védelem szimbóluma. A hagyomány szerint ezen " +
                         " a napon kezdődött a tél leghosszabb éjszakája, így Luca napja a fény és " +
@@ -1506,7 +1513,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " remény ünnepe, a fény győzelme a sötétség felett és a következő év " +
                         " jólétének biztosítása. " +
                         " "),
-                new FeastDay(2028, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
+                new FeastDayModel(2028, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -1517,7 +1524,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " felett, így ez a leghosszabb éjszaka. Ezen a napon kezdődik a nappali fény " +
                         " fokozatos növekedése, így a következő hónapokban egyre hosszabbak lesznek " +
                         " a nappalok."),
-                new FeastDay(2028, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2028, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus születésének előestéje. Bár Jézus pontos születési dátuma " +
                         " nem ismert, a keresztény egyház a 4. században december 25.-ét jelölte meg " +
                         " születésének napjaként, összekapcsolva azt a téli napfordulóval. " +
@@ -1529,7 +1536,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szeretet és a megbecsülés kifejezése, amely a három királyok " +
                         " ajándékozására utal. Karácsony, bár elsősorban keresztény ünnep, " +
                         " világszerte a szeretet, a béke és a család ünnepe lett."),
-                new FeastDay(2028, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
+                new FeastDayModel(2028, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
                         " század óta tartanak. Az ünnep a téli napfordulóhoz kapcsolódik, " +
                         " szimbolizálva a fény győzelmét a sötétség felett. Karácsony a remény, " +
                         " a szeretet és a megváltás ünnepe, amely a családi együttlét, az öröm " +
@@ -1539,7 +1546,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " kultúrában a szeretet és a béke fontosságát hangsúlyozza. Karácsony " +
                         " lehetőséget ad az emberi kapcsolatok és az élet értelmének " +
                         " átgondolására"),
-                new FeastDay(2028, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
+                new FeastDayModel(2028, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
                         " azonban Magyarországon elsősorban Szent István királyra, az " +
                         " államalapítóra emlékeznek. A 4. századi eredetű ünnep során Jézus " +
                         " születése után következik Szent István napja, aki kulcsszerepet játszott " +
@@ -1548,7 +1555,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon nemzeti hősként is tisztelik, mivel ő alapította az " +
                         " államot. Ezen a napon az emberek szentmisére mennek, megemlékeznek " +
                         " királyukról és különböző ünnepi rendezvényeken is részt vesznek"),
-                new FeastDay(2028, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
+                new FeastDayModel(2028, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
                         " ünnepeljük az új év kezdetét. Az ünnep neve Szent Szilveszter pápától " +
                         " származik, aki 335 körül halt meg, de az újév ünneplésének hagyományai " +
                         " sokkal régebbre nyúlnak vissza. Szilveszter éjszakáján családok és " +
@@ -1561,7 +1568,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Boldog Új Évet kívánok! Legyen tele örömmel, egészséggel és sikerrel. " +
                         " Hozzon az új év boldog pillanatokat, új lehetőségeket és boldog együtt " +
                         " töltött időt!"),
-                new FeastDay(2029, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
+                new FeastDayModel(2029, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
                         " Ilyenkor sokan fogadalmakat tesznek, hogy jobbá és tartalmasabbá tegyék az " +
                         " elkövetkező esztendőt. Kezdd az évet tiszta lappal és jusson eszedbe, hogy " +
                         " minden nap egy új lehetőség arra, hogy közelebb kerülj céljaidhoz és " +
@@ -1569,7 +1576,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " mondás. Legyen ez a nap a változás első lépése. Boldogságot, " +
                         " egészséget és kitartást kívánok az új év minden pillanatára! "
                 ),
-                new FeastDay(2029, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
+                new FeastDayModel(2029, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
                         " karácsonyfát, jelezve az ünnepi időszak végét. Az ünnep Jézus " +
                         " megjelenésére emlékeztet: a napkeleti bölcsek látogatására, Jézus " +
                         " megkeresztelkedésére és az első csodájára. A három királyok aranyat, " +
@@ -1578,7 +1585,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbóluma, amely a megkeresztelkedés szentségéhez kapcsolódik. Egyházi " +
                         " ünnepként a 4. század óta létezik. Sok helyen ekkor tartanak " +
                         " házszenteléseket, Isten áldását kérve az otthonra és az új évre."),
-                new FeastDay(2029, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
+                new FeastDayModel(2029, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
                         " (Valentin) római paphoz kötődik. A legenda szerint Valentin a 3. században " +
                         " titokban esketett meg szerelmespárokat, mert II. Claudius császár " +
                         " megtiltotta a házasságot, mondván, hogy a nőtlen férfiak jobb katonák. " +
@@ -1586,7 +1593,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepet hivatalosan 496-ban vezette be I. Geláz pápa. Ma világszerte a " +
                         " szerelmesek megajándékozásáról szól, szív alakú díszekkel, virágokkal " +
                         " és üdvözlőkártyákkal ünneplik."),
-                new FeastDay(2029, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
+                new FeastDayModel(2029, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
                         " amely a 7. század óta létezik. A hívők ezen a napon hamuval jelölik meg a " +
                         " homlokukat, emlékeztetve bűnösségükre és az élet mulandóságára. A " +
                         " szertartás a Teremtés könyvének szavait idézi: „porból vétettél, és " +
@@ -1597,7 +1604,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és feltámadására emlékezve, alázatos életet élve Isten előtt.  A " +
                         " Hamvazószerda a húsvéti böjt kezdete, amit 46 nappal húsvétvasárnap " +
                         " előtt tartanak. Általában február végére vagy március elejére esik."),
-                new FeastDay(2029, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
+                new FeastDayModel(2029, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
                         " demonstráltak a jobb munkakörülményekért és az egyenlő jogokért. Az " +
                         " ünnep célja a nők társadalmi, politikai és gazdasági jogainak " +
                         " előmozdítása, valamint a nemek közti egyenlőség hangsúlyozása. 1910-ben " +
@@ -1605,7 +1612,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " 1911-ben már több európai országban is megünnepelték. Magyarországon " +
                         " 1913 óta hivatalos ünnep. Eredetileg szocialista gyökerei voltak, mára már " +
                         " a nők jogainak elismerésére és tiszteletére emelkedett."),
-                new FeastDay(2029, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
+                new FeastDayModel(2029, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
                         " 1848-as forradalom és szabadságharc emlékére van. Ezen a napon a pesti " +
                         " forradalmi események nyomán, a fiatalok és a polgárok kiálltak a " +
                         " sajtószabadságért, a jobb életkörülményekért és a függetlenségért. " +
@@ -1616,7 +1623,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " identitás és ma már a magyar szabadság és összetartozás napjaként " +
                         " ünnepeljük. " +
                         " "),
-                new FeastDay(2029, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
+                new FeastDayModel(2029, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
                         " A tavaszi óraátállításkor az órákat hajnali 2:00-ról 3:00-ra állítjuk " +
                         " előre, hogy jobban kihasználjuk a nappali világosságot és csökkentsük a " +
                         " mesterséges világítás szükségességét. Magyarországon először " +
@@ -1628,7 +1635,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " villamosenergia-megtakarítás érdekében. Azóta évente kétszer állítjuk " +
                         " át az órákat és 1996 óta kormányrendelet szabályozza az " +
                         " óraátállítást Magyarországon."),
-                new FeastDay(2029, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
+                new FeastDayModel(2029, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
                         " átverések napja. Az emberek apró csínyekkel, például hamis hírekkel vagy " +
                         " kitalált történetekkel szórakoztatják egymást. Az internet " +
                         " elterjedésével az álhírek és vírusos videók is népszerűvé váltak. A " +
@@ -1640,7 +1647,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " váltak. Hasonló szokások figyelhetők meg a kelta tavaszi ünnepekben és az " +
                         " ókori római Hilaria ünnepén is, ahol a bolondos viselkedés a tavaszi " +
                         " megújulást jelezte. "),
-                new FeastDay(2029, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
+                new FeastDayModel(2029, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
                         " bevonulásának emlékére van. Az evangéliumok szerint Jézus szamárháton " +
                         " vonult be a városba, miközben a hívek pálmaágakat lengettek, üdvözölve " +
                         " őt, mint a Megváltót. A virágok, a pálmák és a zöld ágak használata " +
@@ -1649,7 +1656,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepekre való lelki felkészülést jelzi. Az ünnep hivatalosan a 4. " +
                         " század óta van jelen az egyházi naptárban és azóta része a keresztény " +
                         " hagyományoknak világszerte."),
-                new FeastDay(2029, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
+                new FeastDayModel(2029, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
                         " Jézus Krisztus kereszthalálát és szenvedését emlékezzük meg. Az ünnep " +
                         " célja, hogy a hívők átgondolják a megváltásra tett áldozat " +
                         " jelentőségét. E napot a 4. század óta ünneplik, amikor a keresztény " +
@@ -1661,7 +1668,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " megújulás napja is.  Nagypénteket a húsvét előtti pénteken ünneplik, " +
                         " tehát ez a dátum évente változik.  " +
                         " "),
-                new FeastDay(2029, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
+                new FeastDayModel(2029, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
                         " feltámadásának napja, amely a halál feletti győzelmet és az örök élet " +
                         " ígéretét hirdeti. Magyarországon 1991 óta munkaszüneti nap, de " +
                         " jelentősége évszázadok óta meghatározó. Húsvét a 40 napos nagyböjt " +
@@ -1674,7 +1681,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény húsvéti szokásokba. " +
                         " A Húsvétot évente változó dátumon ünneplik, mivel a tavaszi " +
                         " napéjegyenlőség utáni első teliholdat követő vasárnapra esik."),
-                new FeastDay(2029, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2029, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus feltámadását követően az új élet és a megújulás " +
                         " szimbólumává vált. Magyarországon a húsvéti locsolás hagyománya a 17. " +
                         " századtól terjedt el. A férfiak vízzel vagy illatos kölnivel locsolják " +
@@ -1685,7 +1692,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és a megváltást szimbolizálja. Magyarországon a húsvétot a " +
                         " kereszténység elterjedése óta ünneplik és a népszokások a 19. " +
                         " századtól erősödtek meg."),
-                new FeastDay(2029, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
+                new FeastDayModel(2029, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
                         " Nelson szenátor kezdeményezésére több millió ember gyűlt össze, hogy " +
                         " felhívja a figyelmet a környezetszennyezésre és a természeti erőforrások " +
                         " védelmére. A nap célja, hogy globálisan tudatosítsa az emberekben a " +
@@ -1696,7 +1703,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         "  " +
                         "  " +
                         " "),
-                new FeastDay(2029, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
+                new FeastDayModel(2029, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
                         " május 1-jét megelőző nap délután/este volt.  " +
                         " Magyarországon a középkor óta ismert, tehát legalább a 14. századtól " +
                         " ünneplik. A szokás az ősi tavaszi rituálékra épül, melyek a természet " +
@@ -1708,7 +1715,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepe volt, később pedig összefonódott a munka ünnepével (május 1.). " +
                         " Mára már kevésbé elterjedt szokás, de sok helyen igyekeznek még " +
                         " fenntartani."),
-                new FeastDay(2029, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
+                new FeastDayModel(2029, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
                         " folytatott küzdelem emléknapja világszerte. Az ünnep gyökerei az 1886-os " +
                         " chicagói tüntetésekhez nyúlnak vissza, ahol a munkások a nyolcórás " +
                         " munkaidő bevezetéséért demonstráltak. Az események hatására 1890-től " +
@@ -1718,7 +1725,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " nagyszabású felvonulásokkal és tömegrendezvényekkel ünnepelték. A " +
                         " rendszerváltás után a jelentése átalakult, de továbbra is a munka " +
                         " tiszteletét és a munkavállalók jogainak fontosságát hirdeti. "),
-                new FeastDay(2029, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
+                new FeastDayModel(2029, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
                         " világszerte az édesanyák tiszteletére tartanak. Gyökerei az ókori " +
                         " Görögországba nyúlnak vissza, ahol Rheát, az istenek anyját ünnepelték. " +
                         " A modern anyák napja az Egyesült Államokból indult 1908-ban, amikor Anna " +
@@ -1731,7 +1738,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " anyák iránti szeretet és tisztelet áll a középpontban. Anyák napját " +
                         " Magyarországon minden év május első vasárnapján ünneplik.  " +
                         " "),
-                new FeastDay(2029, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
+                new FeastDayModel(2029, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
                         " ünnep, melyet világszerte különböző időpontokban tartanak. Eredete " +
                         " 1925-re nyúlik vissza, amikor a genfi Gyermekjóléti Konferencián " +
                         " elhatározták, hogy kiemelik a gyermekek védelmének fontosságát. " +
@@ -1741,7 +1748,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " rendezvényekkel ünneplik őket. Az ünnep célja, hogy felhívja a figyelmet " +
                         " a gyermekek jogaira és boldogságuk fontosságára. Magyarországon a " +
                         " Gyermeknapot minden évben május utolsó vasárnapján ünneplik."),
-                new FeastDay(2029, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
+                new FeastDayModel(2029, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
                         " századtól kezdve ünnepelnek a keresztény egyházban. Az ünnep Jézus " +
                         " mennybemenetele után ötven nappal emlékezik meg a Szentlélek " +
                         " eljöveteléről, amely erőt adott az apostoloknak a keresztény hit " +
@@ -1751,7 +1758,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " számos népi hagyomány kapcsolódik hozzá, például a pünkösdi király " +
                         " és királyné választása. Pünkösd vasárnapját a húsvét utáni 50. " +
                         " napon, tehát 50 nappal húsvétvasárnap után ünneplik. "),
-                new FeastDay(2029, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
+                new FeastDayModel(2029, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
                         " pünkösdnek a második napja. Pünkösd a húsvét utáni 50. napon van, és a " +
                         " Szentlélek eljövetelét ünnepli, amikor Jézus tanítványai erőt és " +
                         " útmutatást kaptak küldetésükhöz. Az esemény a keresztény egyház " +
@@ -1760,7 +1767,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " volt. Magyarországon pünkösdhétfő munkaszüneti nap és hivatalosan 1993 " +
                         " óta ünnepeljük újra. Az ünnep a megújulást és a közösség " +
                         " összetartozását jelképezi."),
-                new FeastDay(2029, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
+                new FeastDayModel(2029, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
                         " családban és a gyermeknevelésben betöltött szerepüket. Az ünnep eredete " +
                         " az Egyesült Államokhoz köthető, ahol először 1910-ben tartották meg " +
                         " Sonora Smart Dodd kezdeményezésére , aki édesapját akarta tiszteletben " +
@@ -1771,7 +1778,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szerepét. Ez a nap lehetőséget ad arra, hogy köszönetet mondjunk az apák " +
                         " szeretetéért, támogatásáért és áldozatos munkájáért, amelyet " +
                         " családjukért tesznek. "),
-                new FeastDay(2029, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
+                new FeastDayModel(2029, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -1781,7 +1788,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " környékén a Nap több mint 15 órán keresztül a horizont felett " +
                         " tartózkodik. Ezen a napon a Föld az északi féltekén éri el a leghosszabb " +
                         " nappali órákat, így ez a legrövidebb éjszaka."),
-                new FeastDay(2029, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
+                new FeastDayModel(2029, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
                         " megalapozva a keresztény Magyarországot. 1083 augusztus 20.-án szentté " +
                         " avatták a Szent Péter-bazilikában. Az Árpád-korban az István-kultusz az " +
                         " uralkodó dinasztiát támogatta és egységet teremtett a népcsoportok " +
@@ -1793,7 +1800,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbólumává vált. 1950-től az új államrendszer ideológiája szerint " +
                         " alakították át az ünnep jelentését, majd 1991-ben ismét állami " +
                         " ünneppé nyilvánították."),
-                new FeastDay(2029, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
+                new FeastDayModel(2029, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
                         " eseményeire emlékezik. Az ünnep hivatalosan 1989 október 23.-án vált " +
                         " nemzeti ünneppé a rendszerváltás után, amikor a forradalom hőseit " +
                         " ünnepelve tisztelegtek a szabadságért és a demokráciáért folytatott " +
@@ -1802,7 +1809,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " játszott Magyarország függetlenségi törekvéseiben és a későbbi " +
                         " rendszerváltásban. Az október 23.-i események máig a szabadság és a " +
                         " nemzeti szuverenitás fontos szimbólumai."),
-                new FeastDay(2029, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
+                new FeastDayModel(2029, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
                         " 3:00 → 2:00 " +
                         " Ekkor kell 1 órát visszaállítani az órákat. " +
                         " Az őszi óraátállítás célja, hogy reggel világosabb legyen, így a " +
@@ -1814,7 +1821,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " hamarabb világosodik, de este hamarabb sötétedik.  1996 óta " +
                         " kormányrendelet szabályozza az óraátállítást. " +
                         " "),
-                new FeastDay(2029, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
+                new FeastDayModel(2029, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
                         " megemlékezik minden üdvözült lélekről, akik elnyerték a mennyországot, " +
                         " de nevüket nem tartják számon a naptárban. Az ünnep eredete a " +
                         " kereszténység előtti halotti kultuszokra is visszavezethető. Hivatalosan a " +
@@ -1823,7 +1830,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon munkaszüneti nap. Sokan virágokkal és gyertyagyújtással " +
                         " tisztelegnek elhunyt szeretteik emléke előtt. Ez a nap a hit és a " +
                         " megemlékezés ünnepe."),
-                new FeastDay(2029, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
+                new FeastDayModel(2029, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
                         " elhunyt hívekről. Az ünnep célja, hogy imádságokkal és jó " +
                         " cselekedetekkel segítsük a halottak lelki üdvét és tisztelegjünk " +
                         " szeretteink emléke előtt. Bár gyökerei a kereszténység előtti halotti " +
@@ -1831,7 +1838,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Odiló apát vezette be. Ő rendelte el, hogy a kolostorok imádkozzanak a " +
                         " tisztítótűzben szenvedő lelkekért. A gyertyagyújtás és a virágok " +
                         " elhelyezése máig az emlékezés fontos része. "),
-                new FeastDay(2029, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
+                new FeastDayModel(2029, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
                         " születésére és második eljövetelére való várakozást jelenti. Az " +
                         " advent származása a 4. századra nyúlik vissza, amikor bűnbánattal és " +
                         " lelki felkészüléssel várták a karácsonyt. Kezdetben hosszabb böjti " +
@@ -1843,7 +1850,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Advent első vasárnapját a karácsonyt megelőző négy vasárnap egyikeként " +
                         " ünneplik. Ez a nap általában november végére vagy december elejére esik.  " +
                         " "),
-                new FeastDay(2029, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
+                new FeastDayModel(2029, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
                         " csizmáit édességgel és játékokkal. Szent Miklós püspök emlék napja. A " +
                         " 4. században élt szent, aki a gyermekek, a hajósok és a szegények " +
                         " védőszentje lett, híres volt jótékonyságáról. Egy legenda szerint " +
@@ -1855,7 +1862,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " eltérőek. Egyes helyeken a Mikulás hozza az ajándékokat, máshol a " +
                         " Télapó. A lényeg azonban mindenhol ugyanaz: a szeretet az adakozás és a " +
                         " gyermeki öröm ünnepe"),
-                new FeastDay(2029, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
+                new FeastDayModel(2029, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
                         " századi vértanú, a látás védőszentje, de a népi hitvilágban a " +
                         " termékenység, a jólét és a védelem szimbóluma. A hagyomány szerint ezen " +
                         " a napon kezdődött a tél leghosszabb éjszakája, így Luca napja a fény és " +
@@ -1865,7 +1872,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " remény ünnepe, a fény győzelme a sötétség felett és a következő év " +
                         " jólétének biztosítása. " +
                         " "),
-                new FeastDay(2029, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
+                new FeastDayModel(2029, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -1876,7 +1883,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " felett, így ez a leghosszabb éjszaka. Ezen a napon kezdődik a nappali fény " +
                         " fokozatos növekedése, így a következő hónapokban egyre hosszabbak lesznek " +
                         " a nappalok."),
-                new FeastDay(2029, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2029, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus születésének előestéje. Bár Jézus pontos születési dátuma " +
                         " nem ismert, a keresztény egyház a 4. században december 25.-ét jelölte meg " +
                         " születésének napjaként, összekapcsolva azt a téli napfordulóval. " +
@@ -1888,7 +1895,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szeretet és a megbecsülés kifejezése, amely a három királyok " +
                         " ajándékozására utal. Karácsony, bár elsősorban keresztény ünnep, " +
                         " világszerte a szeretet, a béke és a család ünnepe lett."),
-                new FeastDay(2029, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
+                new FeastDayModel(2029, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
                         " század óta tartanak. Az ünnep a téli napfordulóhoz kapcsolódik, " +
                         " szimbolizálva a fény győzelmét a sötétség felett. Karácsony a remény, " +
                         " a szeretet és a megváltás ünnepe, amely a családi együttlét, az öröm " +
@@ -1898,7 +1905,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " kultúrában a szeretet és a béke fontosságát hangsúlyozza. Karácsony " +
                         " lehetőséget ad az emberi kapcsolatok és az élet értelmének " +
                         " átgondolására"),
-                new FeastDay(2029, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
+                new FeastDayModel(2029, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
                         " azonban Magyarországon elsősorban Szent István királyra, az " +
                         " államalapítóra emlékeznek. A 4. századi eredetű ünnep során Jézus " +
                         " születése után következik Szent István napja, aki kulcsszerepet játszott " +
@@ -1907,7 +1914,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon nemzeti hősként is tisztelik, mivel ő alapította az " +
                         " államot. Ezen a napon az emberek szentmisére mennek, megemlékeznek " +
                         " királyukról és különböző ünnepi rendezvényeken is részt vesznek"),
-                new FeastDay(2029, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
+                new FeastDayModel(2029, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
                         " ünnepeljük az új év kezdetét. Az ünnep neve Szent Szilveszter pápától " +
                         " származik, aki 335 körül halt meg, de az újév ünneplésének hagyományai " +
                         " sokkal régebbre nyúlnak vissza. Szilveszter éjszakáján családok és " +
@@ -1921,7 +1928,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Hozzon az új év boldog pillanatokat, új lehetőségeket és boldog együtt " +
                         " töltött időt!"),
 
-                new FeastDay(2030, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
+                new FeastDayModel(2030, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
                         " Ilyenkor sokan fogadalmakat tesznek, hogy jobbá és tartalmasabbá tegyék az " +
                         " elkövetkező esztendőt. Kezdd az évet tiszta lappal és jusson eszedbe, hogy " +
                         " minden nap egy új lehetőség arra, hogy közelebb kerülj céljaidhoz és " +
@@ -1929,7 +1936,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " mondás. Legyen ez a nap a változás első lépése. Boldogságot, " +
                         " egészséget és kitartást kívánok az új év minden pillanatára! "
                 ),
-                new FeastDay(2030, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
+                new FeastDayModel(2030, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
                         " karácsonyfát, jelezve az ünnepi időszak végét. Az ünnep Jézus " +
                         " megjelenésére emlékeztet: a napkeleti bölcsek látogatására, Jézus " +
                         " megkeresztelkedésére és az első csodájára. A három királyok aranyat, " +
@@ -1938,7 +1945,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbóluma, amely a megkeresztelkedés szentségéhez kapcsolódik. Egyházi " +
                         " ünnepként a 4. század óta létezik. Sok helyen ekkor tartanak " +
                         " házszenteléseket, Isten áldását kérve az otthonra és az új évre."),
-                new FeastDay(2030, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
+                new FeastDayModel(2030, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
                         " (Valentin) római paphoz kötődik. A legenda szerint Valentin a 3. században " +
                         " titokban esketett meg szerelmespárokat, mert II. Claudius császár " +
                         " megtiltotta a házasságot, mondván, hogy a nőtlen férfiak jobb katonák. " +
@@ -1946,7 +1953,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepet hivatalosan 496-ban vezette be I. Geláz pápa. Ma világszerte a " +
                         " szerelmesek megajándékozásáról szól, szív alakú díszekkel, virágokkal " +
                         " és üdvözlőkártyákkal ünneplik."),
-                new FeastDay(2030, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
+                new FeastDayModel(2030, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
                         " amely a 7. század óta létezik. A hívők ezen a napon hamuval jelölik meg a " +
                         " homlokukat, emlékeztetve bűnösségükre és az élet mulandóságára. A " +
                         " szertartás a Teremtés könyvének szavait idézi: „porból vétettél, és " +
@@ -1957,7 +1964,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és feltámadására emlékezve, alázatos életet élve Isten előtt.  A " +
                         " Hamvazószerda a húsvéti böjt kezdete, amit 46 nappal húsvétvasárnap " +
                         " előtt tartanak. Általában február végére vagy március elejére esik."),
-                new FeastDay(2030, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
+                new FeastDayModel(2030, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
                         " demonstráltak a jobb munkakörülményekért és az egyenlő jogokért. Az " +
                         " ünnep célja a nők társadalmi, politikai és gazdasági jogainak " +
                         " előmozdítása, valamint a nemek közti egyenlőség hangsúlyozása. 1910-ben " +
@@ -1965,7 +1972,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " 1911-ben már több európai országban is megünnepelték. Magyarországon " +
                         " 1913 óta hivatalos ünnep. Eredetileg szocialista gyökerei voltak, mára már " +
                         " a nők jogainak elismerésére és tiszteletére emelkedett."),
-                new FeastDay(2030, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
+                new FeastDayModel(2030, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
                         " 1848-as forradalom és szabadságharc emlékére van. Ezen a napon a pesti " +
                         " forradalmi események nyomán, a fiatalok és a polgárok kiálltak a " +
                         " sajtószabadságért, a jobb életkörülményekért és a függetlenségért. " +
@@ -1976,7 +1983,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " identitás és ma már a magyar szabadság és összetartozás napjaként " +
                         " ünnepeljük. " +
                         " "),
-                new FeastDay(2030, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
+                new FeastDayModel(2030, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
                         " A tavaszi óraátállításkor az órákat hajnali 2:00-ról 3:00-ra állítjuk " +
                         " előre, hogy jobban kihasználjuk a nappali világosságot és csökkentsük a " +
                         " mesterséges világítás szükségességét. Magyarországon először " +
@@ -1988,7 +1995,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " villamosenergia-megtakarítás érdekében. Azóta évente kétszer állítjuk " +
                         " át az órákat és 1996 óta kormányrendelet szabályozza az " +
                         " óraátállítást Magyarországon."),
-                new FeastDay(2030, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
+                new FeastDayModel(2030, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
                         " átverések napja. Az emberek apró csínyekkel, például hamis hírekkel vagy " +
                         " kitalált történetekkel szórakoztatják egymást. Az internet " +
                         " elterjedésével az álhírek és vírusos videók is népszerűvé váltak. A " +
@@ -2000,7 +2007,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " váltak. Hasonló szokások figyelhetők meg a kelta tavaszi ünnepekben és az " +
                         " ókori római Hilaria ünnepén is, ahol a bolondos viselkedés a tavaszi " +
                         " megújulást jelezte. "),
-                new FeastDay(2030, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
+                new FeastDayModel(2030, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
                         " bevonulásának emlékére van. Az evangéliumok szerint Jézus szamárháton " +
                         " vonult be a városba, miközben a hívek pálmaágakat lengettek, üdvözölve " +
                         " őt, mint a Megváltót. A virágok, a pálmák és a zöld ágak használata " +
@@ -2009,7 +2016,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepekre való lelki felkészülést jelzi. Az ünnep hivatalosan a 4. " +
                         " század óta van jelen az egyházi naptárban és azóta része a keresztény " +
                         " hagyományoknak világszerte."),
-                new FeastDay(2030, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
+                new FeastDayModel(2030, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
                         " Jézus Krisztus kereszthalálát és szenvedését emlékezzük meg. Az ünnep " +
                         " célja, hogy a hívők átgondolják a megváltásra tett áldozat " +
                         " jelentőségét. E napot a 4. század óta ünneplik, amikor a keresztény " +
@@ -2021,7 +2028,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " megújulás napja is.  Nagypénteket a húsvét előtti pénteken ünneplik, " +
                         " tehát ez a dátum évente változik.  " +
                         " "),
-                new FeastDay(2030, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
+                new FeastDayModel(2030, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
                         " feltámadásának napja, amely a halál feletti győzelmet és az örök élet " +
                         " ígéretét hirdeti. Magyarországon 1991 óta munkaszüneti nap, de " +
                         " jelentősége évszázadok óta meghatározó. Húsvét a 40 napos nagyböjt " +
@@ -2034,7 +2041,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény húsvéti szokásokba. " +
                         " A Húsvétot évente változó dátumon ünneplik, mivel a tavaszi " +
                         " napéjegyenlőség utáni első teliholdat követő vasárnapra esik."),
-                new FeastDay(2030, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2030, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus feltámadását követően az új élet és a megújulás " +
                         " szimbólumává vált. Magyarországon a húsvéti locsolás hagyománya a 17. " +
                         " századtól terjedt el. A férfiak vízzel vagy illatos kölnivel locsolják " +
@@ -2045,7 +2052,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és a megváltást szimbolizálja. Magyarországon a húsvétot a " +
                         " kereszténység elterjedése óta ünneplik és a népszokások a 19. " +
                         " századtól erősödtek meg."),
-                new FeastDay(2030, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
+                new FeastDayModel(2030, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
                         " Nelson szenátor kezdeményezésére több millió ember gyűlt össze, hogy " +
                         " felhívja a figyelmet a környezetszennyezésre és a természeti erőforrások " +
                         " védelmére. A nap célja, hogy globálisan tudatosítsa az emberekben a " +
@@ -2056,7 +2063,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         "  " +
                         "  " +
                         " "),
-                new FeastDay(2030, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
+                new FeastDayModel(2030, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
                         " május 1-jét megelőző nap délután/este volt.  " +
                         " Magyarországon a középkor óta ismert, tehát legalább a 14. századtól " +
                         " ünneplik. A szokás az ősi tavaszi rituálékra épül, melyek a természet " +
@@ -2068,7 +2075,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepe volt, később pedig összefonódott a munka ünnepével (május 1.). " +
                         " Mára már kevésbé elterjedt szokás, de sok helyen igyekeznek még " +
                         " fenntartani."),
-                new FeastDay(2030, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
+                new FeastDayModel(2030, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
                         " folytatott küzdelem emléknapja világszerte. Az ünnep gyökerei az 1886-os " +
                         " chicagói tüntetésekhez nyúlnak vissza, ahol a munkások a nyolcórás " +
                         " munkaidő bevezetéséért demonstráltak. Az események hatására 1890-től " +
@@ -2078,7 +2085,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " nagyszabású felvonulásokkal és tömegrendezvényekkel ünnepelték. A " +
                         " rendszerváltás után a jelentése átalakult, de továbbra is a munka " +
                         " tiszteletét és a munkavállalók jogainak fontosságát hirdeti. "),
-                new FeastDay(2030, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
+                new FeastDayModel(2030, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
                         " világszerte az édesanyák tiszteletére tartanak. Gyökerei az ókori " +
                         " Görögországba nyúlnak vissza, ahol Rheát, az istenek anyját ünnepelték. " +
                         " A modern anyák napja az Egyesült Államokból indult 1908-ban, amikor Anna " +
@@ -2091,7 +2098,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " anyák iránti szeretet és tisztelet áll a középpontban. Anyák napját " +
                         " Magyarországon minden év május első vasárnapján ünneplik.  " +
                         " "),
-                new FeastDay(2030, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
+                new FeastDayModel(2030, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
                         " ünnep, melyet világszerte különböző időpontokban tartanak. Eredete " +
                         " 1925-re nyúlik vissza, amikor a genfi Gyermekjóléti Konferencián " +
                         " elhatározták, hogy kiemelik a gyermekek védelmének fontosságát. " +
@@ -2101,7 +2108,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " rendezvényekkel ünneplik őket. Az ünnep célja, hogy felhívja a figyelmet " +
                         " a gyermekek jogaira és boldogságuk fontosságára. Magyarországon a " +
                         " Gyermeknapot minden évben május utolsó vasárnapján ünneplik."),
-                new FeastDay(2030, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
+                new FeastDayModel(2030, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
                         " századtól kezdve ünnepelnek a keresztény egyházban. Az ünnep Jézus " +
                         " mennybemenetele után ötven nappal emlékezik meg a Szentlélek " +
                         " eljöveteléről, amely erőt adott az apostoloknak a keresztény hit " +
@@ -2111,7 +2118,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " számos népi hagyomány kapcsolódik hozzá, például a pünkösdi király " +
                         " és királyné választása. Pünkösd vasárnapját a húsvét utáni 50. " +
                         " napon, tehát 50 nappal húsvétvasárnap után ünneplik. "),
-                new FeastDay(2030, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
+                new FeastDayModel(2030, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
                         " pünkösdnek a második napja. Pünkösd a húsvét utáni 50. napon van, és a " +
                         " Szentlélek eljövetelét ünnepli, amikor Jézus tanítványai erőt és " +
                         " útmutatást kaptak küldetésükhöz. Az esemény a keresztény egyház " +
@@ -2120,7 +2127,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " volt. Magyarországon pünkösdhétfő munkaszüneti nap és hivatalosan 1993 " +
                         " óta ünnepeljük újra. Az ünnep a megújulást és a közösség " +
                         " összetartozását jelképezi."),
-                new FeastDay(2030, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
+                new FeastDayModel(2030, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
                         " családban és a gyermeknevelésben betöltött szerepüket. Az ünnep eredete " +
                         " az Egyesült Államokhoz köthető, ahol először 1910-ben tartották meg " +
                         " Sonora Smart Dodd kezdeményezésére , aki édesapját akarta tiszteletben " +
@@ -2131,7 +2138,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szerepét. Ez a nap lehetőséget ad arra, hogy köszönetet mondjunk az apák " +
                         " szeretetéért, támogatásáért és áldozatos munkájáért, amelyet " +
                         " családjukért tesznek. "),
-                new FeastDay(2030, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
+                new FeastDayModel(2030, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -2141,7 +2148,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " környékén a Nap több mint 15 órán keresztül a horizont felett " +
                         " tartózkodik. Ezen a napon a Föld az északi féltekén éri el a leghosszabb " +
                         " nappali órákat, így ez a legrövidebb éjszaka."),
-                new FeastDay(2030, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
+                new FeastDayModel(2030, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
                         " megalapozva a keresztény Magyarországot. 1083 augusztus 20.-án szentté " +
                         " avatták a Szent Péter-bazilikában. Az Árpád-korban az István-kultusz az " +
                         " uralkodó dinasztiát támogatta és egységet teremtett a népcsoportok " +
@@ -2153,7 +2160,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbólumává vált. 1950-től az új államrendszer ideológiája szerint " +
                         " alakították át az ünnep jelentését, majd 1991-ben ismét állami " +
                         " ünneppé nyilvánították."),
-                new FeastDay(2030, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
+                new FeastDayModel(2030, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
                         " eseményeire emlékezik. Az ünnep hivatalosan 1989 október 23.-án vált " +
                         " nemzeti ünneppé a rendszerváltás után, amikor a forradalom hőseit " +
                         " ünnepelve tisztelegtek a szabadságért és a demokráciáért folytatott " +
@@ -2162,7 +2169,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " játszott Magyarország függetlenségi törekvéseiben és a későbbi " +
                         " rendszerváltásban. Az október 23.-i események máig a szabadság és a " +
                         " nemzeti szuverenitás fontos szimbólumai."),
-                new FeastDay(2030, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
+                new FeastDayModel(2030, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
                         " 3:00 → 2:00 " +
                         " Ekkor kell 1 órát visszaállítani az órákat. " +
                         " Az őszi óraátállítás célja, hogy reggel világosabb legyen, így a " +
@@ -2174,7 +2181,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " hamarabb világosodik, de este hamarabb sötétedik.  1996 óta " +
                         " kormányrendelet szabályozza az óraátállítást. " +
                         " "),
-                new FeastDay(2030, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
+                new FeastDayModel(2030, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
                         " megemlékezik minden üdvözült lélekről, akik elnyerték a mennyországot, " +
                         " de nevüket nem tartják számon a naptárban. Az ünnep eredete a " +
                         " kereszténység előtti halotti kultuszokra is visszavezethető. Hivatalosan a " +
@@ -2183,7 +2190,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon munkaszüneti nap. Sokan virágokkal és gyertyagyújtással " +
                         " tisztelegnek elhunyt szeretteik emléke előtt. Ez a nap a hit és a " +
                         " megemlékezés ünnepe."),
-                new FeastDay(2030, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
+                new FeastDayModel(2030, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
                         " elhunyt hívekről. Az ünnep célja, hogy imádságokkal és jó " +
                         " cselekedetekkel segítsük a halottak lelki üdvét és tisztelegjünk " +
                         " szeretteink emléke előtt. Bár gyökerei a kereszténység előtti halotti " +
@@ -2191,7 +2198,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Odiló apát vezette be. Ő rendelte el, hogy a kolostorok imádkozzanak a " +
                         " tisztítótűzben szenvedő lelkekért. A gyertyagyújtás és a virágok " +
                         " elhelyezése máig az emlékezés fontos része. "),
-                new FeastDay(2030, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
+                new FeastDayModel(2030, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
                         " születésére és második eljövetelére való várakozást jelenti. Az " +
                         " advent származása a 4. századra nyúlik vissza, amikor bűnbánattal és " +
                         " lelki felkészüléssel várták a karácsonyt. Kezdetben hosszabb böjti " +
@@ -2203,7 +2210,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Advent első vasárnapját a karácsonyt megelőző négy vasárnap egyikeként " +
                         " ünneplik. Ez a nap általában november végére vagy december elejére esik.  " +
                         " "),
-                new FeastDay(2030, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
+                new FeastDayModel(2030, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
                         " csizmáit édességgel és játékokkal. Szent Miklós püspök emlék napja. A " +
                         " 4. században élt szent, aki a gyermekek, a hajósok és a szegények " +
                         " védőszentje lett, híres volt jótékonyságáról. Egy legenda szerint " +
@@ -2215,7 +2222,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " eltérőek. Egyes helyeken a Mikulás hozza az ajándékokat, máshol a " +
                         " Télapó. A lényeg azonban mindenhol ugyanaz: a szeretet az adakozás és a " +
                         " gyermeki öröm ünnepe"),
-                new FeastDay(2030, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
+                new FeastDayModel(2030, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
                         " századi vértanú, a látás védőszentje, de a népi hitvilágban a " +
                         " termékenység, a jólét és a védelem szimbóluma. A hagyomány szerint ezen " +
                         " a napon kezdődött a tél leghosszabb éjszakája, így Luca napja a fény és " +
@@ -2225,7 +2232,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " remény ünnepe, a fény győzelme a sötétség felett és a következő év " +
                         " jólétének biztosítása. " +
                         " "),
-                new FeastDay(2030, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
+                new FeastDayModel(2030, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -2236,7 +2243,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " felett, így ez a leghosszabb éjszaka. Ezen a napon kezdődik a nappali fény " +
                         " fokozatos növekedése, így a következő hónapokban egyre hosszabbak lesznek " +
                         " a nappalok."),
-                new FeastDay(2030, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2030, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus születésének előestéje. Bár Jézus pontos születési dátuma " +
                         " nem ismert, a keresztény egyház a 4. században december 25.-ét jelölte meg " +
                         " születésének napjaként, összekapcsolva azt a téli napfordulóval. " +
@@ -2248,7 +2255,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szeretet és a megbecsülés kifejezése, amely a három királyok " +
                         " ajándékozására utal. Karácsony, bár elsősorban keresztény ünnep, " +
                         " világszerte a szeretet, a béke és a család ünnepe lett."),
-                new FeastDay(2030, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
+                new FeastDayModel(2030, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
                         " század óta tartanak. Az ünnep a téli napfordulóhoz kapcsolódik, " +
                         " szimbolizálva a fény győzelmét a sötétség felett. Karácsony a remény, " +
                         " a szeretet és a megváltás ünnepe, amely a családi együttlét, az öröm " +
@@ -2258,7 +2265,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " kultúrában a szeretet és a béke fontosságát hangsúlyozza. Karácsony " +
                         " lehetőséget ad az emberi kapcsolatok és az élet értelmének " +
                         " átgondolására"),
-                new FeastDay(2030, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
+                new FeastDayModel(2030, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
                         " azonban Magyarországon elsősorban Szent István királyra, az " +
                         " államalapítóra emlékeznek. A 4. századi eredetű ünnep során Jézus " +
                         " születése után következik Szent István napja, aki kulcsszerepet játszott " +
@@ -2267,7 +2274,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon nemzeti hősként is tisztelik, mivel ő alapította az " +
                         " államot. Ezen a napon az emberek szentmisére mennek, megemlékeznek " +
                         " királyukról és különböző ünnepi rendezvényeken is részt vesznek"),
-                new FeastDay(2030, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
+                new FeastDayModel(2030, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
                         " ünnepeljük az új év kezdetét. Az ünnep neve Szent Szilveszter pápától " +
                         " származik, aki 335 körül halt meg, de az újév ünneplésének hagyományai " +
                         " sokkal régebbre nyúlnak vissza. Szilveszter éjszakáján családok és " +
@@ -2280,7 +2287,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Boldog Új Évet kívánok! Legyen tele örömmel, egészséggel és sikerrel. " +
                         " Hozzon az új év boldog pillanatokat, új lehetőségeket és boldog együtt " +
                         " töltött időt!"),
-                new FeastDay(2031, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
+                new FeastDayModel(2031, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
                         " Ilyenkor sokan fogadalmakat tesznek, hogy jobbá és tartalmasabbá tegyék az " +
                         " elkövetkező esztendőt. Kezdd az évet tiszta lappal és jusson eszedbe, hogy " +
                         " minden nap egy új lehetőség arra, hogy közelebb kerülj céljaidhoz és " +
@@ -2288,7 +2295,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " mondás. Legyen ez a nap a változás első lépése. Boldogságot, " +
                         " egészséget és kitartást kívánok az új év minden pillanatára! "
                 ),
-                new FeastDay(2031, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
+                new FeastDayModel(2031, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
                         " karácsonyfát, jelezve az ünnepi időszak végét. Az ünnep Jézus " +
                         " megjelenésére emlékeztet: a napkeleti bölcsek látogatására, Jézus " +
                         " megkeresztelkedésére és az első csodájára. A három királyok aranyat, " +
@@ -2297,7 +2304,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbóluma, amely a megkeresztelkedés szentségéhez kapcsolódik. Egyházi " +
                         " ünnepként a 4. század óta létezik. Sok helyen ekkor tartanak " +
                         " házszenteléseket, Isten áldását kérve az otthonra és az új évre."),
-                new FeastDay(2031, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
+                new FeastDayModel(2031, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
                         " (Valentin) római paphoz kötődik. A legenda szerint Valentin a 3. században " +
                         " titokban esketett meg szerelmespárokat, mert II. Claudius császár " +
                         " megtiltotta a házasságot, mondván, hogy a nőtlen férfiak jobb katonák. " +
@@ -2305,7 +2312,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepet hivatalosan 496-ban vezette be I. Geláz pápa. Ma világszerte a " +
                         " szerelmesek megajándékozásáról szól, szív alakú díszekkel, virágokkal " +
                         " és üdvözlőkártyákkal ünneplik."),
-                new FeastDay(2031, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
+                new FeastDayModel(2031, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
                         " amely a 7. század óta létezik. A hívők ezen a napon hamuval jelölik meg a " +
                         " homlokukat, emlékeztetve bűnösségükre és az élet mulandóságára. A " +
                         " szertartás a Teremtés könyvének szavait idézi: „porból vétettél, és " +
@@ -2316,7 +2323,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és feltámadására emlékezve, alázatos életet élve Isten előtt.  A " +
                         " Hamvazószerda a húsvéti böjt kezdete, amit 46 nappal húsvétvasárnap " +
                         " előtt tartanak. Általában február végére vagy március elejére esik."),
-                new FeastDay(2031, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
+                new FeastDayModel(2031, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
                         " demonstráltak a jobb munkakörülményekért és az egyenlő jogokért. Az " +
                         " ünnep célja a nők társadalmi, politikai és gazdasági jogainak " +
                         " előmozdítása, valamint a nemek közti egyenlőség hangsúlyozása. 1910-ben " +
@@ -2324,7 +2331,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " 1911-ben már több európai országban is megünnepelték. Magyarországon " +
                         " 1913 óta hivatalos ünnep. Eredetileg szocialista gyökerei voltak, mára már " +
                         " a nők jogainak elismerésére és tiszteletére emelkedett."),
-                new FeastDay(2031, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
+                new FeastDayModel(2031, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
                         " 1848-as forradalom és szabadságharc emlékére van. Ezen a napon a pesti " +
                         " forradalmi események nyomán, a fiatalok és a polgárok kiálltak a " +
                         " sajtószabadságért, a jobb életkörülményekért és a függetlenségért. " +
@@ -2335,7 +2342,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " identitás és ma már a magyar szabadság és összetartozás napjaként " +
                         " ünnepeljük. " +
                         " "),
-                new FeastDay(2031, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
+                new FeastDayModel(2031, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
                         " A tavaszi óraátállításkor az órákat hajnali 2:00-ról 3:00-ra állítjuk " +
                         " előre, hogy jobban kihasználjuk a nappali világosságot és csökkentsük a " +
                         " mesterséges világítás szükségességét. Magyarországon először " +
@@ -2347,7 +2354,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " villamosenergia-megtakarítás érdekében. Azóta évente kétszer állítjuk " +
                         " át az órákat és 1996 óta kormányrendelet szabályozza az " +
                         " óraátállítást Magyarországon."),
-                new FeastDay(2031, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
+                new FeastDayModel(2031, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
                         " átverések napja. Az emberek apró csínyekkel, például hamis hírekkel vagy " +
                         " kitalált történetekkel szórakoztatják egymást. Az internet " +
                         " elterjedésével az álhírek és vírusos videók is népszerűvé váltak. A " +
@@ -2359,7 +2366,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " váltak. Hasonló szokások figyelhetők meg a kelta tavaszi ünnepekben és az " +
                         " ókori római Hilaria ünnepén is, ahol a bolondos viselkedés a tavaszi " +
                         " megújulást jelezte. "),
-                new FeastDay(2031, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
+                new FeastDayModel(2031, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
                         " bevonulásának emlékére van. Az evangéliumok szerint Jézus szamárháton " +
                         " vonult be a városba, miközben a hívek pálmaágakat lengettek, üdvözölve " +
                         " őt, mint a Megváltót. A virágok, a pálmák és a zöld ágak használata " +
@@ -2368,7 +2375,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepekre való lelki felkészülést jelzi. Az ünnep hivatalosan a 4. " +
                         " század óta van jelen az egyházi naptárban és azóta része a keresztény " +
                         " hagyományoknak világszerte."),
-                new FeastDay(2031, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
+                new FeastDayModel(2031, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
                         " Jézus Krisztus kereszthalálát és szenvedését emlékezzük meg. Az ünnep " +
                         " célja, hogy a hívők átgondolják a megváltásra tett áldozat " +
                         " jelentőségét. E napot a 4. század óta ünneplik, amikor a keresztény " +
@@ -2380,7 +2387,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " megújulás napja is.  Nagypénteket a húsvét előtti pénteken ünneplik, " +
                         " tehát ez a dátum évente változik.  " +
                         " "),
-                new FeastDay(2031, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
+                new FeastDayModel(2031, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
                         " feltámadásának napja, amely a halál feletti győzelmet és az örök élet " +
                         " ígéretét hirdeti. Magyarországon 1991 óta munkaszüneti nap, de " +
                         " jelentősége évszázadok óta meghatározó. Húsvét a 40 napos nagyböjt " +
@@ -2393,7 +2400,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény húsvéti szokásokba. " +
                         " A Húsvétot évente változó dátumon ünneplik, mivel a tavaszi " +
                         " napéjegyenlőség utáni első teliholdat követő vasárnapra esik."),
-                new FeastDay(2031, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2031, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus feltámadását követően az új élet és a megújulás " +
                         " szimbólumává vált. Magyarországon a húsvéti locsolás hagyománya a 17. " +
                         " századtól terjedt el. A férfiak vízzel vagy illatos kölnivel locsolják " +
@@ -2404,7 +2411,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és a megváltást szimbolizálja. Magyarországon a húsvétot a " +
                         " kereszténység elterjedése óta ünneplik és a népszokások a 19. " +
                         " századtól erősödtek meg."),
-                new FeastDay(2031, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
+                new FeastDayModel(2031, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
                         " Nelson szenátor kezdeményezésére több millió ember gyűlt össze, hogy " +
                         " felhívja a figyelmet a környezetszennyezésre és a természeti erőforrások " +
                         " védelmére. A nap célja, hogy globálisan tudatosítsa az emberekben a " +
@@ -2415,7 +2422,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         "  " +
                         "  " +
                         " "),
-                new FeastDay(2031, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
+                new FeastDayModel(2031, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
                         " május 1-jét megelőző nap délután/este volt.  " +
                         " Magyarországon a középkor óta ismert, tehát legalább a 14. századtól " +
                         " ünneplik. A szokás az ősi tavaszi rituálékra épül, melyek a természet " +
@@ -2427,7 +2434,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepe volt, később pedig összefonódott a munka ünnepével (május 1.). " +
                         " Mára már kevésbé elterjedt szokás, de sok helyen igyekeznek még " +
                         " fenntartani."),
-                new FeastDay(2031, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
+                new FeastDayModel(2031, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
                         " folytatott küzdelem emléknapja világszerte. Az ünnep gyökerei az 1886-os " +
                         " chicagói tüntetésekhez nyúlnak vissza, ahol a munkások a nyolcórás " +
                         " munkaidő bevezetéséért demonstráltak. Az események hatására 1890-től " +
@@ -2437,7 +2444,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " nagyszabású felvonulásokkal és tömegrendezvényekkel ünnepelték. A " +
                         " rendszerváltás után a jelentése átalakult, de továbbra is a munka " +
                         " tiszteletét és a munkavállalók jogainak fontosságát hirdeti. "),
-                new FeastDay(2031, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
+                new FeastDayModel(2031, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
                         " világszerte az édesanyák tiszteletére tartanak. Gyökerei az ókori " +
                         " Görögországba nyúlnak vissza, ahol Rheát, az istenek anyját ünnepelték. " +
                         " A modern anyák napja az Egyesült Államokból indult 1908-ban, amikor Anna " +
@@ -2450,7 +2457,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " anyák iránti szeretet és tisztelet áll a középpontban. Anyák napját " +
                         " Magyarországon minden év május első vasárnapján ünneplik.  " +
                         " "),
-                new FeastDay(2031, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
+                new FeastDayModel(2031, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
                         " ünnep, melyet világszerte különböző időpontokban tartanak. Eredete " +
                         " 1925-re nyúlik vissza, amikor a genfi Gyermekjóléti Konferencián " +
                         " elhatározták, hogy kiemelik a gyermekek védelmének fontosságát. " +
@@ -2460,7 +2467,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " rendezvényekkel ünneplik őket. Az ünnep célja, hogy felhívja a figyelmet " +
                         " a gyermekek jogaira és boldogságuk fontosságára. Magyarországon a " +
                         " Gyermeknapot minden évben május utolsó vasárnapján ünneplik."),
-                new FeastDay(2031, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
+                new FeastDayModel(2031, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
                         " századtól kezdve ünnepelnek a keresztény egyházban. Az ünnep Jézus " +
                         " mennybemenetele után ötven nappal emlékezik meg a Szentlélek " +
                         " eljöveteléről, amely erőt adott az apostoloknak a keresztény hit " +
@@ -2470,7 +2477,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " számos népi hagyomány kapcsolódik hozzá, például a pünkösdi király " +
                         " és királyné választása. Pünkösd vasárnapját a húsvét utáni 50. " +
                         " napon, tehát 50 nappal húsvétvasárnap után ünneplik. "),
-                new FeastDay(2031, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
+                new FeastDayModel(2031, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
                         " pünkösdnek a második napja. Pünkösd a húsvét utáni 50. napon van, és a " +
                         " Szentlélek eljövetelét ünnepli, amikor Jézus tanítványai erőt és " +
                         " útmutatást kaptak küldetésükhöz. Az esemény a keresztény egyház " +
@@ -2479,7 +2486,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " volt. Magyarországon pünkösdhétfő munkaszüneti nap és hivatalosan 1993 " +
                         " óta ünnepeljük újra. Az ünnep a megújulást és a közösség " +
                         " összetartozását jelképezi."),
-                new FeastDay(2031, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
+                new FeastDayModel(2031, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
                         " családban és a gyermeknevelésben betöltött szerepüket. Az ünnep eredete " +
                         " az Egyesült Államokhoz köthető, ahol először 1910-ben tartották meg " +
                         " Sonora Smart Dodd kezdeményezésére , aki édesapját akarta tiszteletben " +
@@ -2490,7 +2497,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szerepét. Ez a nap lehetőséget ad arra, hogy köszönetet mondjunk az apák " +
                         " szeretetéért, támogatásáért és áldozatos munkájáért, amelyet " +
                         " családjukért tesznek. "),
-                new FeastDay(2031, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
+                new FeastDayModel(2031, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -2500,7 +2507,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " környékén a Nap több mint 15 órán keresztül a horizont felett " +
                         " tartózkodik. Ezen a napon a Föld az északi féltekén éri el a leghosszabb " +
                         " nappali órákat, így ez a legrövidebb éjszaka."),
-                new FeastDay(2031, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
+                new FeastDayModel(2031, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
                         " megalapozva a keresztény Magyarországot. 1083 augusztus 20.-án szentté " +
                         " avatták a Szent Péter-bazilikában. Az Árpád-korban az István-kultusz az " +
                         " uralkodó dinasztiát támogatta és egységet teremtett a népcsoportok " +
@@ -2512,7 +2519,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbólumává vált. 1950-től az új államrendszer ideológiája szerint " +
                         " alakították át az ünnep jelentését, majd 1991-ben ismét állami " +
                         " ünneppé nyilvánították."),
-                new FeastDay(2031, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
+                new FeastDayModel(2031, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
                         " eseményeire emlékezik. Az ünnep hivatalosan 1989 október 23.-án vált " +
                         " nemzeti ünneppé a rendszerváltás után, amikor a forradalom hőseit " +
                         " ünnepelve tisztelegtek a szabadságért és a demokráciáért folytatott " +
@@ -2521,7 +2528,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " játszott Magyarország függetlenségi törekvéseiben és a későbbi " +
                         " rendszerváltásban. Az október 23.-i események máig a szabadság és a " +
                         " nemzeti szuverenitás fontos szimbólumai."),
-                new FeastDay(2031, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
+                new FeastDayModel(2031, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
                         " 3:00 → 2:00 " +
                         " Ekkor kell 1 órát visszaállítani az órákat. " +
                         " Az őszi óraátállítás célja, hogy reggel világosabb legyen, így a " +
@@ -2533,7 +2540,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " hamarabb világosodik, de este hamarabb sötétedik.  1996 óta " +
                         " kormányrendelet szabályozza az óraátállítást. " +
                         " "),
-                new FeastDay(2031, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
+                new FeastDayModel(2031, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
                         " megemlékezik minden üdvözült lélekről, akik elnyerték a mennyországot, " +
                         " de nevüket nem tartják számon a naptárban. Az ünnep eredete a " +
                         " kereszténység előtti halotti kultuszokra is visszavezethető. Hivatalosan a " +
@@ -2542,7 +2549,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon munkaszüneti nap. Sokan virágokkal és gyertyagyújtással " +
                         " tisztelegnek elhunyt szeretteik emléke előtt. Ez a nap a hit és a " +
                         " megemlékezés ünnepe."),
-                new FeastDay(2031, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
+                new FeastDayModel(2031, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
                         " elhunyt hívekről. Az ünnep célja, hogy imádságokkal és jó " +
                         " cselekedetekkel segítsük a halottak lelki üdvét és tisztelegjünk " +
                         " szeretteink emléke előtt. Bár gyökerei a kereszténység előtti halotti " +
@@ -2550,7 +2557,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Odiló apát vezette be. Ő rendelte el, hogy a kolostorok imádkozzanak a " +
                         " tisztítótűzben szenvedő lelkekért. A gyertyagyújtás és a virágok " +
                         " elhelyezése máig az emlékezés fontos része. "),
-                new FeastDay(2031, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
+                new FeastDayModel(2031, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
                         " születésére és második eljövetelére való várakozást jelenti. Az " +
                         " advent származása a 4. századra nyúlik vissza, amikor bűnbánattal és " +
                         " lelki felkészüléssel várták a karácsonyt. Kezdetben hosszabb böjti " +
@@ -2562,7 +2569,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Advent első vasárnapját a karácsonyt megelőző négy vasárnap egyikeként " +
                         " ünneplik. Ez a nap általában november végére vagy december elejére esik.  " +
                         " "),
-                new FeastDay(2031, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
+                new FeastDayModel(2031, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
                         " csizmáit édességgel és játékokkal. Szent Miklós püspök emlék napja. A " +
                         " 4. században élt szent, aki a gyermekek, a hajósok és a szegények " +
                         " védőszentje lett, híres volt jótékonyságáról. Egy legenda szerint " +
@@ -2574,7 +2581,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " eltérőek. Egyes helyeken a Mikulás hozza az ajándékokat, máshol a " +
                         " Télapó. A lényeg azonban mindenhol ugyanaz: a szeretet az adakozás és a " +
                         " gyermeki öröm ünnepe"),
-                new FeastDay(2031, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
+                new FeastDayModel(2031, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
                         " századi vértanú, a látás védőszentje, de a népi hitvilágban a " +
                         " termékenység, a jólét és a védelem szimbóluma. A hagyomány szerint ezen " +
                         " a napon kezdődött a tél leghosszabb éjszakája, így Luca napja a fény és " +
@@ -2584,7 +2591,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " remény ünnepe, a fény győzelme a sötétség felett és a következő év " +
                         " jólétének biztosítása. " +
                         " "),
-                new FeastDay(2031, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
+                new FeastDayModel(2031, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -2595,7 +2602,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " felett, így ez a leghosszabb éjszaka. Ezen a napon kezdődik a nappali fény " +
                         " fokozatos növekedése, így a következő hónapokban egyre hosszabbak lesznek " +
                         " a nappalok."),
-                new FeastDay(2031, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2031, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus születésének előestéje. Bár Jézus pontos születési dátuma " +
                         " nem ismert, a keresztény egyház a 4. században december 25.-ét jelölte meg " +
                         " születésének napjaként, összekapcsolva azt a téli napfordulóval. " +
@@ -2607,7 +2614,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szeretet és a megbecsülés kifejezése, amely a három királyok " +
                         " ajándékozására utal. Karácsony, bár elsősorban keresztény ünnep, " +
                         " világszerte a szeretet, a béke és a család ünnepe lett."),
-                new FeastDay(2031, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
+                new FeastDayModel(2031, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
                         " század óta tartanak. Az ünnep a téli napfordulóhoz kapcsolódik, " +
                         " szimbolizálva a fény győzelmét a sötétség felett. Karácsony a remény, " +
                         " a szeretet és a megváltás ünnepe, amely a családi együttlét, az öröm " +
@@ -2617,7 +2624,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " kultúrában a szeretet és a béke fontosságát hangsúlyozza. Karácsony " +
                         " lehetőséget ad az emberi kapcsolatok és az élet értelmének " +
                         " átgondolására"),
-                new FeastDay(2031, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
+                new FeastDayModel(2031, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
                         " azonban Magyarországon elsősorban Szent István királyra, az " +
                         " államalapítóra emlékeznek. A 4. századi eredetű ünnep során Jézus " +
                         " születése után következik Szent István napja, aki kulcsszerepet játszott " +
@@ -2626,7 +2633,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon nemzeti hősként is tisztelik, mivel ő alapította az " +
                         " államot. Ezen a napon az emberek szentmisére mennek, megemlékeznek " +
                         " királyukról és különböző ünnepi rendezvényeken is részt vesznek"),
-                new FeastDay(2031, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
+                new FeastDayModel(2031, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
                         " ünnepeljük az új év kezdetét. Az ünnep neve Szent Szilveszter pápától " +
                         " származik, aki 335 körül halt meg, de az újév ünneplésének hagyományai " +
                         " sokkal régebbre nyúlnak vissza. Szilveszter éjszakáján családok és " +
@@ -2639,7 +2646,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Boldog Új Évet kívánok! Legyen tele örömmel, egészséggel és sikerrel. " +
                         " Hozzon az új év boldog pillanatokat, új lehetőségeket és boldog együtt " +
                         " töltött időt!"),
-                new FeastDay(2032, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
+                new FeastDayModel(2032, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
                         " Ilyenkor sokan fogadalmakat tesznek, hogy jobbá és tartalmasabbá tegyék az " +
                         " elkövetkező esztendőt. Kezdd az évet tiszta lappal és jusson eszedbe, hogy " +
                         " minden nap egy új lehetőség arra, hogy közelebb kerülj céljaidhoz és " +
@@ -2647,7 +2654,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " mondás. Legyen ez a nap a változás első lépése. Boldogságot, " +
                         " egészséget és kitartást kívánok az új év minden pillanatára! "
                 ),
-                new FeastDay(2032, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
+                new FeastDayModel(2032, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
                         " karácsonyfát, jelezve az ünnepi időszak végét. Az ünnep Jézus " +
                         " megjelenésére emlékeztet: a napkeleti bölcsek látogatására, Jézus " +
                         " megkeresztelkedésére és az első csodájára. A három királyok aranyat, " +
@@ -2656,7 +2663,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbóluma, amely a megkeresztelkedés szentségéhez kapcsolódik. Egyházi " +
                         " ünnepként a 4. század óta létezik. Sok helyen ekkor tartanak " +
                         " házszenteléseket, Isten áldását kérve az otthonra és az új évre."),
-                new FeastDay(2032, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
+                new FeastDayModel(2032, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
                         " (Valentin) római paphoz kötődik. A legenda szerint Valentin a 3. században " +
                         " titokban esketett meg szerelmespárokat, mert II. Claudius császár " +
                         " megtiltotta a házasságot, mondván, hogy a nőtlen férfiak jobb katonák. " +
@@ -2664,7 +2671,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepet hivatalosan 496-ban vezette be I. Geláz pápa. Ma világszerte a " +
                         " szerelmesek megajándékozásáról szól, szív alakú díszekkel, virágokkal " +
                         " és üdvözlőkártyákkal ünneplik."),
-                new FeastDay(2032, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
+                new FeastDayModel(2032, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
                         " amely a 7. század óta létezik. A hívők ezen a napon hamuval jelölik meg a " +
                         " homlokukat, emlékeztetve bűnösségükre és az élet mulandóságára. A " +
                         " szertartás a Teremtés könyvének szavait idézi: „porból vétettél, és " +
@@ -2675,7 +2682,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és feltámadására emlékezve, alázatos életet élve Isten előtt.  A " +
                         " Hamvazószerda a húsvéti böjt kezdete, amit 46 nappal húsvétvasárnap " +
                         " előtt tartanak. Általában február végére vagy március elejére esik."),
-                new FeastDay(2032, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
+                new FeastDayModel(2032, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
                         " demonstráltak a jobb munkakörülményekért és az egyenlő jogokért. Az " +
                         " ünnep célja a nők társadalmi, politikai és gazdasági jogainak " +
                         " előmozdítása, valamint a nemek közti egyenlőség hangsúlyozása. 1910-ben " +
@@ -2683,7 +2690,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " 1911-ben már több európai országban is megünnepelték. Magyarországon " +
                         " 1913 óta hivatalos ünnep. Eredetileg szocialista gyökerei voltak, mára már " +
                         " a nők jogainak elismerésére és tiszteletére emelkedett."),
-                new FeastDay(2032, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
+                new FeastDayModel(2032, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
                         " 1848-as forradalom és szabadságharc emlékére van. Ezen a napon a pesti " +
                         " forradalmi események nyomán, a fiatalok és a polgárok kiálltak a " +
                         " sajtószabadságért, a jobb életkörülményekért és a függetlenségért. " +
@@ -2694,7 +2701,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " identitás és ma már a magyar szabadság és összetartozás napjaként " +
                         " ünnepeljük. " +
                         " "),
-                new FeastDay(2032, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
+                new FeastDayModel(2032, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
                         " A tavaszi óraátállításkor az órákat hajnali 2:00-ról 3:00-ra állítjuk " +
                         " előre, hogy jobban kihasználjuk a nappali világosságot és csökkentsük a " +
                         " mesterséges világítás szükségességét. Magyarországon először " +
@@ -2706,7 +2713,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " villamosenergia-megtakarítás érdekében. Azóta évente kétszer állítjuk " +
                         " át az órákat és 1996 óta kormányrendelet szabályozza az " +
                         " óraátállítást Magyarországon."),
-                new FeastDay(2032, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
+                new FeastDayModel(2032, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
                         " átverések napja. Az emberek apró csínyekkel, például hamis hírekkel vagy " +
                         " kitalált történetekkel szórakoztatják egymást. Az internet " +
                         " elterjedésével az álhírek és vírusos videók is népszerűvé váltak. A " +
@@ -2718,7 +2725,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " váltak. Hasonló szokások figyelhetők meg a kelta tavaszi ünnepekben és az " +
                         " ókori római Hilaria ünnepén is, ahol a bolondos viselkedés a tavaszi " +
                         " megújulást jelezte. "),
-                new FeastDay(2032, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
+                new FeastDayModel(2032, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
                         " bevonulásának emlékére van. Az evangéliumok szerint Jézus szamárháton " +
                         " vonult be a városba, miközben a hívek pálmaágakat lengettek, üdvözölve " +
                         " őt, mint a Megváltót. A virágok, a pálmák és a zöld ágak használata " +
@@ -2727,7 +2734,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepekre való lelki felkészülést jelzi. Az ünnep hivatalosan a 4. " +
                         " század óta van jelen az egyházi naptárban és azóta része a keresztény " +
                         " hagyományoknak világszerte."),
-                new FeastDay(2032, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
+                new FeastDayModel(2032, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
                         " Jézus Krisztus kereszthalálát és szenvedését emlékezzük meg. Az ünnep " +
                         " célja, hogy a hívők átgondolják a megváltásra tett áldozat " +
                         " jelentőségét. E napot a 4. század óta ünneplik, amikor a keresztény " +
@@ -2739,7 +2746,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " megújulás napja is.  Nagypénteket a húsvét előtti pénteken ünneplik, " +
                         " tehát ez a dátum évente változik.  " +
                         " "),
-                new FeastDay(2032, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
+                new FeastDayModel(2032, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
                         " feltámadásának napja, amely a halál feletti győzelmet és az örök élet " +
                         " ígéretét hirdeti. Magyarországon 1991 óta munkaszüneti nap, de " +
                         " jelentősége évszázadok óta meghatározó. Húsvét a 40 napos nagyböjt " +
@@ -2752,7 +2759,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény húsvéti szokásokba. " +
                         " A Húsvétot évente változó dátumon ünneplik, mivel a tavaszi " +
                         " napéjegyenlőség utáni első teliholdat követő vasárnapra esik."),
-                new FeastDay(2032, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2032, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus feltámadását követően az új élet és a megújulás " +
                         " szimbólumává vált. Magyarországon a húsvéti locsolás hagyománya a 17. " +
                         " századtól terjedt el. A férfiak vízzel vagy illatos kölnivel locsolják " +
@@ -2763,7 +2770,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és a megváltást szimbolizálja. Magyarországon a húsvétot a " +
                         " kereszténység elterjedése óta ünneplik és a népszokások a 19. " +
                         " századtól erősödtek meg."),
-                new FeastDay(2032, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
+                new FeastDayModel(2032, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
                         " Nelson szenátor kezdeményezésére több millió ember gyűlt össze, hogy " +
                         " felhívja a figyelmet a környezetszennyezésre és a természeti erőforrások " +
                         " védelmére. A nap célja, hogy globálisan tudatosítsa az emberekben a " +
@@ -2774,7 +2781,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         "  " +
                         "  " +
                         " "),
-                new FeastDay(2032, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
+                new FeastDayModel(2032, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
                         " május 1-jét megelőző nap délután/este volt.  " +
                         " Magyarországon a középkor óta ismert, tehát legalább a 14. századtól " +
                         " ünneplik. A szokás az ősi tavaszi rituálékra épül, melyek a természet " +
@@ -2786,7 +2793,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepe volt, később pedig összefonódott a munka ünnepével (május 1.). " +
                         " Mára már kevésbé elterjedt szokás, de sok helyen igyekeznek még " +
                         " fenntartani."),
-                new FeastDay(2032, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
+                new FeastDayModel(2032, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
                         " folytatott küzdelem emléknapja világszerte. Az ünnep gyökerei az 1886-os " +
                         " chicagói tüntetésekhez nyúlnak vissza, ahol a munkások a nyolcórás " +
                         " munkaidő bevezetéséért demonstráltak. Az események hatására 1890-től " +
@@ -2796,7 +2803,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " nagyszabású felvonulásokkal és tömegrendezvényekkel ünnepelték. A " +
                         " rendszerváltás után a jelentése átalakult, de továbbra is a munka " +
                         " tiszteletét és a munkavállalók jogainak fontosságát hirdeti. "),
-                new FeastDay(2032, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
+                new FeastDayModel(2032, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
                         " világszerte az édesanyák tiszteletére tartanak. Gyökerei az ókori " +
                         " Görögországba nyúlnak vissza, ahol Rheát, az istenek anyját ünnepelték. " +
                         " A modern anyák napja az Egyesült Államokból indult 1908-ban, amikor Anna " +
@@ -2809,7 +2816,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " anyák iránti szeretet és tisztelet áll a középpontban. Anyák napját " +
                         " Magyarországon minden év május első vasárnapján ünneplik.  " +
                         " "),
-                new FeastDay(2032, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
+                new FeastDayModel(2032, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
                         " ünnep, melyet világszerte különböző időpontokban tartanak. Eredete " +
                         " 1925-re nyúlik vissza, amikor a genfi Gyermekjóléti Konferencián " +
                         " elhatározták, hogy kiemelik a gyermekek védelmének fontosságát. " +
@@ -2819,7 +2826,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " rendezvényekkel ünneplik őket. Az ünnep célja, hogy felhívja a figyelmet " +
                         " a gyermekek jogaira és boldogságuk fontosságára. Magyarországon a " +
                         " Gyermeknapot minden évben május utolsó vasárnapján ünneplik."),
-                new FeastDay(2032, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
+                new FeastDayModel(2032, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
                         " századtól kezdve ünnepelnek a keresztény egyházban. Az ünnep Jézus " +
                         " mennybemenetele után ötven nappal emlékezik meg a Szentlélek " +
                         " eljöveteléről, amely erőt adott az apostoloknak a keresztény hit " +
@@ -2829,7 +2836,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " számos népi hagyomány kapcsolódik hozzá, például a pünkösdi király " +
                         " és királyné választása. Pünkösd vasárnapját a húsvét utáni 50. " +
                         " napon, tehát 50 nappal húsvétvasárnap után ünneplik. "),
-                new FeastDay(2032, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
+                new FeastDayModel(2032, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
                         " pünkösdnek a második napja. Pünkösd a húsvét utáni 50. napon van, és a " +
                         " Szentlélek eljövetelét ünnepli, amikor Jézus tanítványai erőt és " +
                         " útmutatást kaptak küldetésükhöz. Az esemény a keresztény egyház " +
@@ -2838,7 +2845,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " volt. Magyarországon pünkösdhétfő munkaszüneti nap és hivatalosan 1993 " +
                         " óta ünnepeljük újra. Az ünnep a megújulást és a közösség " +
                         " összetartozását jelképezi."),
-                new FeastDay(2032, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
+                new FeastDayModel(2032, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
                         " családban és a gyermeknevelésben betöltött szerepüket. Az ünnep eredete " +
                         " az Egyesült Államokhoz köthető, ahol először 1910-ben tartották meg " +
                         " Sonora Smart Dodd kezdeményezésére , aki édesapját akarta tiszteletben " +
@@ -2849,7 +2856,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szerepét. Ez a nap lehetőséget ad arra, hogy köszönetet mondjunk az apák " +
                         " szeretetéért, támogatásáért és áldozatos munkájáért, amelyet " +
                         " családjukért tesznek. "),
-                new FeastDay(2032, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
+                new FeastDayModel(2032, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -2859,7 +2866,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " környékén a Nap több mint 15 órán keresztül a horizont felett " +
                         " tartózkodik. Ezen a napon a Föld az északi féltekén éri el a leghosszabb " +
                         " nappali órákat, így ez a legrövidebb éjszaka."),
-                new FeastDay(2032, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
+                new FeastDayModel(2032, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
                         " megalapozva a keresztény Magyarországot. 1083 augusztus 20.-án szentté " +
                         " avatták a Szent Péter-bazilikában. Az Árpád-korban az István-kultusz az " +
                         " uralkodó dinasztiát támogatta és egységet teremtett a népcsoportok " +
@@ -2871,7 +2878,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbólumává vált. 1950-től az új államrendszer ideológiája szerint " +
                         " alakították át az ünnep jelentését, majd 1991-ben ismét állami " +
                         " ünneppé nyilvánították."),
-                new FeastDay(2032, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
+                new FeastDayModel(2032, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
                         " eseményeire emlékezik. Az ünnep hivatalosan 1989 október 23.-án vált " +
                         " nemzeti ünneppé a rendszerváltás után, amikor a forradalom hőseit " +
                         " ünnepelve tisztelegtek a szabadságért és a demokráciáért folytatott " +
@@ -2880,7 +2887,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " játszott Magyarország függetlenségi törekvéseiben és a későbbi " +
                         " rendszerváltásban. Az október 23.-i események máig a szabadság és a " +
                         " nemzeti szuverenitás fontos szimbólumai."),
-                new FeastDay(2032, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
+                new FeastDayModel(2032, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
                         " 3:00 → 2:00 " +
                         " Ekkor kell 1 órát visszaállítani az órákat. " +
                         " Az őszi óraátállítás célja, hogy reggel világosabb legyen, így a " +
@@ -2892,7 +2899,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " hamarabb világosodik, de este hamarabb sötétedik.  1996 óta " +
                         " kormányrendelet szabályozza az óraátállítást. " +
                         " "),
-                new FeastDay(2032, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
+                new FeastDayModel(2032, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
                         " megemlékezik minden üdvözült lélekről, akik elnyerték a mennyországot, " +
                         " de nevüket nem tartják számon a naptárban. Az ünnep eredete a " +
                         " kereszténység előtti halotti kultuszokra is visszavezethető. Hivatalosan a " +
@@ -2901,7 +2908,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon munkaszüneti nap. Sokan virágokkal és gyertyagyújtással " +
                         " tisztelegnek elhunyt szeretteik emléke előtt. Ez a nap a hit és a " +
                         " megemlékezés ünnepe."),
-                new FeastDay(2032, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
+                new FeastDayModel(2032, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
                         " elhunyt hívekről. Az ünnep célja, hogy imádságokkal és jó " +
                         " cselekedetekkel segítsük a halottak lelki üdvét és tisztelegjünk " +
                         " szeretteink emléke előtt. Bár gyökerei a kereszténység előtti halotti " +
@@ -2909,7 +2916,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Odiló apát vezette be. Ő rendelte el, hogy a kolostorok imádkozzanak a " +
                         " tisztítótűzben szenvedő lelkekért. A gyertyagyújtás és a virágok " +
                         " elhelyezése máig az emlékezés fontos része. "),
-                new FeastDay(2032, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
+                new FeastDayModel(2032, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
                         " születésére és második eljövetelére való várakozást jelenti. Az " +
                         " advent származása a 4. századra nyúlik vissza, amikor bűnbánattal és " +
                         " lelki felkészüléssel várták a karácsonyt. Kezdetben hosszabb böjti " +
@@ -2921,7 +2928,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Advent első vasárnapját a karácsonyt megelőző négy vasárnap egyikeként " +
                         " ünneplik. Ez a nap általában november végére vagy december elejére esik.  " +
                         " "),
-                new FeastDay(2032, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
+                new FeastDayModel(2032, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
                         " csizmáit édességgel és játékokkal. Szent Miklós püspök emlék napja. A " +
                         " 4. században élt szent, aki a gyermekek, a hajósok és a szegények " +
                         " védőszentje lett, híres volt jótékonyságáról. Egy legenda szerint " +
@@ -2933,7 +2940,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " eltérőek. Egyes helyeken a Mikulás hozza az ajándékokat, máshol a " +
                         " Télapó. A lényeg azonban mindenhol ugyanaz: a szeretet az adakozás és a " +
                         " gyermeki öröm ünnepe"),
-                new FeastDay(2032, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
+                new FeastDayModel(2032, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
                         " századi vértanú, a látás védőszentje, de a népi hitvilágban a " +
                         " termékenység, a jólét és a védelem szimbóluma. A hagyomány szerint ezen " +
                         " a napon kezdődött a tél leghosszabb éjszakája, így Luca napja a fény és " +
@@ -2943,7 +2950,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " remény ünnepe, a fény győzelme a sötétség felett és a következő év " +
                         " jólétének biztosítása. " +
                         " "),
-                new FeastDay(2032, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
+                new FeastDayModel(2032, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -2954,7 +2961,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " felett, így ez a leghosszabb éjszaka. Ezen a napon kezdődik a nappali fény " +
                         " fokozatos növekedése, így a következő hónapokban egyre hosszabbak lesznek " +
                         " a nappalok."),
-                new FeastDay(2032, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2032, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus születésének előestéje. Bár Jézus pontos születési dátuma " +
                         " nem ismert, a keresztény egyház a 4. században december 25.-ét jelölte meg " +
                         " születésének napjaként, összekapcsolva azt a téli napfordulóval. " +
@@ -2966,7 +2973,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szeretet és a megbecsülés kifejezése, amely a három királyok " +
                         " ajándékozására utal. Karácsony, bár elsősorban keresztény ünnep, " +
                         " világszerte a szeretet, a béke és a család ünnepe lett."),
-                new FeastDay(2032, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
+                new FeastDayModel(2032, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
                         " század óta tartanak. Az ünnep a téli napfordulóhoz kapcsolódik, " +
                         " szimbolizálva a fény győzelmét a sötétség felett. Karácsony a remény, " +
                         " a szeretet és a megváltás ünnepe, amely a családi együttlét, az öröm " +
@@ -2976,7 +2983,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " kultúrában a szeretet és a béke fontosságát hangsúlyozza. Karácsony " +
                         " lehetőséget ad az emberi kapcsolatok és az élet értelmének " +
                         " átgondolására"),
-                new FeastDay(2032, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
+                new FeastDayModel(2032, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
                         " azonban Magyarországon elsősorban Szent István királyra, az " +
                         " államalapítóra emlékeznek. A 4. századi eredetű ünnep során Jézus " +
                         " születése után következik Szent István napja, aki kulcsszerepet játszott " +
@@ -2985,7 +2992,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon nemzeti hősként is tisztelik, mivel ő alapította az " +
                         " államot. Ezen a napon az emberek szentmisére mennek, megemlékeznek " +
                         " királyukról és különböző ünnepi rendezvényeken is részt vesznek"),
-                new FeastDay(2032, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
+                new FeastDayModel(2032, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
                         " ünnepeljük az új év kezdetét. Az ünnep neve Szent Szilveszter pápától " +
                         " származik, aki 335 körül halt meg, de az újév ünneplésének hagyományai " +
                         " sokkal régebbre nyúlnak vissza. Szilveszter éjszakáján családok és " +
@@ -2998,7 +3005,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Boldog Új Évet kívánok! Legyen tele örömmel, egészséggel és sikerrel. " +
                         " Hozzon az új év boldog pillanatokat, új lehetőségeket és boldog együtt " +
                         " töltött időt!"),
-                new FeastDay(2033, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
+                new FeastDayModel(2033, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
                         " Ilyenkor sokan fogadalmakat tesznek, hogy jobbá és tartalmasabbá tegyék az " +
                         " elkövetkező esztendőt. Kezdd az évet tiszta lappal és jusson eszedbe, hogy " +
                         " minden nap egy új lehetőség arra, hogy közelebb kerülj céljaidhoz és " +
@@ -3006,7 +3013,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " mondás. Legyen ez a nap a változás első lépése. Boldogságot, " +
                         " egészséget és kitartást kívánok az új év minden pillanatára! "
                 ),
-                new FeastDay(2033, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
+                new FeastDayModel(2033, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
                         " karácsonyfát, jelezve az ünnepi időszak végét. Az ünnep Jézus " +
                         " megjelenésére emlékeztet: a napkeleti bölcsek látogatására, Jézus " +
                         " megkeresztelkedésére és az első csodájára. A három királyok aranyat, " +
@@ -3015,7 +3022,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbóluma, amely a megkeresztelkedés szentségéhez kapcsolódik. Egyházi " +
                         " ünnepként a 4. század óta létezik. Sok helyen ekkor tartanak " +
                         " házszenteléseket, Isten áldását kérve az otthonra és az új évre."),
-                new FeastDay(2033, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
+                new FeastDayModel(2033, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
                         " (Valentin) római paphoz kötődik. A legenda szerint Valentin a 3. században " +
                         " titokban esketett meg szerelmespárokat, mert II. Claudius császár " +
                         " megtiltotta a házasságot, mondván, hogy a nőtlen férfiak jobb katonák. " +
@@ -3023,7 +3030,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepet hivatalosan 496-ban vezette be I. Geláz pápa. Ma világszerte a " +
                         " szerelmesek megajándékozásáról szól, szív alakú díszekkel, virágokkal " +
                         " és üdvözlőkártyákkal ünneplik."),
-                new FeastDay(2033, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
+                new FeastDayModel(2033, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
                         " amely a 7. század óta létezik. A hívők ezen a napon hamuval jelölik meg a " +
                         " homlokukat, emlékeztetve bűnösségükre és az élet mulandóságára. A " +
                         " szertartás a Teremtés könyvének szavait idézi: „porból vétettél, és " +
@@ -3034,7 +3041,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és feltámadására emlékezve, alázatos életet élve Isten előtt.  A " +
                         " Hamvazószerda a húsvéti böjt kezdete, amit 46 nappal húsvétvasárnap " +
                         " előtt tartanak. Általában február végére vagy március elejére esik."),
-                new FeastDay(2033, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
+                new FeastDayModel(2033, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
                         " demonstráltak a jobb munkakörülményekért és az egyenlő jogokért. Az " +
                         " ünnep célja a nők társadalmi, politikai és gazdasági jogainak " +
                         " előmozdítása, valamint a nemek közti egyenlőség hangsúlyozása. 1910-ben " +
@@ -3042,7 +3049,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " 1911-ben már több európai országban is megünnepelték. Magyarországon " +
                         " 1913 óta hivatalos ünnep. Eredetileg szocialista gyökerei voltak, mára már " +
                         " a nők jogainak elismerésére és tiszteletére emelkedett."),
-                new FeastDay(2033, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
+                new FeastDayModel(2033, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
                         " 1848-as forradalom és szabadságharc emlékére van. Ezen a napon a pesti " +
                         " forradalmi események nyomán, a fiatalok és a polgárok kiálltak a " +
                         " sajtószabadságért, a jobb életkörülményekért és a függetlenségért. " +
@@ -3053,7 +3060,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " identitás és ma már a magyar szabadság és összetartozás napjaként " +
                         " ünnepeljük. " +
                         " "),
-                new FeastDay(2033, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
+                new FeastDayModel(2033, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
                         " A tavaszi óraátállításkor az órákat hajnali 2:00-ról 3:00-ra állítjuk " +
                         " előre, hogy jobban kihasználjuk a nappali világosságot és csökkentsük a " +
                         " mesterséges világítás szükségességét. Magyarországon először " +
@@ -3065,7 +3072,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " villamosenergia-megtakarítás érdekében. Azóta évente kétszer állítjuk " +
                         " át az órákat és 1996 óta kormányrendelet szabályozza az " +
                         " óraátállítást Magyarországon."),
-                new FeastDay(2033, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
+                new FeastDayModel(2033, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
                         " átverések napja. Az emberek apró csínyekkel, például hamis hírekkel vagy " +
                         " kitalált történetekkel szórakoztatják egymást. Az internet " +
                         " elterjedésével az álhírek és vírusos videók is népszerűvé váltak. A " +
@@ -3077,7 +3084,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " váltak. Hasonló szokások figyelhetők meg a kelta tavaszi ünnepekben és az " +
                         " ókori római Hilaria ünnepén is, ahol a bolondos viselkedés a tavaszi " +
                         " megújulást jelezte. "),
-                new FeastDay(2033, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
+                new FeastDayModel(2033, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
                         " bevonulásának emlékére van. Az evangéliumok szerint Jézus szamárháton " +
                         " vonult be a városba, miközben a hívek pálmaágakat lengettek, üdvözölve " +
                         " őt, mint a Megváltót. A virágok, a pálmák és a zöld ágak használata " +
@@ -3086,7 +3093,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepekre való lelki felkészülést jelzi. Az ünnep hivatalosan a 4. " +
                         " század óta van jelen az egyházi naptárban és azóta része a keresztény " +
                         " hagyományoknak világszerte."),
-                new FeastDay(2033, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
+                new FeastDayModel(2033, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
                         " Jézus Krisztus kereszthalálát és szenvedését emlékezzük meg. Az ünnep " +
                         " célja, hogy a hívők átgondolják a megváltásra tett áldozat " +
                         " jelentőségét. E napot a 4. század óta ünneplik, amikor a keresztény " +
@@ -3098,7 +3105,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " megújulás napja is.  Nagypénteket a húsvét előtti pénteken ünneplik, " +
                         " tehát ez a dátum évente változik.  " +
                         " "),
-                new FeastDay(2033, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
+                new FeastDayModel(2033, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
                         " feltámadásának napja, amely a halál feletti győzelmet és az örök élet " +
                         " ígéretét hirdeti. Magyarországon 1991 óta munkaszüneti nap, de " +
                         " jelentősége évszázadok óta meghatározó. Húsvét a 40 napos nagyböjt " +
@@ -3111,7 +3118,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény húsvéti szokásokba. " +
                         " A Húsvétot évente változó dátumon ünneplik, mivel a tavaszi " +
                         " napéjegyenlőség utáni első teliholdat követő vasárnapra esik."),
-                new FeastDay(2033, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2033, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus feltámadását követően az új élet és a megújulás " +
                         " szimbólumává vált. Magyarországon a húsvéti locsolás hagyománya a 17. " +
                         " századtól terjedt el. A férfiak vízzel vagy illatos kölnivel locsolják " +
@@ -3122,7 +3129,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és a megváltást szimbolizálja. Magyarországon a húsvétot a " +
                         " kereszténység elterjedése óta ünneplik és a népszokások a 19. " +
                         " századtól erősödtek meg."),
-                new FeastDay(2033, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
+                new FeastDayModel(2033, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
                         " Nelson szenátor kezdeményezésére több millió ember gyűlt össze, hogy " +
                         " felhívja a figyelmet a környezetszennyezésre és a természeti erőforrások " +
                         " védelmére. A nap célja, hogy globálisan tudatosítsa az emberekben a " +
@@ -3133,7 +3140,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         "  " +
                         "  " +
                         " "),
-                new FeastDay(2033, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
+                new FeastDayModel(2033, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
                         " május 1-jét megelőző nap délután/este volt.  " +
                         " Magyarországon a középkor óta ismert, tehát legalább a 14. századtól " +
                         " ünneplik. A szokás az ősi tavaszi rituálékra épül, melyek a természet " +
@@ -3145,7 +3152,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepe volt, később pedig összefonódott a munka ünnepével (május 1.). " +
                         " Mára már kevésbé elterjedt szokás, de sok helyen igyekeznek még " +
                         " fenntartani."),
-                new FeastDay(2033, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
+                new FeastDayModel(2033, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
                         " folytatott küzdelem emléknapja világszerte. Az ünnep gyökerei az 1886-os " +
                         " chicagói tüntetésekhez nyúlnak vissza, ahol a munkások a nyolcórás " +
                         " munkaidő bevezetéséért demonstráltak. Az események hatására 1890-től " +
@@ -3155,7 +3162,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " nagyszabású felvonulásokkal és tömegrendezvényekkel ünnepelték. A " +
                         " rendszerváltás után a jelentése átalakult, de továbbra is a munka " +
                         " tiszteletét és a munkavállalók jogainak fontosságát hirdeti. "),
-                new FeastDay(2033, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
+                new FeastDayModel(2033, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
                         " világszerte az édesanyák tiszteletére tartanak. Gyökerei az ókori " +
                         " Görögországba nyúlnak vissza, ahol Rheát, az istenek anyját ünnepelték. " +
                         " A modern anyák napja az Egyesült Államokból indult 1908-ban, amikor Anna " +
@@ -3168,7 +3175,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " anyák iránti szeretet és tisztelet áll a középpontban. Anyák napját " +
                         " Magyarországon minden év május első vasárnapján ünneplik.  " +
                         " "),
-                new FeastDay(2033, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
+                new FeastDayModel(2033, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
                         " ünnep, melyet világszerte különböző időpontokban tartanak. Eredete " +
                         " 1925-re nyúlik vissza, amikor a genfi Gyermekjóléti Konferencián " +
                         " elhatározták, hogy kiemelik a gyermekek védelmének fontosságát. " +
@@ -3178,7 +3185,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " rendezvényekkel ünneplik őket. Az ünnep célja, hogy felhívja a figyelmet " +
                         " a gyermekek jogaira és boldogságuk fontosságára. Magyarországon a " +
                         " Gyermeknapot minden évben május utolsó vasárnapján ünneplik."),
-                new FeastDay(2033, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
+                new FeastDayModel(2033, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
                         " századtól kezdve ünnepelnek a keresztény egyházban. Az ünnep Jézus " +
                         " mennybemenetele után ötven nappal emlékezik meg a Szentlélek " +
                         " eljöveteléről, amely erőt adott az apostoloknak a keresztény hit " +
@@ -3188,7 +3195,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " számos népi hagyomány kapcsolódik hozzá, például a pünkösdi király " +
                         " és királyné választása. Pünkösd vasárnapját a húsvét utáni 50. " +
                         " napon, tehát 50 nappal húsvétvasárnap után ünneplik. "),
-                new FeastDay(2033, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
+                new FeastDayModel(2033, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
                         " pünkösdnek a második napja. Pünkösd a húsvét utáni 50. napon van, és a " +
                         " Szentlélek eljövetelét ünnepli, amikor Jézus tanítványai erőt és " +
                         " útmutatást kaptak küldetésükhöz. Az esemény a keresztény egyház " +
@@ -3197,7 +3204,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " volt. Magyarországon pünkösdhétfő munkaszüneti nap és hivatalosan 1993 " +
                         " óta ünnepeljük újra. Az ünnep a megújulást és a közösség " +
                         " összetartozását jelképezi."),
-                new FeastDay(2033, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
+                new FeastDayModel(2033, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
                         " családban és a gyermeknevelésben betöltött szerepüket. Az ünnep eredete " +
                         " az Egyesült Államokhoz köthető, ahol először 1910-ben tartották meg " +
                         " Sonora Smart Dodd kezdeményezésére , aki édesapját akarta tiszteletben " +
@@ -3208,7 +3215,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szerepét. Ez a nap lehetőséget ad arra, hogy köszönetet mondjunk az apák " +
                         " szeretetéért, támogatásáért és áldozatos munkájáért, amelyet " +
                         " családjukért tesznek. "),
-                new FeastDay(2033, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
+                new FeastDayModel(2033, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -3218,7 +3225,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " környékén a Nap több mint 15 órán keresztül a horizont felett " +
                         " tartózkodik. Ezen a napon a Föld az északi féltekén éri el a leghosszabb " +
                         " nappali órákat, így ez a legrövidebb éjszaka."),
-                new FeastDay(2033, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
+                new FeastDayModel(2033, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
                         " megalapozva a keresztény Magyarországot. 1083 augusztus 20.-án szentté " +
                         " avatták a Szent Péter-bazilikában. Az Árpád-korban az István-kultusz az " +
                         " uralkodó dinasztiát támogatta és egységet teremtett a népcsoportok " +
@@ -3230,7 +3237,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbólumává vált. 1950-től az új államrendszer ideológiája szerint " +
                         " alakították át az ünnep jelentését, majd 1991-ben ismét állami " +
                         " ünneppé nyilvánították."),
-                new FeastDay(2033, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
+                new FeastDayModel(2033, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
                         " eseményeire emlékezik. Az ünnep hivatalosan 1989 október 23.-án vált " +
                         " nemzeti ünneppé a rendszerváltás után, amikor a forradalom hőseit " +
                         " ünnepelve tisztelegtek a szabadságért és a demokráciáért folytatott " +
@@ -3239,7 +3246,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " játszott Magyarország függetlenségi törekvéseiben és a későbbi " +
                         " rendszerváltásban. Az október 23.-i események máig a szabadság és a " +
                         " nemzeti szuverenitás fontos szimbólumai."),
-                new FeastDay(2033, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
+                new FeastDayModel(2033, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
                         " 3:00 → 2:00 " +
                         " Ekkor kell 1 órát visszaállítani az órákat. " +
                         " Az őszi óraátállítás célja, hogy reggel világosabb legyen, így a " +
@@ -3251,7 +3258,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " hamarabb világosodik, de este hamarabb sötétedik.  1996 óta " +
                         " kormányrendelet szabályozza az óraátállítást. " +
                         " "),
-                new FeastDay(2033, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
+                new FeastDayModel(2033, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
                         " megemlékezik minden üdvözült lélekről, akik elnyerték a mennyországot, " +
                         " de nevüket nem tartják számon a naptárban. Az ünnep eredete a " +
                         " kereszténység előtti halotti kultuszokra is visszavezethető. Hivatalosan a " +
@@ -3260,7 +3267,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon munkaszüneti nap. Sokan virágokkal és gyertyagyújtással " +
                         " tisztelegnek elhunyt szeretteik emléke előtt. Ez a nap a hit és a " +
                         " megemlékezés ünnepe."),
-                new FeastDay(2033, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
+                new FeastDayModel(2033, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
                         " elhunyt hívekről. Az ünnep célja, hogy imádságokkal és jó " +
                         " cselekedetekkel segítsük a halottak lelki üdvét és tisztelegjünk " +
                         " szeretteink emléke előtt. Bár gyökerei a kereszténység előtti halotti " +
@@ -3268,7 +3275,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Odiló apát vezette be. Ő rendelte el, hogy a kolostorok imádkozzanak a " +
                         " tisztítótűzben szenvedő lelkekért. A gyertyagyújtás és a virágok " +
                         " elhelyezése máig az emlékezés fontos része. "),
-                new FeastDay(2033, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
+                new FeastDayModel(2033, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
                         " születésére és második eljövetelére való várakozást jelenti. Az " +
                         " advent származása a 4. századra nyúlik vissza, amikor bűnbánattal és " +
                         " lelki felkészüléssel várták a karácsonyt. Kezdetben hosszabb böjti " +
@@ -3280,7 +3287,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Advent első vasárnapját a karácsonyt megelőző négy vasárnap egyikeként " +
                         " ünneplik. Ez a nap általában november végére vagy december elejére esik.  " +
                         " "),
-                new FeastDay(2033, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
+                new FeastDayModel(2033, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
                         " csizmáit édességgel és játékokkal. Szent Miklós püspök emlék napja. A " +
                         " 4. században élt szent, aki a gyermekek, a hajósok és a szegények " +
                         " védőszentje lett, híres volt jótékonyságáról. Egy legenda szerint " +
@@ -3292,7 +3299,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " eltérőek. Egyes helyeken a Mikulás hozza az ajándékokat, máshol a " +
                         " Télapó. A lényeg azonban mindenhol ugyanaz: a szeretet az adakozás és a " +
                         " gyermeki öröm ünnepe"),
-                new FeastDay(2033, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
+                new FeastDayModel(2033, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
                         " századi vértanú, a látás védőszentje, de a népi hitvilágban a " +
                         " termékenység, a jólét és a védelem szimbóluma. A hagyomány szerint ezen " +
                         " a napon kezdődött a tél leghosszabb éjszakája, így Luca napja a fény és " +
@@ -3302,7 +3309,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " remény ünnepe, a fény győzelme a sötétség felett és a következő év " +
                         " jólétének biztosítása. " +
                         " "),
-                new FeastDay(2033, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
+                new FeastDayModel(2033, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -3313,7 +3320,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " felett, így ez a leghosszabb éjszaka. Ezen a napon kezdődik a nappali fény " +
                         " fokozatos növekedése, így a következő hónapokban egyre hosszabbak lesznek " +
                         " a nappalok."),
-                new FeastDay(2033, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2033, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus születésének előestéje. Bár Jézus pontos születési dátuma " +
                         " nem ismert, a keresztény egyház a 4. században december 25.-ét jelölte meg " +
                         " születésének napjaként, összekapcsolva azt a téli napfordulóval. " +
@@ -3325,7 +3332,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szeretet és a megbecsülés kifejezése, amely a három királyok " +
                         " ajándékozására utal. Karácsony, bár elsősorban keresztény ünnep, " +
                         " világszerte a szeretet, a béke és a család ünnepe lett."),
-                new FeastDay(2033, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
+                new FeastDayModel(2033, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
                         " század óta tartanak. Az ünnep a téli napfordulóhoz kapcsolódik, " +
                         " szimbolizálva a fény győzelmét a sötétség felett. Karácsony a remény, " +
                         " a szeretet és a megváltás ünnepe, amely a családi együttlét, az öröm " +
@@ -3335,7 +3342,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " kultúrában a szeretet és a béke fontosságát hangsúlyozza. Karácsony " +
                         " lehetőséget ad az emberi kapcsolatok és az élet értelmének " +
                         " átgondolására"),
-                new FeastDay(2033, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
+                new FeastDayModel(2033, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
                         " azonban Magyarországon elsősorban Szent István királyra, az " +
                         " államalapítóra emlékeznek. A 4. századi eredetű ünnep során Jézus " +
                         " születése után következik Szent István napja, aki kulcsszerepet játszott " +
@@ -3344,7 +3351,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon nemzeti hősként is tisztelik, mivel ő alapította az " +
                         " államot. Ezen a napon az emberek szentmisére mennek, megemlékeznek " +
                         " királyukról és különböző ünnepi rendezvényeken is részt vesznek"),
-                new FeastDay(2033, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
+                new FeastDayModel(2033, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
                         " ünnepeljük az új év kezdetét. Az ünnep neve Szent Szilveszter pápától " +
                         " származik, aki 335 körül halt meg, de az újév ünneplésének hagyományai " +
                         " sokkal régebbre nyúlnak vissza. Szilveszter éjszakáján családok és " +
@@ -3357,7 +3364,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Boldog Új Évet kívánok! Legyen tele örömmel, egészséggel és sikerrel. " +
                         " Hozzon az új év boldog pillanatokat, új lehetőségeket és boldog együtt " +
                         " töltött időt!"),
-                new FeastDay(2034, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
+                new FeastDayModel(2034, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
                         " Ilyenkor sokan fogadalmakat tesznek, hogy jobbá és tartalmasabbá tegyék az " +
                         " elkövetkező esztendőt. Kezdd az évet tiszta lappal és jusson eszedbe, hogy " +
                         " minden nap egy új lehetőség arra, hogy közelebb kerülj céljaidhoz és " +
@@ -3365,7 +3372,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " mondás. Legyen ez a nap a változás első lépése. Boldogságot, " +
                         " egészséget és kitartást kívánok az új év minden pillanatára! "
                 ),
-                new FeastDay(2034, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
+                new FeastDayModel(2034, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
                         " karácsonyfát, jelezve az ünnepi időszak végét. Az ünnep Jézus " +
                         " megjelenésére emlékeztet: a napkeleti bölcsek látogatására, Jézus " +
                         " megkeresztelkedésére és az első csodájára. A három királyok aranyat, " +
@@ -3374,7 +3381,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbóluma, amely a megkeresztelkedés szentségéhez kapcsolódik. Egyházi " +
                         " ünnepként a 4. század óta létezik. Sok helyen ekkor tartanak " +
                         " házszenteléseket, Isten áldását kérve az otthonra és az új évre."),
-                new FeastDay(2034, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
+                new FeastDayModel(2034, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
                         " (Valentin) római paphoz kötődik. A legenda szerint Valentin a 3. században " +
                         " titokban esketett meg szerelmespárokat, mert II. Claudius császár " +
                         " megtiltotta a házasságot, mondván, hogy a nőtlen férfiak jobb katonák. " +
@@ -3382,7 +3389,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepet hivatalosan 496-ban vezette be I. Geláz pápa. Ma világszerte a " +
                         " szerelmesek megajándékozásáról szól, szív alakú díszekkel, virágokkal " +
                         " és üdvözlőkártyákkal ünneplik."),
-                new FeastDay(2034, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
+                new FeastDayModel(2034, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
                         " amely a 7. század óta létezik. A hívők ezen a napon hamuval jelölik meg a " +
                         " homlokukat, emlékeztetve bűnösségükre és az élet mulandóságára. A " +
                         " szertartás a Teremtés könyvének szavait idézi: „porból vétettél, és " +
@@ -3393,7 +3400,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és feltámadására emlékezve, alázatos életet élve Isten előtt.  A " +
                         " Hamvazószerda a húsvéti böjt kezdete, amit 46 nappal húsvétvasárnap " +
                         " előtt tartanak. Általában február végére vagy március elejére esik."),
-                new FeastDay(2034, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
+                new FeastDayModel(2034, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
                         " demonstráltak a jobb munkakörülményekért és az egyenlő jogokért. Az " +
                         " ünnep célja a nők társadalmi, politikai és gazdasági jogainak " +
                         " előmozdítása, valamint a nemek közti egyenlőség hangsúlyozása. 1910-ben " +
@@ -3401,7 +3408,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " 1911-ben már több európai országban is megünnepelték. Magyarországon " +
                         " 1913 óta hivatalos ünnep. Eredetileg szocialista gyökerei voltak, mára már " +
                         " a nők jogainak elismerésére és tiszteletére emelkedett."),
-                new FeastDay(2034, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
+                new FeastDayModel(2034, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
                         " 1848-as forradalom és szabadságharc emlékére van. Ezen a napon a pesti " +
                         " forradalmi események nyomán, a fiatalok és a polgárok kiálltak a " +
                         " sajtószabadságért, a jobb életkörülményekért és a függetlenségért. " +
@@ -3412,7 +3419,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " identitás és ma már a magyar szabadság és összetartozás napjaként " +
                         " ünnepeljük. " +
                         " "),
-                new FeastDay(2034, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
+                new FeastDayModel(2034, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
                         " A tavaszi óraátállításkor az órákat hajnali 2:00-ról 3:00-ra állítjuk " +
                         " előre, hogy jobban kihasználjuk a nappali világosságot és csökkentsük a " +
                         " mesterséges világítás szükségességét. Magyarországon először " +
@@ -3424,7 +3431,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " villamosenergia-megtakarítás érdekében. Azóta évente kétszer állítjuk " +
                         " át az órákat és 1996 óta kormányrendelet szabályozza az " +
                         " óraátállítást Magyarországon."),
-                new FeastDay(2034, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
+                new FeastDayModel(2034, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
                         " átverések napja. Az emberek apró csínyekkel, például hamis hírekkel vagy " +
                         " kitalált történetekkel szórakoztatják egymást. Az internet " +
                         " elterjedésével az álhírek és vírusos videók is népszerűvé váltak. A " +
@@ -3436,7 +3443,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " váltak. Hasonló szokások figyelhetők meg a kelta tavaszi ünnepekben és az " +
                         " ókori római Hilaria ünnepén is, ahol a bolondos viselkedés a tavaszi " +
                         " megújulást jelezte. "),
-                new FeastDay(2034, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
+                new FeastDayModel(2034, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
                         " bevonulásának emlékére van. Az evangéliumok szerint Jézus szamárháton " +
                         " vonult be a városba, miközben a hívek pálmaágakat lengettek, üdvözölve " +
                         " őt, mint a Megváltót. A virágok, a pálmák és a zöld ágak használata " +
@@ -3445,7 +3452,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepekre való lelki felkészülést jelzi. Az ünnep hivatalosan a 4. " +
                         " század óta van jelen az egyházi naptárban és azóta része a keresztény " +
                         " hagyományoknak világszerte."),
-                new FeastDay(2034, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
+                new FeastDayModel(2034, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
                         " Jézus Krisztus kereszthalálát és szenvedését emlékezzük meg. Az ünnep " +
                         " célja, hogy a hívők átgondolják a megváltásra tett áldozat " +
                         " jelentőségét. E napot a 4. század óta ünneplik, amikor a keresztény " +
@@ -3457,7 +3464,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " megújulás napja is.  Nagypénteket a húsvét előtti pénteken ünneplik, " +
                         " tehát ez a dátum évente változik.  " +
                         " "),
-                new FeastDay(2034, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
+                new FeastDayModel(2034, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
                         " feltámadásának napja, amely a halál feletti győzelmet és az örök élet " +
                         " ígéretét hirdeti. Magyarországon 1991 óta munkaszüneti nap, de " +
                         " jelentősége évszázadok óta meghatározó. Húsvét a 40 napos nagyböjt " +
@@ -3470,7 +3477,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény húsvéti szokásokba. " +
                         " A Húsvétot évente változó dátumon ünneplik, mivel a tavaszi " +
                         " napéjegyenlőség utáni első teliholdat követő vasárnapra esik."),
-                new FeastDay(2034, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2034, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus feltámadását követően az új élet és a megújulás " +
                         " szimbólumává vált. Magyarországon a húsvéti locsolás hagyománya a 17. " +
                         " századtól terjedt el. A férfiak vízzel vagy illatos kölnivel locsolják " +
@@ -3481,7 +3488,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és a megváltást szimbolizálja. Magyarországon a húsvétot a " +
                         " kereszténység elterjedése óta ünneplik és a népszokások a 19. " +
                         " századtól erősödtek meg."),
-                new FeastDay(2034, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
+                new FeastDayModel(2034, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
                         " Nelson szenátor kezdeményezésére több millió ember gyűlt össze, hogy " +
                         " felhívja a figyelmet a környezetszennyezésre és a természeti erőforrások " +
                         " védelmére. A nap célja, hogy globálisan tudatosítsa az emberekben a " +
@@ -3492,7 +3499,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         "  " +
                         "  " +
                         " "),
-                new FeastDay(2034, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
+                new FeastDayModel(2034, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
                         " május 1-jét megelőző nap délután/este volt.  " +
                         " Magyarországon a középkor óta ismert, tehát legalább a 14. századtól " +
                         " ünneplik. A szokás az ősi tavaszi rituálékra épül, melyek a természet " +
@@ -3504,7 +3511,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepe volt, később pedig összefonódott a munka ünnepével (május 1.). " +
                         " Mára már kevésbé elterjedt szokás, de sok helyen igyekeznek még " +
                         " fenntartani."),
-                new FeastDay(2034, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
+                new FeastDayModel(2034, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
                         " folytatott küzdelem emléknapja világszerte. Az ünnep gyökerei az 1886-os " +
                         " chicagói tüntetésekhez nyúlnak vissza, ahol a munkások a nyolcórás " +
                         " munkaidő bevezetéséért demonstráltak. Az események hatására 1890-től " +
@@ -3514,7 +3521,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " nagyszabású felvonulásokkal és tömegrendezvényekkel ünnepelték. A " +
                         " rendszerváltás után a jelentése átalakult, de továbbra is a munka " +
                         " tiszteletét és a munkavállalók jogainak fontosságát hirdeti. "),
-                new FeastDay(2034, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
+                new FeastDayModel(2034, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
                         " világszerte az édesanyák tiszteletére tartanak. Gyökerei az ókori " +
                         " Görögországba nyúlnak vissza, ahol Rheát, az istenek anyját ünnepelték. " +
                         " A modern anyák napja az Egyesült Államokból indult 1908-ban, amikor Anna " +
@@ -3527,7 +3534,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " anyák iránti szeretet és tisztelet áll a középpontban. Anyák napját " +
                         " Magyarországon minden év május első vasárnapján ünneplik.  " +
                         " "),
-                new FeastDay(2034, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
+                new FeastDayModel(2034, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
                         " ünnep, melyet világszerte különböző időpontokban tartanak. Eredete " +
                         " 1925-re nyúlik vissza, amikor a genfi Gyermekjóléti Konferencián " +
                         " elhatározták, hogy kiemelik a gyermekek védelmének fontosságát. " +
@@ -3537,7 +3544,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " rendezvényekkel ünneplik őket. Az ünnep célja, hogy felhívja a figyelmet " +
                         " a gyermekek jogaira és boldogságuk fontosságára. Magyarországon a " +
                         " Gyermeknapot minden évben május utolsó vasárnapján ünneplik."),
-                new FeastDay(2034, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
+                new FeastDayModel(2034, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
                         " századtól kezdve ünnepelnek a keresztény egyházban. Az ünnep Jézus " +
                         " mennybemenetele után ötven nappal emlékezik meg a Szentlélek " +
                         " eljöveteléről, amely erőt adott az apostoloknak a keresztény hit " +
@@ -3547,7 +3554,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " számos népi hagyomány kapcsolódik hozzá, például a pünkösdi király " +
                         " és királyné választása. Pünkösd vasárnapját a húsvét utáni 50. " +
                         " napon, tehát 50 nappal húsvétvasárnap után ünneplik. "),
-                new FeastDay(2034, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
+                new FeastDayModel(2034, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
                         " pünkösdnek a második napja. Pünkösd a húsvét utáni 50. napon van, és a " +
                         " Szentlélek eljövetelét ünnepli, amikor Jézus tanítványai erőt és " +
                         " útmutatást kaptak küldetésükhöz. Az esemény a keresztény egyház " +
@@ -3556,7 +3563,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " volt. Magyarországon pünkösdhétfő munkaszüneti nap és hivatalosan 1993 " +
                         " óta ünnepeljük újra. Az ünnep a megújulást és a közösség " +
                         " összetartozását jelképezi."),
-                new FeastDay(2034, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
+                new FeastDayModel(2034, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
                         " családban és a gyermeknevelésben betöltött szerepüket. Az ünnep eredete " +
                         " az Egyesült Államokhoz köthető, ahol először 1910-ben tartották meg " +
                         " Sonora Smart Dodd kezdeményezésére , aki édesapját akarta tiszteletben " +
@@ -3567,7 +3574,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szerepét. Ez a nap lehetőséget ad arra, hogy köszönetet mondjunk az apák " +
                         " szeretetéért, támogatásáért és áldozatos munkájáért, amelyet " +
                         " családjukért tesznek. "),
-                new FeastDay(2034, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
+                new FeastDayModel(2034, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -3577,7 +3584,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " környékén a Nap több mint 15 órán keresztül a horizont felett " +
                         " tartózkodik. Ezen a napon a Föld az északi féltekén éri el a leghosszabb " +
                         " nappali órákat, így ez a legrövidebb éjszaka."),
-                new FeastDay(2034, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
+                new FeastDayModel(2034, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
                         " megalapozva a keresztény Magyarországot. 1083 augusztus 20.-án szentté " +
                         " avatták a Szent Péter-bazilikában. Az Árpád-korban az István-kultusz az " +
                         " uralkodó dinasztiát támogatta és egységet teremtett a népcsoportok " +
@@ -3589,7 +3596,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbólumává vált. 1950-től az új államrendszer ideológiája szerint " +
                         " alakították át az ünnep jelentését, majd 1991-ben ismét állami " +
                         " ünneppé nyilvánították."),
-                new FeastDay(2034, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
+                new FeastDayModel(2034, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
                         " eseményeire emlékezik. Az ünnep hivatalosan 1989 október 23.-án vált " +
                         " nemzeti ünneppé a rendszerváltás után, amikor a forradalom hőseit " +
                         " ünnepelve tisztelegtek a szabadságért és a demokráciáért folytatott " +
@@ -3598,7 +3605,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " játszott Magyarország függetlenségi törekvéseiben és a későbbi " +
                         " rendszerváltásban. Az október 23.-i események máig a szabadság és a " +
                         " nemzeti szuverenitás fontos szimbólumai."),
-                new FeastDay(2034, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
+                new FeastDayModel(2034, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
                         " 3:00 → 2:00 " +
                         " Ekkor kell 1 órát visszaállítani az órákat. " +
                         " Az őszi óraátállítás célja, hogy reggel világosabb legyen, így a " +
@@ -3610,7 +3617,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " hamarabb világosodik, de este hamarabb sötétedik.  1996 óta " +
                         " kormányrendelet szabályozza az óraátállítást. " +
                         " "),
-                new FeastDay(2034, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
+                new FeastDayModel(2034, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
                         " megemlékezik minden üdvözült lélekről, akik elnyerték a mennyországot, " +
                         " de nevüket nem tartják számon a naptárban. Az ünnep eredete a " +
                         " kereszténység előtti halotti kultuszokra is visszavezethető. Hivatalosan a " +
@@ -3619,7 +3626,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon munkaszüneti nap. Sokan virágokkal és gyertyagyújtással " +
                         " tisztelegnek elhunyt szeretteik emléke előtt. Ez a nap a hit és a " +
                         " megemlékezés ünnepe."),
-                new FeastDay(2034, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
+                new FeastDayModel(2034, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
                         " elhunyt hívekről. Az ünnep célja, hogy imádságokkal és jó " +
                         " cselekedetekkel segítsük a halottak lelki üdvét és tisztelegjünk " +
                         " szeretteink emléke előtt. Bár gyökerei a kereszténység előtti halotti " +
@@ -3627,7 +3634,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Odiló apát vezette be. Ő rendelte el, hogy a kolostorok imádkozzanak a " +
                         " tisztítótűzben szenvedő lelkekért. A gyertyagyújtás és a virágok " +
                         " elhelyezése máig az emlékezés fontos része. "),
-                new FeastDay(2034, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
+                new FeastDayModel(2034, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
                         " születésére és második eljövetelére való várakozást jelenti. Az " +
                         " advent származása a 4. századra nyúlik vissza, amikor bűnbánattal és " +
                         " lelki felkészüléssel várták a karácsonyt. Kezdetben hosszabb böjti " +
@@ -3639,7 +3646,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Advent első vasárnapját a karácsonyt megelőző négy vasárnap egyikeként " +
                         " ünneplik. Ez a nap általában november végére vagy december elejére esik.  " +
                         " "),
-                new FeastDay(2034, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
+                new FeastDayModel(2034, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
                         " csizmáit édességgel és játékokkal. Szent Miklós püspök emlék napja. A " +
                         " 4. században élt szent, aki a gyermekek, a hajósok és a szegények " +
                         " védőszentje lett, híres volt jótékonyságáról. Egy legenda szerint " +
@@ -3651,7 +3658,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " eltérőek. Egyes helyeken a Mikulás hozza az ajándékokat, máshol a " +
                         " Télapó. A lényeg azonban mindenhol ugyanaz: a szeretet az adakozás és a " +
                         " gyermeki öröm ünnepe"),
-                new FeastDay(2034, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
+                new FeastDayModel(2034, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
                         " századi vértanú, a látás védőszentje, de a népi hitvilágban a " +
                         " termékenység, a jólét és a védelem szimbóluma. A hagyomány szerint ezen " +
                         " a napon kezdődött a tél leghosszabb éjszakája, így Luca napja a fény és " +
@@ -3661,7 +3668,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " remény ünnepe, a fény győzelme a sötétség felett és a következő év " +
                         " jólétének biztosítása. " +
                         " "),
-                new FeastDay(2034, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
+                new FeastDayModel(2034, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -3672,7 +3679,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " felett, így ez a leghosszabb éjszaka. Ezen a napon kezdődik a nappali fény " +
                         " fokozatos növekedése, így a következő hónapokban egyre hosszabbak lesznek " +
                         " a nappalok."),
-                new FeastDay(2034, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2034, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus születésének előestéje. Bár Jézus pontos születési dátuma " +
                         " nem ismert, a keresztény egyház a 4. században december 25.-ét jelölte meg " +
                         " születésének napjaként, összekapcsolva azt a téli napfordulóval. " +
@@ -3684,7 +3691,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szeretet és a megbecsülés kifejezése, amely a három királyok " +
                         " ajándékozására utal. Karácsony, bár elsősorban keresztény ünnep, " +
                         " világszerte a szeretet, a béke és a család ünnepe lett."),
-                new FeastDay(2034, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
+                new FeastDayModel(2034, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
                         " század óta tartanak. Az ünnep a téli napfordulóhoz kapcsolódik, " +
                         " szimbolizálva a fény győzelmét a sötétség felett. Karácsony a remény, " +
                         " a szeretet és a megváltás ünnepe, amely a családi együttlét, az öröm " +
@@ -3694,7 +3701,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " kultúrában a szeretet és a béke fontosságát hangsúlyozza. Karácsony " +
                         " lehetőséget ad az emberi kapcsolatok és az élet értelmének " +
                         " átgondolására"),
-                new FeastDay(2034, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
+                new FeastDayModel(2034, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
                         " azonban Magyarországon elsősorban Szent István királyra, az " +
                         " államalapítóra emlékeznek. A 4. századi eredetű ünnep során Jézus " +
                         " születése után következik Szent István napja, aki kulcsszerepet játszott " +
@@ -3703,7 +3710,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon nemzeti hősként is tisztelik, mivel ő alapította az " +
                         " államot. Ezen a napon az emberek szentmisére mennek, megemlékeznek " +
                         " királyukról és különböző ünnepi rendezvényeken is részt vesznek"),
-                new FeastDay(2034, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
+                new FeastDayModel(2034, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
                         " ünnepeljük az új év kezdetét. Az ünnep neve Szent Szilveszter pápától " +
                         " származik, aki 335 körül halt meg, de az újév ünneplésének hagyományai " +
                         " sokkal régebbre nyúlnak vissza. Szilveszter éjszakáján családok és " +
@@ -3716,7 +3723,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Boldog Új Évet kívánok! Legyen tele örömmel, egészséggel és sikerrel. " +
                         " Hozzon az új év boldog pillanatokat, új lehetőségeket és boldog együtt " +
                         " töltött időt!"),
-                new FeastDay(2035, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
+                new FeastDayModel(2035, 0, 1, "Újév", "Az év első napja a megújulás, az újrakezdés és a remény szimbóluma. " +
                         " Ilyenkor sokan fogadalmakat tesznek, hogy jobbá és tartalmasabbá tegyék az " +
                         " elkövetkező esztendőt. Kezdd az évet tiszta lappal és jusson eszedbe, hogy " +
                         " minden nap egy új lehetőség arra, hogy közelebb kerülj céljaidhoz és " +
@@ -3724,7 +3731,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " mondás. Legyen ez a nap a változás első lépése. Boldogságot, " +
                         " egészséget és kitartást kívánok az új év minden pillanatára! "
                 ),
-                new FeastDay(2035, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
+                new FeastDayModel(2035, 0, 6, "Vízkereszt", " A vízkereszt a karácsonyi ünnepkör lezárása, ekkor bontják le a " +
                         " karácsonyfát, jelezve az ünnepi időszak végét. Az ünnep Jézus " +
                         " megjelenésére emlékeztet: a napkeleti bölcsek látogatására, Jézus " +
                         " megkeresztelkedésére és az első csodájára. A három királyok aranyat, " +
@@ -3733,7 +3740,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbóluma, amely a megkeresztelkedés szentségéhez kapcsolódik. Egyházi " +
                         " ünnepként a 4. század óta létezik. Sok helyen ekkor tartanak " +
                         " házszenteléseket, Isten áldását kérve az otthonra és az új évre."),
-                new FeastDay(2035, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
+                new FeastDayModel(2035, 1, 14, "Valentin nap", "A Valentin-nap a szerelem és a romantika ünnepe, amely Szent Bálint " +
                         " (Valentin) római paphoz kötődik. A legenda szerint Valentin a 3. században " +
                         " titokban esketett meg szerelmespárokat, mert II. Claudius császár " +
                         " megtiltotta a házasságot, mondván, hogy a nőtlen férfiak jobb katonák. " +
@@ -3741,7 +3748,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepet hivatalosan 496-ban vezette be I. Geláz pápa. Ma világszerte a " +
                         " szerelmesek megajándékozásáról szól, szív alakú díszekkel, virágokkal " +
                         " és üdvözlőkártyákkal ünneplik."),
-                new FeastDay(2035, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
+                new FeastDayModel(2035, 2, 1, "Hamvazószerda", "A Hamvazószerda a nagyböjt kezdete és a húsvéti ünnepkör első napja, " +
                         " amely a 7. század óta létezik. A hívők ezen a napon hamuval jelölik meg a " +
                         " homlokukat, emlékeztetve bűnösségükre és az élet mulandóságára. A " +
                         " szertartás a Teremtés könyvének szavait idézi: „porból vétettél, és " +
@@ -3752,7 +3759,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és feltámadására emlékezve, alázatos életet élve Isten előtt.  A " +
                         " Hamvazószerda a húsvéti böjt kezdete, amit 46 nappal húsvétvasárnap " +
                         " előtt tartanak. Általában február végére vagy március elejére esik."),
-                new FeastDay(2035, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
+                new FeastDayModel(2035, 2, 8, "Nőnap", " Az első Nőnapot 1908 március 8.-án tartották. A női munkások " +
                         " demonstráltak a jobb munkakörülményekért és az egyenlő jogokért. Az " +
                         " ünnep célja a nők társadalmi, politikai és gazdasági jogainak " +
                         " előmozdítása, valamint a nemek közti egyenlőség hangsúlyozása. 1910-ben " +
@@ -3760,7 +3767,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " 1911-ben már több európai országban is megünnepelték. Magyarországon " +
                         " 1913 óta hivatalos ünnep. Eredetileg szocialista gyökerei voltak, mára már " +
                         " a nők jogainak elismerésére és tiszteletére emelkedett."),
-                new FeastDay(2035, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
+                new FeastDayModel(2035, 2, 15, "1848-as Forradalom", "Március 15.-e Magyarország egyik legfontosabb nemzeti ünnepe, amely a " +
                         " 1848-as forradalom és szabadságharc emlékére van. Ezen a napon a pesti " +
                         " forradalmi események nyomán, a fiatalok és a polgárok kiálltak a " +
                         " sajtószabadságért, a jobb életkörülményekért és a függetlenségért. " +
@@ -3771,7 +3778,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " identitás és ma már a magyar szabadság és összetartozás napjaként " +
                         " ünnepeljük. " +
                         " "),
-                new FeastDay(2035, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
+                new FeastDayModel(2035, 2, 26, "Óraátállítás", " A tavaszi óraátállítás a nyári időszámítás kezdete.  " +
                         " A tavaszi óraátállításkor az órákat hajnali 2:00-ról 3:00-ra állítjuk " +
                         " előre, hogy jobban kihasználjuk a nappali világosságot és csökkentsük a " +
                         " mesterséges világítás szükségességét. Magyarországon először " +
@@ -3783,7 +3790,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " villamosenergia-megtakarítás érdekében. Azóta évente kétszer állítjuk " +
                         " át az órákat és 1996 óta kormányrendelet szabályozza az " +
                         " óraátállítást Magyarországon."),
-                new FeastDay(2035, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
+                new FeastDayModel(2035, 3, 1, "Bolondok napja", "Április elseje a bolondok napja, a bolondos tréfák és ártalmatlan " +
                         " átverések napja. Az emberek apró csínyekkel, például hamis hírekkel vagy " +
                         " kitalált történetekkel szórakoztatják egymást. Az internet " +
                         " elterjedésével az álhírek és vírusos videók is népszerűvé váltak. A " +
@@ -3795,7 +3802,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " váltak. Hasonló szokások figyelhetők meg a kelta tavaszi ünnepekben és az " +
                         " ókori római Hilaria ünnepén is, ahol a bolondos viselkedés a tavaszi " +
                         " megújulást jelezte. "),
-                new FeastDay(2035, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
+                new FeastDayModel(2035, 3, 9, "Virágvasárnap", " A Virágvasárnap a húsvét előtti vasárnap, Jézus jeruzsálemi " +
                         " bevonulásának emlékére van. Az evangéliumok szerint Jézus szamárháton " +
                         " vonult be a városba, miközben a hívek pálmaágakat lengettek, üdvözölve " +
                         " őt, mint a Megváltót. A virágok, a pálmák és a zöld ágak használata " +
@@ -3804,7 +3811,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepekre való lelki felkészülést jelzi. Az ünnep hivatalosan a 4. " +
                         " század óta van jelen az egyházi naptárban és azóta része a keresztény " +
                         " hagyományoknak világszerte."),
-                new FeastDay(2035, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
+                new FeastDayModel(2035, 3, 14, "Nagypéntek", "A Nagypéntek a keresztény húsvéti ünnepkör legfontosabb napja, amikor " +
                         " Jézus Krisztus kereszthalálát és szenvedését emlékezzük meg. Az ünnep " +
                         " célja, hogy a hívők átgondolják a megváltásra tett áldozat " +
                         " jelentőségét. E napot a 4. század óta ünneplik, amikor a keresztény " +
@@ -3816,7 +3823,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " megújulás napja is.  Nagypénteket a húsvét előtti pénteken ünneplik, " +
                         " tehát ez a dátum évente változik.  " +
                         " "),
-                new FeastDay(2035, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
+                new FeastDayModel(2035, 3, 16, "Húsvétvasárnap", "Húsvétvasárnap a kereszténység legfontosabb ünnepe, Jézus Krisztus " +
                         " feltámadásának napja, amely a halál feletti győzelmet és az örök élet " +
                         " ígéretét hirdeti. Magyarországon 1991 óta munkaszüneti nap, de " +
                         " jelentősége évszázadok óta meghatározó. Húsvét a 40 napos nagyböjt " +
@@ -3829,7 +3836,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " keresztény húsvéti szokásokba. " +
                         " A Húsvétot évente változó dátumon ünneplik, mivel a tavaszi " +
                         " napéjegyenlőség utáni első teliholdat követő vasárnapra esik."),
-                new FeastDay(2035, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2035, 3, 17, "Húsvéthétfő", "Húsvéthétfő a húsvéti ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus feltámadását követően az új élet és a megújulás " +
                         " szimbólumává vált. Magyarországon a húsvéti locsolás hagyománya a 17. " +
                         " századtól terjedt el. A férfiak vízzel vagy illatos kölnivel locsolják " +
@@ -3840,7 +3847,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " és a megváltást szimbolizálja. Magyarországon a húsvétot a " +
                         " kereszténység elterjedése óta ünneplik és a népszokások a 19. " +
                         " századtól erősödtek meg."),
-                new FeastDay(2035, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
+                new FeastDayModel(2035, 3, 22, "A Föld napja", "A Föld napja 1970-ben indult el, amikor az Egyesült Államokban Gaylord " +
                         " Nelson szenátor kezdeményezésére több millió ember gyűlt össze, hogy " +
                         " felhívja a figyelmet a környezetszennyezésre és a természeti erőforrások " +
                         " védelmére. A nap célja, hogy globálisan tudatosítsa az emberekben a " +
@@ -3851,7 +3858,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         "  " +
                         "  " +
                         " "),
-                new FeastDay(2035, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
+                new FeastDayModel(2035, 3, 30, "Májusfa állítás", "A májusfa felállításának legjellemzőbb hagyomány szerinti időpontja a " +
                         " május 1-jét megelőző nap délután/este volt.  " +
                         " Magyarországon a középkor óta ismert, tehát legalább a 14. századtól " +
                         " ünneplik. A szokás az ősi tavaszi rituálékra épül, melyek a természet " +
@@ -3863,7 +3870,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " ünnepe volt, később pedig összefonódott a munka ünnepével (május 1.). " +
                         " Mára már kevésbé elterjedt szokás, de sok helyen igyekeznek még " +
                         " fenntartani."),
-                new FeastDay(2035, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
+                new FeastDayModel(2035, 4, 1, "A Munka ünnepe", "Május 1.-e a munka ünnepe. A munkások jogaiért és szolidaritásáért " +
                         " folytatott küzdelem emléknapja világszerte. Az ünnep gyökerei az 1886-os " +
                         " chicagói tüntetésekhez nyúlnak vissza, ahol a munkások a nyolcórás " +
                         " munkaidő bevezetéséért demonstráltak. Az események hatására 1890-től " +
@@ -3873,7 +3880,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " nagyszabású felvonulásokkal és tömegrendezvényekkel ünnepelték. A " +
                         " rendszerváltás után a jelentése átalakult, de továbbra is a munka " +
                         " tiszteletét és a munkavállalók jogainak fontosságát hirdeti. "),
-                new FeastDay(2035, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
+                new FeastDayModel(2035, 4, 7, "Anyák napja", "Az édesanyák napja a szeretet, a tisztelet és a hála ünnepe, amelyet " +
                         " világszerte az édesanyák tiszteletére tartanak. Gyökerei az ókori " +
                         " Görögországba nyúlnak vissza, ahol Rheát, az istenek anyját ünnepelték. " +
                         " A modern anyák napja az Egyesült Államokból indult 1908-ban, amikor Anna " +
@@ -3886,7 +3893,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " anyák iránti szeretet és tisztelet áll a középpontban. Anyák napját " +
                         " Magyarországon minden év május első vasárnapján ünneplik.  " +
                         " "),
-                new FeastDay(2035, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
+                new FeastDayModel(2035, 4, 28, "Gyermeknap", "A gyermeknap a gyerekek jogainak és jólétének fontosságát hirdető " +
                         " ünnep, melyet világszerte különböző időpontokban tartanak. Eredete " +
                         " 1925-re nyúlik vissza, amikor a genfi Gyermekjóléti Konferencián " +
                         " elhatározták, hogy kiemelik a gyermekek védelmének fontosságát. " +
@@ -3896,7 +3903,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " rendezvényekkel ünneplik őket. Az ünnep célja, hogy felhívja a figyelmet " +
                         " a gyermekek jogaira és boldogságuk fontosságára. Magyarországon a " +
                         " Gyermeknapot minden évben május utolsó vasárnapján ünneplik."),
-                new FeastDay(2035, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
+                new FeastDayModel(2035, 5, 4, "Pünkösd", "Pünkösd a kereszténység egyik legősibb ünnepe, melyet már a 4. " +
                         " századtól kezdve ünnepelnek a keresztény egyházban. Az ünnep Jézus " +
                         " mennybemenetele után ötven nappal emlékezik meg a Szentlélek " +
                         " eljöveteléről, amely erőt adott az apostoloknak a keresztény hit " +
@@ -3906,7 +3913,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " számos népi hagyomány kapcsolódik hozzá, például a pünkösdi király " +
                         " és királyné választása. Pünkösd vasárnapját a húsvét utáni 50. " +
                         " napon, tehát 50 nappal húsvétvasárnap után ünneplik. "),
-                new FeastDay(2035, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
+                new FeastDayModel(2035, 5, 5, "Pünkösdhétfő", "A Pünkösdhétfő a keresztény egyház egyik legfontosabb ünnepének, a " +
                         " pünkösdnek a második napja. Pünkösd a húsvét utáni 50. napon van, és a " +
                         " Szentlélek eljövetelét ünnepli, amikor Jézus tanítványai erőt és " +
                         " útmutatást kaptak küldetésükhöz. Az esemény a keresztény egyház " +
@@ -3915,7 +3922,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " volt. Magyarországon pünkösdhétfő munkaszüneti nap és hivatalosan 1993 " +
                         " óta ünnepeljük újra. Az ünnep a megújulást és a közösség " +
                         " összetartozását jelképezi."),
-                new FeastDay(2035, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
+                new FeastDayModel(2035, 5, 18, "Apák napja", "Apák napja világszerte az édesapák tiszteletére szolgál, elismerve a " +
                         " családban és a gyermeknevelésben betöltött szerepüket. Az ünnep eredete " +
                         " az Egyesült Államokhoz köthető, ahol először 1910-ben tartották meg " +
                         " Sonora Smart Dodd kezdeményezésére , aki édesapját akarta tiszteletben " +
@@ -3926,7 +3933,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szerepét. Ez a nap lehetőséget ad arra, hogy köszönetet mondjunk az apák " +
                         " szeretetéért, támogatásáért és áldozatos munkájáért, amelyet " +
                         " családjukért tesznek. "),
-                new FeastDay(2035, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
+                new FeastDayModel(2035, 5, 20, "Nyári napforduló", "Az év leghosszabb napja.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -3936,7 +3943,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " környékén a Nap több mint 15 órán keresztül a horizont felett " +
                         " tartózkodik. Ezen a napon a Föld az északi féltekén éri el a leghosszabb " +
                         " nappali órákat, így ez a legrövidebb éjszaka."),
-                new FeastDay(2035, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
+                new FeastDayModel(2035, 7, 20, "Szent István-nap", "Szent István király koronázása körülbelül 1000-ben történt, ezzel " +
                         " megalapozva a keresztény Magyarországot. 1083 augusztus 20.-án szentté " +
                         " avatták a Szent Péter-bazilikában. Az Árpád-korban az István-kultusz az " +
                         " uralkodó dinasztiát támogatta és egységet teremtett a népcsoportok " +
@@ -3948,7 +3955,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szimbólumává vált. 1950-től az új államrendszer ideológiája szerint " +
                         " alakították át az ünnep jelentését, majd 1991-ben ismét állami " +
                         " ünneppé nyilvánították."),
-                new FeastDay(2035, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
+                new FeastDayModel(2035, 9, 23, "1956-os Forradalom", "Magyarország nemzeti ünnepe, amely az 1956-os forradalom és szabadságharc " +
                         " eseményeire emlékezik. Az ünnep hivatalosan 1989 október 23.-án vált " +
                         " nemzeti ünneppé a rendszerváltás után, amikor a forradalom hőseit " +
                         " ünnepelve tisztelegtek a szabadságért és a demokráciáért folytatott " +
@@ -3957,7 +3964,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " játszott Magyarország függetlenségi törekvéseiben és a későbbi " +
                         " rendszerváltásban. Az október 23.-i események máig a szabadság és a " +
                         " nemzeti szuverenitás fontos szimbólumai."),
-                new FeastDay(2035, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
+                new FeastDayModel(2035, 9, 29, "Óraátállítás", "Az őszi óraátállítás (a téli időszámítás kezdete) – (vasárnap), " +
                         " 3:00 → 2:00 " +
                         " Ekkor kell 1 órát visszaállítani az órákat. " +
                         " Az őszi óraátállítás célja, hogy reggel világosabb legyen, így a " +
@@ -3969,7 +3976,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " hamarabb világosodik, de este hamarabb sötétedik.  1996 óta " +
                         " kormányrendelet szabályozza az óraátállítást. " +
                         " "),
-                new FeastDay(2035, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
+                new FeastDayModel(2035, 10, 1, "Mindenszentek", "Mindenszentek ünnepe november 1.-én van, amikor a katolikus egyház " +
                         " megemlékezik minden üdvözült lélekről, akik elnyerték a mennyországot, " +
                         " de nevüket nem tartják számon a naptárban. Az ünnep eredete a " +
                         " kereszténység előtti halotti kultuszokra is visszavezethető. Hivatalosan a " +
@@ -3978,7 +3985,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon munkaszüneti nap. Sokan virágokkal és gyertyagyújtással " +
                         " tisztelegnek elhunyt szeretteik emléke előtt. Ez a nap a hit és a " +
                         " megemlékezés ünnepe."),
-                new FeastDay(2035, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
+                new FeastDayModel(2035, 10, 2, "Halottak napja", "Halottak napja november 2.-án van, amikor a katolikus egyház megemlékezik az " +
                         " elhunyt hívekről. Az ünnep célja, hogy imádságokkal és jó " +
                         " cselekedetekkel segítsük a halottak lelki üdvét és tisztelegjünk " +
                         " szeretteink emléke előtt. Bár gyökerei a kereszténység előtti halotti " +
@@ -3986,7 +3993,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Odiló apát vezette be. Ő rendelte el, hogy a kolostorok imádkozzanak a " +
                         " tisztítótűzben szenvedő lelkekért. A gyertyagyújtás és a virágok " +
                         " elhelyezése máig az emlékezés fontos része. "),
-                new FeastDay(2035, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
+                new FeastDayModel(2035, 11, 3, "Advent első napja", "Advent a karácsony előtti négyhetes időszak, mely Jézus Krisztus " +
                         " születésére és második eljövetelére való várakozást jelenti. Az " +
                         " advent származása a 4. századra nyúlik vissza, amikor bűnbánattal és " +
                         " lelki felkészüléssel várták a karácsonyt. Kezdetben hosszabb böjti " +
@@ -3998,7 +4005,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Advent első vasárnapját a karácsonyt megelőző négy vasárnap egyikeként " +
                         " ünneplik. Ez a nap általában november végére vagy december elejére esik.  " +
                         " "),
-                new FeastDay(2035, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
+                new FeastDayModel(2035, 11, 6, "Mikulás", " Mikuláskor december 5.-én éjszaka, vagy 6.-án reggel töltik meg a gyerekek " +
                         " csizmáit édességgel és játékokkal. Szent Miklós püspök emlék napja. A " +
                         " 4. században élt szent, aki a gyermekek, a hajósok és a szegények " +
                         " védőszentje lett, híres volt jótékonyságáról. Egy legenda szerint " +
@@ -4010,7 +4017,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " eltérőek. Egyes helyeken a Mikulás hozza az ajándékokat, máshol a " +
                         " Télapó. A lényeg azonban mindenhol ugyanaz: a szeretet az adakozás és a " +
                         " gyermeki öröm ünnepe"),
-                new FeastDay(2035, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
+                new FeastDayModel(2035, 11, 13, "Luca napja", "Luca napja a keresztény és a népi hagyományok keveréke. Szent Luca a 3. " +
                         " századi vértanú, a látás védőszentje, de a népi hitvilágban a " +
                         " termékenység, a jólét és a védelem szimbóluma. A hagyomány szerint ezen " +
                         " a napon kezdődött a tél leghosszabb éjszakája, így Luca napja a fény és " +
@@ -4020,7 +4027,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " remény ünnepe, a fény győzelme a sötétség felett és a következő év " +
                         " jólétének biztosítása. " +
                         " "),
-                new FeastDay(2035, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
+                new FeastDayModel(2035, 11, 21, "Téli napforduló", "Az év legrövidebb napja nap.  " +
                         " Napkelte:  " +
                         " Napnyugta:  " +
                         " Világos időtartam:  " +
@@ -4031,7 +4038,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " felett, így ez a leghosszabb éjszaka. Ezen a napon kezdődik a nappali fény " +
                         " fokozatos növekedése, így a következő hónapokban egyre hosszabbak lesznek " +
                         " a nappalok."),
-                new FeastDay(2035, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
+                new FeastDayModel(2035, 11, 24, "Szenteste", "Szenteste a karácsonyi ünnepkör egyik legfontosabb napja, amely Jézus " +
                         " Krisztus születésének előestéje. Bár Jézus pontos születési dátuma " +
                         " nem ismert, a keresztény egyház a 4. században december 25.-ét jelölte meg " +
                         " születésének napjaként, összekapcsolva azt a téli napfordulóval. " +
@@ -4043,7 +4050,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " szeretet és a megbecsülés kifejezése, amely a három királyok " +
                         " ajándékozására utal. Karácsony, bár elsősorban keresztény ünnep, " +
                         " világszerte a szeretet, a béke és a család ünnepe lett."),
-                new FeastDay(2035, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
+                new FeastDayModel(2035, 11, 25, "Karácsony", "A keresztények számára Jézus Krisztus születésének ünnepe, melyet a 4. " +
                         " század óta tartanak. Az ünnep a téli napfordulóhoz kapcsolódik, " +
                         " szimbolizálva a fény győzelmét a sötétség felett. Karácsony a remény, " +
                         " a szeretet és a megváltás ünnepe, amely a családi együttlét, az öröm " +
@@ -4053,7 +4060,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " kultúrában a szeretet és a béke fontosságát hangsúlyozza. Karácsony " +
                         " lehetőséget ad az emberi kapcsolatok és az élet értelmének " +
                         " átgondolására"),
-                new FeastDay(2035, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
+                new FeastDayModel(2035, 11, 26, "Karácsony másnapja", "A keresztény hagyományban Szent István, az első vértanú emléknapja, " +
                         " azonban Magyarországon elsősorban Szent István királyra, az " +
                         " államalapítóra emlékeznek. A 4. századi eredetű ünnep során Jézus " +
                         " születése után következik Szent István napja, aki kulcsszerepet játszott " +
@@ -4062,7 +4069,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                         " Magyarországon nemzeti hősként is tisztelik, mivel ő alapította az " +
                         " államot. Ezen a napon az emberek szentmisére mennek, megemlékeznek " +
                         " királyukról és különböző ünnepi rendezvényeken is részt vesznek"),
-                new FeastDay(2035, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
+                new FeastDayModel(2035, 11, 31, "Szilveszter", "A Szilveszter az év utolsó napja, amikor búcsút veszünk az óévtől és " +
                         " ünnepeljük az új év kezdetét. Az ünnep neve Szent Szilveszter pápától " +
                         " származik, aki 335 körül halt meg, de az újév ünneplésének hagyományai " +
                         " sokkal régebbre nyúlnak vissza. Szilveszter éjszakáján családok és " +
@@ -4158,7 +4165,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
             }
 
             // Add feast events
-            for (FeastDay fd : feastDays) {
+            for (FeastDayModel fd : feastDays) {
                 if (fd.year == cellYear && fd.month == cellMonth && fd.day == day) {
                     TextView label = createEventLabel(fd.name, ColorPreference.getFeastColor(this), cellSize);
                     label.setOnClickListener(v -> showFeastDialog(fd));
@@ -4167,7 +4174,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
             }
 
             // Add reminder events
-            for (FeastDay fd : dbHelper.getAllEvents()) {
+            for (FeastDayModel fd : dbHelper.getAllEvents()) {
                 if (fd.year == cellYear && fd.month == cellMonth && fd.day == day) {
                     TextView label = createEventLabel(fd.name, ColorPreference.getReminderColor(this), cellSize);
                     label.setOnClickListener(v -> showFeastDialog(fd));
@@ -4243,7 +4250,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
         return tv;
     }
 
-    private void showFeastDialog(FeastDay fd) {
+    private void showFeastDialog(FeastDayModel fd) {
         View eventView = getLayoutInflater().inflate(R.layout.item_event, null);
 
         TextView nameView = eventView.findViewById(R.id.eventName);
@@ -4274,6 +4281,13 @@ public class MonthlyViewActivity extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+    private void applyDimEffect(boolean dim) {
+        if (dim) {
+            rootLayout.setForeground(new ColorDrawable(Color.parseColor("#88000000"))); // 53% black overlay
+        } else {
+            rootLayout.setForeground(null);
+        }
     }
 
     private void showAddEventDialog() {
@@ -4340,7 +4354,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
 
                 // Save event
                 if (addForAllYearsSwitch.isChecked()) {
-                    for (int year = 2025; year <= 2035; year++) {
+                    for (int year = 2000; year <= 2100; year++) {
                         dbHelper.addEvent(year, selectedMonth[0], selectedDay[0], name, story);
                     }
                     Toast.makeText(this, "Esemény mentve minden évre!", Toast.LENGTH_SHORT).show();
@@ -4360,15 +4374,9 @@ public class MonthlyViewActivity extends AppCompatActivity {
     }
 
 
-    private void applyDimEffect(boolean dim) {
-        if (dim) {
-            rootLayout.setForeground(new ColorDrawable(Color.parseColor("#88000000"))); // 53% black overlay
-        } else {
-            rootLayout.setForeground(null);
-        }
-    }
 
-    private void showDeleteConfirmation(FeastDay fd) {
+
+    private void showDeleteConfirmation(FeastDayModel fd) {
         new AlertDialog.Builder(this)
                 .setTitle("Esemény törlése")
                 .setMessage("Biztosan törölni szeretnéd ezt az eseményt?\n\n" +
@@ -4380,14 +4388,11 @@ public class MonthlyViewActivity extends AppCompatActivity {
                     populateCalendar();
                 })
                 .setNeutralButton("Minden év", (dialog, which) -> {
-                    for (int year = 2025; year <= 2035; year++) {
-                        dbHelper.deleteEventById(fd.id);
-
-//                        dbHelper.deleteEventByDate(year, fd.month, fd.day);
-                    }
+                    dbHelper.deleteEventByMonthDay(fd.month, fd.day);
                     Toast.makeText(this, "Esemény minden évből törölve!", Toast.LENGTH_SHORT).show();
                     populateCalendar();
                     refreshWidget();
+
                 })
                 .setNegativeButton("Mégse", null)
                 .show();

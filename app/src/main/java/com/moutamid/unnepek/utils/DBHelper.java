@@ -1,10 +1,12 @@
-package com.moutamid.unnepek;
+package com.moutamid.unnepek.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.moutamid.unnepek.model.FeastDayModel;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,8 +44,8 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     // Fetch all events (with ID)
-    public List<FeastDay> getAllEvents() {
-        List<FeastDay> events = new ArrayList<>();
+    public List<FeastDayModel> getAllEvents() {
+        List<FeastDayModel> events = new ArrayList<>();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery("SELECT * FROM events", null);
         if (cursor.moveToFirst()) {
@@ -55,7 +57,7 @@ public class DBHelper extends SQLiteOpenHelper {
                 String name = cursor.getString(cursor.getColumnIndexOrThrow("name"));
                 String story = cursor.getString(cursor.getColumnIndexOrThrow("story"));
 
-                FeastDay fd = new FeastDay(id, year, month, day, name, story);
+                FeastDayModel fd = new FeastDayModel(id, year, month, day, name, story);
                 fd.isFromDB = true;
                 events.add(fd);
             } while (cursor.moveToNext());
@@ -84,4 +86,11 @@ public class DBHelper extends SQLiteOpenHelper {
         db.delete("events", null, null);
         db.close();
     }
+    public void deleteEventByMonthDay(int month, int day) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete("events", "month = ? AND day = ?",
+                new String[]{String.valueOf(month), String.valueOf(day)});
+        db.close();
+    }
+
 }

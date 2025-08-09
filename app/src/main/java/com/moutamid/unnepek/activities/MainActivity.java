@@ -1,4 +1,4 @@
-package com.moutamid.unnepek;
+package com.moutamid.unnepek.activities;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -29,6 +30,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.moutamid.unnepek.adapter.ColorAdapter;
+import com.moutamid.unnepek.utils.ColorPreference;
+import com.moutamid.unnepek.R;
+import com.moutamid.unnepek.receiver.DateChangeReceiver;
+import com.moutamid.unnepek.receiver.UpdateReceiver;
+import com.moutamid.unnepek.services.BackgroundService;
+import com.moutamid.unnepek.widget.WidgetProvider;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -68,6 +76,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Log.d("Constants.TAG", "onCreate: main started");
         checkApp(MainActivity.this);
+        Intent mServiceIntent = new Intent(getApplicationContext(), BackgroundService.class);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            startForegroundService(mServiceIntent);
+        } else {
+            startService(mServiceIntent);
+        }
         yearText = findViewById(R.id.yearText);
         monthGrid = findViewById(R.id.monthGrid);
         ImageView prev = findViewById(R.id.prevYearBtn);

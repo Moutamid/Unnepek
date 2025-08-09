@@ -1,4 +1,4 @@
-package com.moutamid.unnepek;
+package com.moutamid.unnepek.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

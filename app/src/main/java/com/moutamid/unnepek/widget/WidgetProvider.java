@@ -1,4 +1,4 @@
-package com.moutamid.unnepek;
+package com.moutamid.unnepek.widget;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -11,6 +11,14 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.view.View;
 import android.widget.RemoteViews;
+
+import com.moutamid.unnepek.utils.ColorPreference;
+import com.moutamid.unnepek.activities.MainActivity;
+import com.moutamid.unnepek.activities.MonthlyViewActivity;
+import com.moutamid.unnepek.R;
+import com.moutamid.unnepek.receiver.DateChangeReceiver;
+import com.moutamid.unnepek.receiver.UpdateReceiver;
+import com.moutamid.unnepek.services.WidgetService;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
@@ -25,8 +33,8 @@ public class WidgetProvider extends AppWidgetProvider {
     public static final String ACTION_CELL_CLICK = "com.moutamid.unnepek.CELL_CLICK";
     public static final String ACTION_TOGGLE_LAYOUT = "com.moutamid.unnepek.TOGGLE_LAYOUT";
 
-    private static int month = Calendar.getInstance().get(Calendar.MONTH);
-    private static int year = Calendar.getInstance().get(Calendar.YEAR);
+    public static int month = Calendar.getInstance().get(Calendar.MONTH);
+    public static int year = Calendar.getInstance().get(Calendar.YEAR);
     private static boolean isLayoutVisible = false;
 
     @Override
@@ -101,7 +109,7 @@ public class WidgetProvider extends AppWidgetProvider {
 
     }
 
-    static void updateAppWidget(Context context, AppWidgetManager manager, int appWidgetId) {
+    public static void updateAppWidget(Context context, AppWidgetManager manager, int appWidgetId) {
         views = new RemoteViews(context.getPackageName(), R.layout.activity_monthly_view);
         views.setInt(R.id.widgetRoot, "setBackgroundColor", ColorPreference.getAppColor(context));
 
@@ -176,8 +184,8 @@ public class WidgetProvider extends AppWidgetProvider {
         updateAppWidget(context, manager, appWidgetId);
     }*/
 
-    static void updateAppWidgetWithDate(Context context, AppWidgetManager manager, int appWidgetId,
-                                        int yearParam, int monthParam, int day, int hour, int minute) {
+    public static void updateAppWidgetWithDate(Context context, AppWidgetManager manager, int appWidgetId,
+                                               int yearParam, int monthParam, int day, int hour, int minute) {
         // Update the provider's static month/year so updateAppWidget() uses them
         WidgetProvider.month = monthParam;
         WidgetProvider.year  = yearParam;
@@ -210,6 +218,12 @@ public class WidgetProvider extends AppWidgetProvider {
         long startTime = System.currentTimeMillis() + interval;
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, interval, pendingIntent);
+    }
+
+    @Override
+    public void onEnabled(Context context) {
+        super.onEnabled(context);
+        DateChangeReceiver.scheduleMidnightUpdate(context);
     }
 
 }

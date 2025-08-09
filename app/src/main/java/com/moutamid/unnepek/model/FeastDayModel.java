@@ -1,5 +1,5 @@
-package com.moutamid.unnepek;
-public class FeastDay {
+package com.moutamid.unnepek.model;
+public class FeastDayModel {
     public int id;
     public int year;
     public int month;
@@ -13,7 +13,7 @@ public class FeastDay {
     public boolean isFromDB;
     public int displayDay;
 
-    public FeastDay(int day, boolean isWeekend, boolean isFeastDay, String feastLabel) {
+    public FeastDayModel(int day, boolean isWeekend, boolean isFeastDay, String feastLabel) {
         this.day = day;
         this.isWeekend = isWeekend;
         this.isFeastDay = isFeastDay;
@@ -21,7 +21,7 @@ public class FeastDay {
         this.isFromDB = false;
     }
 
-    public FeastDay(int year, int month, int day, String name, String story) {
+    public FeastDayModel(int year, int month, int day, String name, String story) {
         this.year = year;
         this.month = month;
         this.day = day;
@@ -30,7 +30,7 @@ public class FeastDay {
         this.isFromDB = false;
     }
 
-    public FeastDay(int id, int year, int month, int day, String name, String story) {
+    public FeastDayModel(int id, int year, int month, int day, String name, String story) {
         this.id = id;
         this.year = year;
         this.month = month;

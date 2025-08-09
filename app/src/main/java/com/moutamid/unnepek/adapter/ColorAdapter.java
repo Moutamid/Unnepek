@@ -1,4 +1,4 @@
-package com.moutamid.unnepek;
+package com.moutamid.unnepek.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.moutamid.unnepek.R;
 
 
 public class ColorAdapter extends BaseAdapter {
