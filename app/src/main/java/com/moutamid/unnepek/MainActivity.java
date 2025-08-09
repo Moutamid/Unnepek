@@ -5,10 +5,12 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_main);
+        Log.d("Constants.TAG", "onCreate: main started");
         checkApp(MainActivity.this);
         yearText = findViewById(R.id.yearText);
         monthGrid = findViewById(R.id.monthGrid);
@@ -232,6 +235,14 @@ public class MainActivity extends AppCompatActivity {
 
 
         updateUI();
+
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_DATE_CHANGED);
+        intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
+
+        registerReceiver(new DateChangeReceiver(), intentFilter);
+
     }
 
     private void updateUI() {
@@ -399,6 +410,8 @@ public class MainActivity extends AppCompatActivity {
         for (int id : ids) {
             WidgetProvider.updateAppWidgetWithDate(this, manager, id, year, month, day, hour, minute);
         }
+        Intent intent = new Intent(this, UpdateReceiver.class);
+        sendBroadcast(intent);
     }
     @Override
     public void onBackPressed() {

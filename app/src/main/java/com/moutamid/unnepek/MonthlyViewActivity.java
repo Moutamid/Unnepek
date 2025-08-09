@@ -56,6 +56,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_monthly_view_main);
+        Log.d("Constants.TAG", "onCreate: started");
         dbHelper = new DBHelper(this);
         ImageView showPopupBtn = findViewById(R.id.menu);
         rootLayout = findViewById(R.id.main_layout);
@@ -122,8 +123,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
         ImageView addBtn = findViewById(R.id.add_event);
         currentDay.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 month = Calendar.getInstance().get(Calendar.MONTH);
                 currentYear = Calendar.getInstance().get(Calendar.YEAR);
                 populateCalendar();
@@ -4234,14 +4234,15 @@ public class MonthlyViewActivity extends AppCompatActivity {
         tv.setMaxLines(1);
         ViewGroup.MarginLayoutParams params = new ViewGroup.MarginLayoutParams
                 (
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT
-        );
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
         int margin = 2;
         params.setMargins(margin, margin, margin, margin);
         tv.setLayoutParams(params);
         return tv;
     }
+
     private void showFeastDialog(FeastDay fd) {
         View eventView = getLayoutInflater().inflate(R.layout.item_event, null);
 
@@ -4274,6 +4275,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
 
         dialog.show();
     }
+
     private void showAddEventDialog() {
         if (isFinishing()) return; // prevent crash
 
@@ -4358,7 +4360,6 @@ public class MonthlyViewActivity extends AppCompatActivity {
     }
 
 
-
     private void applyDimEffect(boolean dim) {
         if (dim) {
             rootLayout.setForeground(new ColorDrawable(Color.parseColor("#88000000"))); // 53% black overlay
@@ -4418,6 +4419,9 @@ public class MonthlyViewActivity extends AppCompatActivity {
         for (int id : ids) {
             WidgetProvider.updateAppWidgetWithDate(this, manager, id, year, month, day, hour, minute);
         }
+
+        Intent intent = new Intent(this, UpdateReceiver.class);
+        sendBroadcast(intent);
     }
 
     private void showColorPickerDialog(String title, Consumer<Integer> colorSelected) {
@@ -4459,7 +4463,7 @@ public class MonthlyViewActivity extends AppCompatActivity {
                 Color.parseColor("#98092C"), // Red
                 Color.parseColor("#36923A"), // Green
                 Color.parseColor("#ffffff"), // White
-             
+
         };
 
         final String[] colorNames = {
@@ -4480,13 +4484,14 @@ public class MonthlyViewActivity extends AppCompatActivity {
     }
 
     private void showNoteColorPickerDialog(String title, Consumer<Integer> colorSelected) {
-        showColorPickerDialog (title, colorSelected); // same color palette for now
+        showColorPickerDialog(title, colorSelected); // same color palette for now
     }
 
     private void applyColors() {
 
         rootLayout.setBackgroundColor(ColorPreference.getAppColor(this));
     }
+
     private void toggleWeekNumbers() {
         SharedPreferences prefs = getSharedPreferences("AppPrefs", MODE_PRIVATE);
         boolean showWeek = prefs.getBoolean("show_week_numbers", false);
@@ -4506,12 +4511,15 @@ public class MonthlyViewActivity extends AppCompatActivity {
         }
 
     }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         Log.d("ActivityLifecycle", "onDestroy called");
         finish();
-    }  @Override
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         Log.d("ActivityLifecycle", "onPause called");
@@ -4525,6 +4533,6 @@ public class MonthlyViewActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
         month = prefs.getInt("saved_month", Calendar.getInstance().get(Calendar.MONTH));
         currentYear = prefs.getInt("saved_year", Calendar.getInstance().get(Calendar.YEAR));
-        Log.d("ActivityLifecycle", "onResume called   "+ month);
+        Log.d("ActivityLifecycle", "onResume called   " + month);
     }
 }

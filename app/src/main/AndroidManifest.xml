@@ -45,13 +45,24 @@
             android:name=".WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
 
-        <receiver android:name=".MidnightReceiver"
-            android:enabled="true"
-            android:exported="false">
+<!--        <receiver android:name=".MidnightReceiver"-->
+<!--            android:enabled="true"-->
+<!--            android:exported="false">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.BOOT_COMPLETED" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
+
+        <receiver android:name=".DateChangeReceiver"
+            android:exported="true"
+            android:enabled="true">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.DATE_CHANGED" />
+                <action android:name="android.intent.action.TIME_SET" />
+                <action android:name="android.intent.action.TIMEZONE_CHANGED"/>
             </intent-filter>
         </receiver>
+
 
         <receiver android:name=".UpdateReceiver" android:exported="false" />
     </application>

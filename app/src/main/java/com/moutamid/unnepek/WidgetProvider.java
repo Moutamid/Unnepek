@@ -1,7 +1,5 @@
 package com.moutamid.unnepek;
 
-import static com.moutamid.unnepek.MidnightUpdateScheduler.scheduleMidnightUpdate;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -10,12 +8,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.net.Uri;
-import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
-import android.widget.Toast;
 
 import java.text.DateFormatSymbols;
 import java.util.Calendar;
@@ -173,13 +168,35 @@ public class WidgetProvider extends AppWidgetProvider {
         manager.updateAppWidget(appWidgetId, views);
     }
 
-    static void updateAppWidgetWithDate(Context context, AppWidgetManager manager, int appWidgetId,
+    /*static void updateAppWidgetWithDate(Context context, AppWidgetManager manager, int appWidgetId,
                                         int year, int month, int day, int hour, int minute) {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.activity_monthly_view);
         String dateTime = String.format("%04d/%02d", year, month + 1);
         views.setTextViewText(R.id.monthYearText, dateTime);
         updateAppWidget(context, manager, appWidgetId);
+    }*/
+
+    static void updateAppWidgetWithDate(Context context, AppWidgetManager manager, int appWidgetId,
+                                        int yearParam, int monthParam, int day, int hour, int minute) {
+        // Update the provider's static month/year so updateAppWidget() uses them
+        WidgetProvider.month = monthParam;
+        WidgetProvider.year  = yearParam;
+
+        // Save to prefs if you want persistence (optional - you already do this in updateAppWidget)
+        SharedPreferences prefs = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("saved_month", WidgetProvider.month);
+        editor.putInt("saved_year", WidgetProvider.year);
+        editor.apply();
+
+        // Tell the Grid's RemoteViewsService to re-query (important for list/grid updates)
+        AppWidgetManager.getInstance(context).notifyAppWidgetViewDataChanged(appWidgetId, R.id.calendarGrid);
+
+        // Now call the normal update which will use the static month/year we just set
+        updateAppWidget(context, manager, appWidgetId);
     }
+
+
     private void startRepeatingUpdates(Context context) {
         Intent intent = new Intent(context, UpdateReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(

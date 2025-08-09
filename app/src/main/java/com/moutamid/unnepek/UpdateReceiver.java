@@ -1,6 +1,5 @@
 package com.moutamid.unnepek;
 
-
 import android.appwidget.AppWidgetManager;
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
