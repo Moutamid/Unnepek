@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity {
 
                     TextView dayView = new TextView(MainActivity.this);
                     dayView.setText(String.valueOf(day));
-                    dayView.setTextSize(8);
+                    dayView.setTextSize(6);
                     dayView.setWidth(18);
                     dayView.setHeight(25);
                     dayView.setGravity(Gravity.CENTER);
@@ -276,12 +276,12 @@ public class MainActivity extends AppCompatActivity {
                 Color.parseColor("#331F1E"), // Barna
                 Color.parseColor("#98092C"), // Red
                 Color.parseColor("#36923A"), // Green
-                Color.parseColor("#ffffff"), // White
+                 
         };
 
         final String[] colorNames = {
                 "Fekete", "Sötétkék", "Lila", "Borvörös", "Zöld", "Olíva", "Barna",
-                "Red", "Green", "White"
+                "Red", "Green"
         };
 
         ColorAdapter adapter = new ColorAdapter(this, colors, colorNames);
@@ -303,12 +303,11 @@ public class MainActivity extends AppCompatActivity {
                 Color.parseColor("#FF2D61"), // Piros
                 Color.parseColor("#98092C"), // Red
                 Color.parseColor("#36923A"), // Green
-                Color.parseColor("#ffffff"), // White
         };
 
         final String[] colorNames = {
                 "Rózsaszín", "Sárga", "Mentazöld", "Aqua", "Világoskék", "Levendula", "Piros",
-                "Red", "Green", "White"
+                "Red", "Green"
         };
 
         ColorAdapter adapter = new ColorAdapter(this, colors, colorNames);

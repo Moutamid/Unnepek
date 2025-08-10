@@ -4440,12 +4440,11 @@ public class MonthlyViewActivity extends AppCompatActivity {
                 Color.parseColor("#331F1E"), // Barna
                 Color.parseColor("#98092C"), // Red
                 Color.parseColor("#36923A"), // Green
-                Color.parseColor("#ffffff"), // White
         };
 
         final String[] colorNames = {
                 "Fekete", "Sötétkék", "Lila", "Borvörös", "Zöld", "Olíva", "Barna",
-                "Red", "Green", "White"
+                "Red", "Green"
         };
 
         ColorAdapter adapter = new ColorAdapter(this, colors, colorNames);
@@ -4467,13 +4466,13 @@ public class MonthlyViewActivity extends AppCompatActivity {
                 Color.parseColor("#FF2D61"), // Piros
                 Color.parseColor("#98092C"), // Red
                 Color.parseColor("#36923A"), // Green
-                Color.parseColor("#ffffff"), // White
+                 
 
         };
 
         final String[] colorNames = {
                 "Rózsaszín", "Sárga", "Mentazöld", "Aqua", "Világoskék", "Levendula", "Piros",
-                "Red", "Green", "White"
+                "Red", "Green"
         };
 
         ColorAdapter adapter = new ColorAdapter(this, colors, colorNames);
