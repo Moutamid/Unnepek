@@ -158,6 +158,8 @@ public class GridRemoteViewsFactory implements RemoteViewsService.RemoteViewsFac
             rv.setTextViewText(R.id.dayText, item.feastLabel);
             rv.setTextColor(R.id.dayText,
                     (item.feastLabel.equals("Szo") || item.feastLabel.equals("V")) ? Color.RED : Color.WHITE);
+            rv.setViewVisibility(R.id.feastLabel, View.GONE);
+
 //            rv.setTextViewTextSize(R.id.dayText, TypedValue.COMPLEX_UNIT_SP, 13);
 
             // --- Previous/Next Month Cells ---
