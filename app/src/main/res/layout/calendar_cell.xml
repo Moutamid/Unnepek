@@ -1,26 +1,29 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="52dp"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:id="@+id/calendar_cell_root"
-    android:gravity="center">
+    android:layout_width="wrap_content"
+    android:layout_height="75dp"
+    android:minHeight="75dp"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/dayText"
         android:layout_width="wrap_content"
+        android:maxLines="1"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="1"
-        android:textSize="18sp"
         android:textColor="#FFFFFF"
-        android:gravity="center" />
+        android:textSize="17sp" />
 
     <TextView
         android:id="@+id/feastLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Feast Day"
-        android:textSize="7sp"
-        android:textColor="#000"
         android:background="#0B9F89"
-        android:gravity="center" />
+        android:gravity="center|top"
+        android:text="Feast Day"
+        android:minLines="3"
+        android:textColor="#000"
+        android:textSize="7sp" />
 </LinearLayout>
