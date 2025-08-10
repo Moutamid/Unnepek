@@ -2,7 +2,6 @@
     android:layout_width="52dp"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="2dp"
     android:id="@+id/calendar_cell_root"
     android:gravity="center">
 
@@ -11,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="1"
-        android:textSize="14sp"
+        android:textSize="18sp"
         android:textColor="#FFFFFF"
         android:gravity="center" />
 
@@ -22,7 +21,6 @@
         android:text="Feast Day"
         android:textSize="7sp"
         android:textColor="#000"
-        android:padding="2dp"
         android:background="#0B9F89"
         android:gravity="center" />
 </LinearLayout>

@@ -100,10 +100,23 @@ public class WidgetProvider extends AppWidgetProvider {
         }
     }
 
+    // Add this helper to get current date
+    private static int[] getCurrentDate() {
+        Calendar calendar = Calendar.getInstance();
+        return new int[] {
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH)
+        };
+    }
+
     @Override
     public void onUpdate(Context context, AppWidgetManager manager, int[] ids) {
+        int[] date = getCurrentDate();
+
         for (int id : ids) {
             updateAppWidget(context, manager, id);
+            updateAppWidgetWithDate(context, manager, id, date[0], date[1], date[2]);
         }
         startRepeatingUpdates(context);
 
@@ -185,7 +198,7 @@ public class WidgetProvider extends AppWidgetProvider {
     }*/
 
     public static void updateAppWidgetWithDate(Context context, AppWidgetManager manager, int appWidgetId,
-                                               int yearParam, int monthParam, int day, int hour, int minute) {
+                                               int yearParam, int monthParam, int day) {
         // Update the provider's static month/year so updateAppWidget() uses them
         WidgetProvider.month = monthParam;
         WidgetProvider.year  = yearParam;
@@ -214,7 +227,8 @@ public class WidgetProvider extends AppWidgetProvider {
 
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         alarmManager.cancel(pendingIntent); // Cancel any previous
-        long interval = 1 * 60 * 1000; // 2 minutes in milliseconds
+        long interval = 10 * 1000; // 2 minutes in milliseconds
+//        long interval = 1 * 60 * 1000; // 2 minutes in milliseconds
         long startTime = System.currentTimeMillis() + interval;
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, startTime, interval, pendingIntent);

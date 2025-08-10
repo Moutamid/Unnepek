@@ -21,14 +21,14 @@ public class DateChangeReceiver extends BroadcastReceiver {
         String action = intent.getAction();
         Log.d("DateChangeReceiver", "onReceive: " + action + " at " + new Date());
 
-        if (Intent.ACTION_TIME_TICK.equals(action)
-                || Intent.ACTION_DATE_CHANGED.equals(action)
-                || Intent.ACTION_TIMEZONE_CHANGED.equals(action)
-                || AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(action)
-                || "MIDNIGHT_UPDATE".equals(action)) {
+//        if (Intent.ACTION_TIME_TICK.equals(action)
+//                || Intent.ACTION_DATE_CHANGED.equals(action)
+//                || Intent.ACTION_TIMEZONE_CHANGED.equals(action)
+//                || AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(action)
+//                || "MIDNIGHT_UPDATE".equals(action)) {
 
             refreshWidget(context);
-        }
+//        }
     }
 
     private void refreshWidget(Context context) {

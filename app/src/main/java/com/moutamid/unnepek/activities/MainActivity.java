@@ -251,12 +251,12 @@ public class MainActivity extends AppCompatActivity {
 
         updateUI();
 
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Intent.ACTION_DATE_CHANGED);
-        intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
-        intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
-
-        registerReceiver(new DateChangeReceiver(), intentFilter);
+//        IntentFilter intentFilter = new IntentFilter();
+//        intentFilter.addAction(Intent.ACTION_DATE_CHANGED);
+//        intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+//        intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
+//
+//        registerReceiver(new DateChangeReceiver(), intentFilter);
 
     }
 
@@ -422,7 +422,9 @@ public class MainActivity extends AppCompatActivity {
         int minute = calendar.get(Calendar.MINUTE);
 
         for (int id : ids) {
-            WidgetProvider.updateAppWidgetWithDate(this, manager, id, year, month, day, hour, minute);
+            WidgetProvider.updateAppWidgetWithDate(this, manager, id, year, month, day
+//                    , hour, minute
+            );
         }
         Intent intent = new Intent(this, UpdateReceiver.class);
         sendBroadcast(intent);

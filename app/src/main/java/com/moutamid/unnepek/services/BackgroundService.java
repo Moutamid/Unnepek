@@ -7,8 +7,11 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.IBinder;
@@ -17,6 +20,13 @@ import android.os.SystemClock;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+
+import com.moutamid.unnepek.receiver.DateChangeReceiver;
+import com.moutamid.unnepek.widget.WidgetProvider;
+
+import java.util.Calendar;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class BackgroundService extends Service {
 
@@ -35,10 +45,39 @@ public class BackgroundService extends Service {
         super.onStartCommand(intent, flags, startId);
 
         // ANY BACKGROUND RUNNING LOGIC CODE HERE
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_DATE_CHANGED);
+        intentFilter.addAction(Intent.ACTION_TIMEZONE_CHANGED);
+        intentFilter.addAction(Intent.ACTION_TIME_CHANGED);
+
+        registerReceiver(new DateChangeReceiver(), intentFilter);
+
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                // send a broadcast to the date change receiver
+               refreshWidget(getApplicationContext());
+            }
+        }, 1000, 60000); // 1 minute
+
 
         return START_STICKY;
     }
 
+    private void refreshWidget(Context context) {
+        AppWidgetManager manager = AppWidgetManager.getInstance(context);
+        ComponentName widget = new ComponentName(context, WidgetProvider.class);
+        int[] ids = manager.getAppWidgetIds(widget);
+
+        // Set month/year to today's values
+        Calendar calendar = Calendar.getInstance();
+        WidgetProvider.month = calendar.get(Calendar.MONTH);
+        WidgetProvider.year = calendar.get(Calendar.YEAR);
+
+        for (int id : ids) {
+            WidgetProvider.updateAppWidget(context, manager, id);
+        }
+    }
 
     @Override
     public void onDestroy() {
